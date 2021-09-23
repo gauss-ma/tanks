@@ -1,0 +1,593 @@
+/*Image formatting===================================================================*/
+
+.DEQ-logo {
+	align: block;
+	width: 200px;
+	text-align: center;
+	margin: 20px auto;
+}
+
+.OK-logo {
+	align: block;
+	text-align: left;
+}
+
+/*input types and label formatting====================================================*/
+
+input {
+	display: inline-block;
+	width:173px;
+	text-align: center;
+	font-family: "Times New Roman", Times, serif;
+	border-width: 1px;
+}
+
+input.checked {
+	/*width: 50px;*/
+}
+
+input[id="InputFile1"] {
+	width: 210px;
+	border: 1px solid black;
+}
+
+label {
+	display: inline-block;
+	width: 180px;
+	text-align: left;
+	font-family: "Times New Roman", Times, serif;
+}
+
+mark {
+	background-color: yellow;
+	color: black;
+}
+
+select {
+	display: inline-block;
+	width: 177px;
+	font-family: "Times New Roman", Times, serif;
+}			
+
+table, th, td {
+	/*text-align-last: left;*/
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding-left: 20px;
+	padding-right: 20px;
+	font-family: "Times New Roman", Times, serif;				
+}
+
+textarea {
+	vertical-align: top;
+	resize: none;
+	width: 171px;
+	font-family: "Times New Roman", Times, serif;
+}
+
+/*Terms of service formatting=========================================================================*/
+
+/* The Modal (background) */
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed;
+	z-index: 1; /* Sit on top */
+	padding-top: 50px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+	position: relative;
+	background-color: #fefefe;
+	margin: auto;
+	padding: 0;
+	border: 1px solid #888;
+	width: 80%;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s;
+	
+}
+
+.modal-content p, div, button {
+	vertical-align: middle;
+	/*text-align: center;*/
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+	from {top:-300px; opacity:0} 
+	to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+	from {top:-300px; opacity:0}
+	to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+	color: white;
+	background-color: #012b55;
+	float: center;
+	font-size: 16px;
+	font-weight: bold;
+	opacity: 0.6;
+	transition: 0.3s;
+}
+
+.close:hover, .close:focus {
+	opacity: 1;
+
+}
+.close:disabled {
+	opacity: 0.5;
+	background-color: #a6a6a6;
+}
+
+.inputCheckTerm {
+	width: 15px;
+}
+
+.termTable, .termTd {
+	border: 0px solid black;
+}
+
+.modal-header {
+	padding: 2px 16px;
+	background-color: #6699cc;
+	color: white;
+	/*height: 58px;*/
+	text-align: center;
+}
+
+.modal-body {
+	background-color: #6699cc;
+	padding: 2px 16px;
+	font-size: 16px;
+	/*height: 160px;*/
+	/*overflow: auto;*/
+	max-height: calc(100vh - 200px);
+	overflow-y: auto;
+}
+
+.modal-footer {
+	padding: 16px 0px 0px 0px;
+	
+	color: white;
+	height: 36px;
+	text-align: center;
+	
+}
+
+.modal-footer p, div, button {
+	vertical-align: middle;
+	/*text-align: center;*/
+}		
+
+/*Flexbox container class formatting==================================================================*/
+
+.flex-header {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	border: 1px solid black;
+	
+	background-color: #333333;
+	padding: 5px;
+	font-size: 20px;
+	color: white;
+}
+
+.flex-header > div {
+	background: inherit;	
+	flex-grow: 1;			
+}
+
+.flex-description {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	background-color: #012b55;
+	border: 1px solid black;
+	/*border: 2px solid red;*/
+}
+
+.flex-description > div {
+	background: inherit;
+	width: 200px;
+	text-align: center;				
+	color: white;
+	min-width: 200px;
+	/*border: 2px solid red;*/
+}
+
+.description-Middle {
+	padding: 20px;
+	min-width: 360px;
+	
+}
+
+.flex-instructions {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	background-color: White;
+}
+
+.flex-input1 {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	/*background-color: White;*/
+	/*border: 1px solid black;*/
+	flex-basis: 0;
+	position: relative;
+}
+
+.flex-input1 > div {
+	/*background-color: White;*/
+	text-align: center;	
+	color: Black;				
+	min-width: 360px;
+	border: 1px solid black;
+	flex-grow: 1;
+	padding: 20px;	
+	padding-bottom: 40px;
+}
+
+#flex-input1 div:nth-of-type(1) {flex-grow: 1;}
+#flex-input1 div:nth-of-type(2) {flex-grow: 1;}
+#flex-input1 div:nth-of-type(3) {flex-grow: 1;}
+
+.flex-input2 {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	/*background-color: White;*/
+	/*border: 1px solid black;*/
+	flex-basis: 0;
+	position: relative;
+}
+
+.flex-input2 > div {
+	/*background-color: White;*/
+	text-align: center;	
+	color: Black;				
+	min-width: 360px;
+	border: 1px solid black;
+	flex-grow: 1;
+	padding: 20px;
+	padding-bottom: 40px;				
+}
+
+#flex-input2 div:nth-of-type(1) {flex-grow: 1;}
+#flex-input2 div:nth-of-type(2) {flex-grow: 1;}
+#flex-input2 div:nth-of-type(3) {flex-grow: 1;}
+
+.flex-input3 {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	/*background-color: White;*/
+	/*border: 1px solid black;*/	
+	flex-basis: 0;
+	position: relative;				
+}
+
+.flex-input3 > div {
+	/*background-color: White;*/
+	text-align: center;	
+	color: Black;				
+	/*min-width: 360px;*/
+	border: 1px solid black;
+	flex-grow: 1;
+	padding: 20px;
+	padding-bottom: 40px;				
+}
+
+.flex-input4 {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	/*background-color: White;*/
+	border: 1px solid black;	
+	flex-basis: 0;
+}
+
+.flex-input4 > div {
+	/*background-color: White;*/
+	text-align: center;	
+	color: Black;				
+	/*min-width: 360px;*/
+	/*border: 1px solid black;*/
+	flex-grow: 1;
+	padding: 20px;
+	
+}	
+/*
+.flex-output1 {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	flex-wrap: wrap;
+	/*background-color: White;*/
+	/*border: 1px solid black;*/
+	flex-basis: 0;
+}
+
+.flex-output1 > div {
+	/*background-color: White;*/
+	text-align: center;	
+	color: Black;				
+	/*min-width: 360px;*/
+	border: 1px solid black;
+	flex-grow: 1;
+	background-color: White;
+	padding: 20px;	
+}
+*/
+.flex-instructions > div {
+	/*background-color: White;*/
+	text-align: center;	
+	color: Black;				
+	border: 1px solid black;
+	flex-grow: 1;
+	padding: 20px;
+	
+}
+
+
+/* set up collabsible instructions====================================================*/
+
+.collapsible {
+	background-color: #777;
+	
+	color: white;
+	cursor: pointer;
+	padding: 10px;
+	width: 100%;
+	border: 1px solid black;
+	text-align: left;
+	outline: none;
+	font-size: 20px;
+	font-family: "Times New Roman", Times, serif;				
+}
+
+.active, .collapsible:hover {
+	background-color: #555;
+	border: 1px solid black;
+}
+
+.collapsible:after {
+	content: '\002B';
+	color: white;
+	font-weight: bold;
+	float: right;
+	margin-left: 5px;
+}
+
+.active:after {
+	content: "\2212";
+}
+
+.content {
+	padding: 0 10px;
+	display: none;
+	overflow: hidden;
+	transition: max-height 0.2s ease-out;
+	/*background-color: #f1f1f1;*/
+	background-color: #dbe4eb;
+	border: 1px solid black;
+}
+
+/*set up tooltip formatting===========================================================*/
+
+.tooltip {
+	position: relative;
+	text-align: center;
+	display: inline-block;
+	background: rgba(237, 237, 204);
+	border: 1px solid black;
+	padding: 1px 5px;				
+	border-radius: 100%;				
+	font-size: 12px;				
+	cursor: help;
+	font-weight: 900;
+}
+
+.tooltiptext {
+	border-radius: 6px;
+	padding: 5px 5px;
+	text-align: left;
+	border: 1px solid black;
+	font-weight: 600;
+}
+
+.tooltipblank {
+	position: relative;
+	display: inline-block;				
+	padding: 2px 6px;				
+	border-radius: 100%;				
+	font-size: 12px;				
+	width: 6px;
+	font-weight: 900;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 250px;
+	margin-left: -240px;
+	background-color: rgba(237, 237, 204);
+	color: Black;				
+	position: absolute;
+	z-index: 1;
+	bottom: 150%;
+	left: 50%;				
+}
+
+.tooltip .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	/*margin-left: -5px;*/
+	/*border-width: 5px;*/
+	border-width: 10px 8px 08px;
+	margin-left: 101px;
+	border-style: solid;
+	border-color: black transparent transparent transparent;			
+}
+
+.tooltip:hover {
+	background: rgba(35, 251, 253);
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+
+/*set up output table formatting======================================================*/
+.cellOut {
+	max-width: 225px;
+	min-width: 50px;
+	padding: 5px;
+}
+
+table#tableInput {
+	/*border-collapse: collapse;*/
+}
+
+/*page section class formatting======================================================*/
+.footer {
+	background-color: #333333;
+	padding: 5px;
+	text-align: center;
+	color: white;
+	border: 1px solid black;
+}
+
+.header {
+	background-color: #333333;
+	padding: 5px;
+	text-align: left;
+	font-size: 20px;
+	color: white;
+}
+/*
+.outputTitle {
+	background-color: #E5E4E2;
+	/*background-color: White;*/
+	border: 1px solid black;
+	padding: 20px;
+	text-align: center;
+}
+*/
+
+/*other class formatting============================================================*/
+
+.checked {
+	/*width: 58px;*/
+}
+
+.Input21 {
+	display: none;
+}
+
+.liqChar > input, .metChar > input  {
+	background-color: #cccccc;
+	width: 75px;
+}
+
+.longLabel {
+	width: 180px;				
+}
+
+.longInput {
+	width: 180px;
+}
+.longSelect {
+	width: 186px;
+}
+
+.mediumLabel {
+	width: 130px;
+}
+
+.mediumInput {
+	width: 130px;
+}
+.mediumSelect {
+	width: 136px;
+}
+
+.monthQ {
+	background-color: #cccccc;
+}
+
+.shortLabel {
+	width: 80px;
+}
+
+.shortInput {
+	width: 80px;
+}
+
+.shortSelect {
+	width: 86px;
+}
+
+.next {						
+	/*text-decoration-line: underline;*/
+	text-align: right;
+	position: absolute;
+	bottom:10px;
+	right:20px;
+}
+
+.next:hover {
+	cursor: pointer;
+}
+
+/*other class formatting============================================================*/
+::placeholder {
+	color: lightGrey;
+	opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color: lightGrey;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+	color: lightGrey;
+}
+
+/*to prevent lines from splitting while printing=====================================*/
+/*@media print {
+	.Input3 {
+		page-break-left: avoid;
+		break-left: avoid;
+	}
+	.page-break	{ 
+		display: block; page-break-before: always; 
+	}
+}*/
+
