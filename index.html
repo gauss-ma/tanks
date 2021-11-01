@@ -5,31 +5,16 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Liquid Storage Tanks Emissions Calculation Tool</title>
-	
 		<!-- call css -->
 		<link rel="stylesheet" href="css/style.css">
-
 		<!-- call js -->
 
 	</head>
 
 	<body>
 		<div class="flex-header" id="header">
-			<!--div>
-				<a href="https://www.ok.gov/" target="_blank" style="float:left">
-					<!-- img class="OK-logo" alt="Oklahoma Government" src="https://www.deq.ok.gov/wp-content/uploads/deqmainresources/top-bar-ok-logo.png" title="https://www.ok.gov/" -->
-				</a>
-			</div-->
-			<!-- div>
-				<div id="DEQTerms" style="cursor:pointer;float:right;padding:5px"><u>Terms and Conditions</u></div>
-			</div-->
 		</div>
 		<div class="flex-description" id="flex-description">
-			<!-- div class="description-Left">
-				<a href="https://www.deq.ok.gov">
-					<img class="DEQ-logo" alt="DEQ logo, click to go to DEQ home page" src="https://www.deq.ok.gov/wp-content/uploads/deqmainresources/logo-1.png" title="https://www.deq.ok.gov/">
-				</a>
-			</div -->
 			<div class="description-Middle" style="flex-grow: 8">
 				<div style="font-size: 24px" style="font-weight: 700px" ><b>Storage Tank Emissions Calculation Tool</b></div>
 				<br>
@@ -38,35 +23,8 @@
 					Calculations are based on <a href="https://www3.epa.gov/ttn/chief/ap42/ch07/final/ch07s01.pdf" target="_blank" style="color: #00a9ff" title="https://www3.epa.gov/ttn/chief/ap42/ch07/final/ch07s01.pdf"> AP-42 (06/2020), Section 7.1</a>.<br>
 				</div>
 			</div>
-			<div class="description-Right">
-				<!--intentionally left empty-->
-			</div>
 		</div>
 		
-		<!-- div class="flex-container">
-			<div>
-				<button type="button" class="collapsible"><u>Instructions</u></button>
-				<div class="content" id="content">
-					<br>
-					<b><u>Directions</u></b><br>
-					<p>Enter information into each of the input boxes below.&nbsp;&nbsp;All inputs are required unless marked "Optional".&nbsp;&nbsp;Additional boxes may appear as information is entered.&nbsp;&nbsp;Click on the "Next" button to proceed once all the information is entered for each section.</p>
-					<p>For additional information regarding a specific input box, please refer to the associated tooltip (question mark symbol) to the right of the box.&nbsp;&nbsp;Note: not all input boxes have an associated tooltip.</p>					
-					<b><u>Note</u>:  This tool only calculates the emissions if using...</b><br>
-					<br>
-					&#9679; The following tank types:<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#9675; Vertical Fixed Roof<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#9675; Horizontal<br>
-					<br>
-					&#9679; The following compatible internet browsers:<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#9675; Google Chrome<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#9675; Microsoft Edge<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#9675; Mozilla Firefox (some formatting issues may occur)<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#9675; Most mobile devices<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;&#9675; (<b>Not</b> compatible with Internet Explorer)<br>
-					<br>
-				</div>
-			</div>
-		</div -->
 		<div class="flex-input1" id="flex-input1">	
 			<div class="Input1" id="Input1">
 				<h2>Identification</h2>
@@ -89,6 +47,11 @@
 					<label class="shortLabel" for="tankDesc">Description:</label>
 					<textarea id="tankDesc" name="tankDesc" placeholder="Optional" form="Form1" rows="5" ></textarea><br>
 				</div>
+				
+				<!-- Boton puesto por ramiro -->
+				<button type="button" class="debug-run" id="DebugRun" onclick="debugRun()"> * Debug Run *</button>
+				<!-- fin Boton puesto por ramiro -->
+
 				<button type="button" class="next" id="Next1" onclick="Next1()">Next--></button>
 			</div>			
 			<div class ="Input2" id="Input2">
@@ -595,11 +558,13 @@
 		</div>
 
 		<!-- call js -->
-		<script src="js/outputs.js"> </script>
-		<script src="js/tablas/meteo.js"> </script>
-		<script src="js/tablas/chems.js"> </script>
-		<script src="js/figures.js"> </script>
-		<script src="js/calculations.js"> </script>
-		<script src="js/script.js"> </script>
+		<!-- script src="js/inputs.js">  //Funciones para input.    </script-->
+		<script src="js/outputs.js"> 	 //Funciones para output.   </script>
+		<script src="js/tablas/meteo.js">//DB meteorología.	    </script>
+		<script src="js/tablas/chems.js">//DB compuestos.	    </script>
+		<script src="js/figures.js"> 	 //Calculos basados en figs.</script>
+		<script src="js/calculations.js">//Calculos del AP42.       </script>
+		<script src="js/script.js"> 	 //MAIN			    </script>
+		<script src="js/debug.js"> 	 //funciones para debuging  </script>
 	</body>
 </html>

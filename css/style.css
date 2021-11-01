@@ -562,10 +562,24 @@ table#tableInput {
 	right:20px;
 }
 
+
 .next:hover {
 	cursor: pointer;
 }
 
+/* agregado por ramiro */
+.debug-run{
+        /*text-decoration-line: underline;*/
+        text-align: center;
+        position: relative;
+       /* bottom:10px;
+        right:200px;*/
+}
+.debug-run:hover{
+	cursor:pointer;
+	background-color:green;
+}
+/*fin-agregado por ramiro */
 /*other class formatting============================================================*/
 ::placeholder {
 	color: lightGrey;
