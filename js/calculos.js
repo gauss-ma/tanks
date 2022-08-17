@@ -1,6 +1,6 @@
 //Cálculos AP-42 Capítulo 7=============================================================================
 
-//Eq1_1 Pérdidas totales del tanque (o.totalLosses) (lbs/yr)
+//Eq1_1 Pérdidas totales desde tanques de techo fijo (o.totalLosses) (lbs/yr)
 function Eq1_1() {
 
 	Eq1_4();	//ecuacion general de Standing Losses (Pérdidas durante el almacenamiento)
@@ -16,7 +16,7 @@ function Eq1_3() {
 	t.vaporSpaceVolume=(Math.PI*Math.pow(t.effectiveDiameter,2)/4)*t.vaporSpaceOutage;
 }
 
-//Eq1_4 Standing Losses: Pérdidas durante el almacenamiento (o.standingLosses) (lbs/yr)
+//Eq1_4 Standing Losses: Pérdidas durante el almacenamiento desde tanques de techo fijo (o.standingLosses) (lbs/yr)
 function Eq1_4() {
 
 	if ( t.insulation == "underground" ||  t.insulation == "shellAndRoof" ) { 	
@@ -337,7 +337,7 @@ function Eq1_34() {
 	avgVapTemp = (0.6 * avgAmbientTemp) + (0.4 * avgBulkTemp) + (0.01 * aRoof * m.insolation);
 }
 
-//Eq1_35 Working Losses: Pérdidas por llenado y vaciado del tanque (o.workingLosses) (lbs/yr)
+//Eq1_35 Working Losses: Pérdidas por llenado y vaciado de tanques de techo fijo (o.workingLosses) (lbs/yr)
 function Eq1_35() {
 	
 	Eq1_37();	//Obtiene la suma anual de aumentos en el nivel del líquido (sumLiquidIncreases) (ft/yr)
@@ -425,6 +425,124 @@ function Eq8_2() {
 	avgSurfaceTemp = avgBulkTemp;
 }
 
+//Eq2_1 Pérdidas totales desde tanques de techo flotante (o.totalLosses) (lbs/yr)
+function Eq2_1() {
+
+	Eq2_2();	//ecuacion general de Standing Losses (Pérdidas durante el almacenamiento)
+	Eq2_19();	//ecuacion general de Working Losses (Pérdidas por vaciado del tanque)
+	
+	o.totalLosses = o.standingLosses + o.workingLosses;
+}
+
+//Eq2_2 Standing Losses: Pérdidas durante el almacenamiento (o.standingLosses) (lbs/yr)
+function Eq2_2() {
+
+	Eq2_3();	//Calcula las pérdidas a través del sello (o.rimSealLosses) (lbs/yr)
+	Eq2_13();	//Calcula las pérdidas a través de las válvulas y bocas de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
+	Eq2_18();	//Calcula las pérdidas a través de las "costuras" de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
+
+	o.standingLosses = o.rimSealLosses + o.deckFittingLosses + o.deckSeamLosses
+}
+
+//Eq2_3 Pérdidas a través del sello de la plataforma flotante (o.rimSealLosses) (lbs/yr)
+function Eq2_3() {
+
+	Eq2_4();	//Calcula un factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
+
+	//Determina el factor de producto correspondiente (productFactor) (adimensional)
+	if (liquidCategory == "Crude Oils"){
+		productFactor = 0.4
+	} else {
+		productFactor = 1
+	}
+	
+	//Eq2_3
+	if (liquidCategory == "Other organic liquids") {
+		o.rimSealLosses = (t.rimSeal.uIndepLossFactor + t.rimSeal.uDepLossFactor*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
+	} else {
+		o.rimSealLosses = (t.rimSeal.uIndepLossFactor + t.rimSeal.uDepLossFactor*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
+	}
+}
+
+//Eq2_4	Factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
+function Eq2_4() {
+
+	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
+	if (t.type == "IFR" || t.type == "DEFR") {
+		Eq2_5;
+	} else if (t.deckType == "pontoon") {
+		Eq2_7;
+	} else {
+		Eq2_10;
+	}
+
+	//Calcula la presión de vapor del compuesto (c.vaporPressure) a la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp)
+	if (liquidCategory == "Crude Oils") {
+		if (isNaN(c.A) == true || c.A == "" || c.A == null) {
+			Fig1_16();	//Calcula las constantes de la Ecuación de Antoine para petróleos crudos
+			c.vaporPressure = Eq1_25(avgSurfaceTemp);	//Acá también se podría usar la Fig1_13b (en lugar de la Eq1_25)
+		} else {
+			c.vaporPressure = Eq1_25(avgSurfaceTemp);
+		}
+	} else if (liquidCategory == "Refined Petroleum Liquids") {
+		if (isNaN(c.A) == true || c.A == "" || c.A == null) {
+			Fig1_15();	//Calcula las constantes de la Ecuación de Antoine para combustibles refinados
+			c.vaporPressure = Eq1_25(avgSurfaceTemp);	//Acá también se podría usar la Fig1_14b (en lugar de la Eq1_25)
+		} else {
+			c.vaporPressure = Eq1_25(avgSurfaceTemp);
+		}
+	} else {
+		c.vaporPressure = Eq1_26(avgSurfaceTemp);	//Calcula la presión de vapor de otros líquidos orgánicos
+	}
+
+	//Eq2_4
+	vaporPressureFunction = (c.vaporPressure/m.atmPressure)/Math.pow((1+Math.pow((1-(c.vaporPressure/m.atmPressure)),0.5)),2)
+}
+
+//Eq2_5 Temperatura diaria promedio en la superficie del líquido en tanques tipo IFR o DEFR (avgSurfaceTemp) (degrees R)
+function Eq2_5() {
+	Eq1_30;	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	
+	avgSurfaceTemp = (((2.86*(t.height/t.diameter)+1.43)*avgAmbientTemp)+((3.52*(t.height/t.diameter)+3.79)*avgBulkTemp)+(0.027*aRoof*m.insolation)+(0.017*(t.height/t.diameter)*aShell*m.insolation))/(6.38*(t.height/t.diameter)+5.22)
+	//RECORDATORIO SABRI: Ver qué onda la avgBulkTemp de este tipo de tanques, que no aparece la ecuacion para calcularla en el AP-42
+}
+
+//La Eq2_6 se omitió porque es una simplificación de la Eq2_5 en base a un supuesto.
+
+//Eq2_7 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
+function Eq2_7() {
+	Eq1_30; //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq2_8;	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+
+	avgSurfaceTemp = (0.7*avgAmbientTemp) + (0.3*avgBulkTemp) + (0.008*aRoof*m.insolation);
+}
+
+//Eq2_8 Temperatura promedio en el seno del líquido en tanques tipo EFR con pontoon deck (avgBulkTemp) (degrees R)
+function Eq2_8() {
+	avgBulkTemp = avgAmbientTemp + (((0.71*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+57))
+}
+
+//La Eq2_9 se omitió porque es una simplificación de la Eq2_8 en base a un supuesto.
+
+//Eq2_10 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con double deck (avgSurfaceTemp) (degrees R)
+function Eq2_10() {
+	Eq1_30; //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq2_11;	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+
+	avgSurfaceTemp = (0.3*avgAmbientTemp) + (0.7*avgBulkTemp) + (0.009*aRoof*m.insolation);
+}
+
+//Eq2_11 Temperatura promedio en el seno del líquido en tanques tipo EFR con double deck (avgBulkTemp) (degrees R)
+function Eq2_11() {
+	avgBulkTemp = avgAmbientTemp + (((0.39*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+45))
+}
+
+//La Eq2_12 se omitió porque es una simplificación de la Eq2_11 en base a un supuesto.
+
+//CONTINUARÁ.... xD
+
+
+
 //FIGURAS=================================================================================================================================================
 
 //Figura 7.1-13b: Presion de vapor (psia) de petróleos crudos que tengan una presión de vapor de Reid de entre 2 y 15 psi
@@ -467,3 +585,6 @@ function Fig1_17() {
 	}
 	
 }
+
+
+

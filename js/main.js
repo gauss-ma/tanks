@@ -44,18 +44,11 @@ function main(){
 
 	//  (2.b) calculo de emision:
 
-	if (t.type == "VFR") {
+	if (t.type == "VFR" || t.type == "HFR") {
                 Eq1_1();
-
-	} else if (t.type == "HFR") {
-                Eq1_1();
-
-	} else if (t.type == "EFR") {
-                //ecuación para "Exterior Floating Roof Tanks" (aún no incorporada);
-
-        } else if (t.type == "IFR") {
-                //ecuación para "Interior Floating Roof Tanks" (aún no incorporada);
-        }
+	} else if (t.type == "EFR" || t.type == "DEFR" || t.type == "IFR") {
+				Eq2_1();
+    }
 	
 	//(3) OUTPUT
 	//   (0)  Convertir unidades si el usuario elige sistema internacional.
@@ -114,7 +107,7 @@ function loadTankParameters(){
 	console.log("   Tomando características del tanque.. ");
 
 	t={
-		type:"VFR",	    		//document.getElementById("tankType").value; //(VFR|HFR|EFR|IFR)
+		type:"VFR",	    		//document.getElementById("tankType").value; //(VFR|HFR|EFR|DEFR|IFR)
 		height:10,		    	//document.getElementById("tankheight").value; //altura [m] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
 		diameter:5,    	    		//document.getElementById("tankDiamter").value; //diametro [m]
 		minLiquidHeight:1, 	    	//document.getElementById("").value; //altura minima de liquido [m]
@@ -145,6 +138,12 @@ function loadTankParameters(){
 			minBulkTemp:"460",	//document.getElementById("").value; //temperatura minima del liquido [grados Kelvin]
 			maxBulkTemp:"480",	//document.getElementById("").value; //temperatura maxima del liquido [grados Kelvin]
 		},
+		rimSeal:{//ACLARACIÓN: Estos tres inputs que siguen en realidad no los ingresa el usuario sino que salen de una tabla en función de ciertas características del tanque (Habría que ver cómo armamos eso)
+			uIndepLossFactor:"",	//document.getElementById("").value; //wind speed independent rim seal loss factor [lb-mole/ft*yr]
+			uDepLossFactor:"",		//document.getElementById("").value; //wind speed dependent rim seal loss factor [lb-mole/ft*yr]
+			n:"",					//document.getElementById("").value; //seal-related wind speed exponent [dimensionless]
+		},
+		deckType: "double",		//document.getElementById("").value; //(pontoon|double) 
 	};
 
 	return t;
