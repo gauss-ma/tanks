@@ -47,7 +47,8 @@ function main(){
 	if (t.type == "VFR" || t.type == "HFR") {
                 Eq1_1();
 	} else if (t.type == "EFR" || t.type == "DEFR" || t.type == "IFR") {
-				Eq2_1();
+
+		Eq2_1();
     }
 	
 	//(3) OUTPUT
@@ -138,11 +139,12 @@ function loadTankParameters(){
 			minBulkTemp:"460",	//document.getElementById("").value; //temperatura minima del liquido [grados Kelvin]
 			maxBulkTemp:"480",	//document.getElementById("").value; //temperatura maxima del liquido [grados Kelvin]
 		},
-		rimSeal:{//ACLARACIÓN: Estos tres inputs que siguen en realidad no los ingresa el usuario sino que salen de una tabla en función de ciertas características del tanque (Habría que ver cómo armamos eso)
-			uIndepLossFactor:"",	//document.getElementById("").value; //wind speed independent rim seal loss factor [lb-mole/ft*yr]
-			uDepLossFactor:"",		//document.getElementById("").value; //wind speed dependent rim seal loss factor [lb-mole/ft*yr]
-			n:"",					//document.getElementById("").value; //seal-related wind speed exponent [dimensionless]
-		},
+		deckFittings:[],		//acá agrego array con "accesorios"
+		//rimSeal:{//ACLARACIÓN: Estos tres inputs que siguen en realidad no los ingresa el usuario sino que salen de una tabla en función de ciertas características del tanque (Habría que ver cómo armamos eso)
+		//	uIndepLossFactor:"",	//document.getElementById("").value; //wind speed independent rim seal loss factor [lb-mole/ft*yr]
+		//	uDepLossFactor:"",		//document.getElementById("").value; //wind speed dependent rim seal loss factor [lb-mole/ft*yr]
+		//	n:"",					//document.getElementById("").value; //seal-related wind speed exponent [dimensionless]
+		//},
 		deckType: "double",		//document.getElementById("").value; //(pontoon|double) 
 	};
 
@@ -169,3 +171,16 @@ function calculateSolarAbsorbance(t){
 
 	return a; 
 };
+
+
+
+//Agregado por RAMIRO:
+function addDeckFitting(t,fittingName,fittingType,n){
+	
+	databaseDeckFittings=getDeckFittingsProperties(); //levanto de base de datos de deckFittings (tablaa/deckFittings.js)
+	for (i=0;i<n;i++){	//lo agrego n veces!
+		t.deckFittings.push( databaseDeckFittings.find( element => (element.fittingName==fittingName & element.fittingType==fittingType) ) ); 
+	};
+
+};
+

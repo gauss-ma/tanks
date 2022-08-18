@@ -542,6 +542,21 @@ function Eq2_11() {
 //CONTINUARÁ.... xD
 
 
+//Agregado por Ramiro: (MODIFICAR!)
+function Eq2_14(){      //esta quiza mejor ponela en js/calculos.js
+
+        Kv=1.0  // borrar cuando tengas definido de donde sale el verdadero valor de Kv
+        v=m.u;  //es la velocidad?
+
+        Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
+        for (i=0;i<t.deckFittings.length;i++){
+
+                f=t.deckFittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
+                //Eq2_15:
+                Ff+=(f.Kfa + f.Kfb*(Kv*v)**f.m);        //Revisar si es que es así
+        };
+
+};
 
 //FIGURAS=================================================================================================================================================
 
