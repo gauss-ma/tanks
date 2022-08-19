@@ -438,7 +438,7 @@ function Eq2_1() {
 function Eq2_2() {
 
 	Eq2_3();	//Calcula las pérdidas a través del sello (o.rimSealLosses) (lbs/yr)
-	Eq2_13();	//Calcula las pérdidas a través de las válvulas y bocas de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
+	Eq2_13();	//Calcula las pérdidas a través de los accesorios de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
 	Eq2_18();	//Calcula las pérdidas a través de las "costuras" de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
 
 	o.standingLosses = o.rimSealLosses + o.deckFittingLosses + o.deckSeamLosses
@@ -458,9 +458,9 @@ function Eq2_3() {
 	
 	//Eq2_3
 	if (liquidCategory == "Other organic liquids") {
-		o.rimSealLosses = (t.rimSeal.uIndepLossFactor + t.rimSeal.uDepLossFactor*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
+		o.rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
 	} else {
-		o.rimSealLosses = (t.rimSeal.uIndepLossFactor + t.rimSeal.uDepLossFactor*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
+		o.rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
 	}
 }
 
@@ -469,11 +469,11 @@ function Eq2_4() {
 
 	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
 	if (t.type == "IFR" || t.type == "DEFR") {
-		Eq2_5;
+		Eq2_5();
 	} else if (t.deckType == "pontoon") {
-		Eq2_7;
+		Eq2_7();
 	} else {
-		Eq2_10;
+		Eq2_10();
 	}
 
 	//Calcula la presión de vapor del compuesto (c.vaporPressure) a la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp)
@@ -501,7 +501,7 @@ function Eq2_4() {
 
 //Eq2_5 Temperatura diaria promedio en la superficie del líquido en tanques tipo IFR o DEFR (avgSurfaceTemp) (degrees R)
 function Eq2_5() {
-	Eq1_30;	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq1_30();	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
 	
 	avgSurfaceTemp = (((2.86*(t.height/t.diameter)+1.43)*avgAmbientTemp)+((3.52*(t.height/t.diameter)+3.79)*avgBulkTemp)+(0.027*aRoof*m.insolation)+(0.017*(t.height/t.diameter)*aShell*m.insolation))/(6.38*(t.height/t.diameter)+5.22)
 	//RECORDATORIO SABRI: Ver qué onda la avgBulkTemp de este tipo de tanques, que no aparece la ecuacion para calcularla en el AP-42
@@ -511,8 +511,8 @@ function Eq2_5() {
 
 //Eq2_7 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
 function Eq2_7() {
-	Eq1_30; //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
-	Eq2_8;	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+	Eq1_30(); //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq2_8();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
 
 	avgSurfaceTemp = (0.7*avgAmbientTemp) + (0.3*avgBulkTemp) + (0.008*aRoof*m.insolation);
 }
@@ -526,8 +526,8 @@ function Eq2_8() {
 
 //Eq2_10 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con double deck (avgSurfaceTemp) (degrees R)
 function Eq2_10() {
-	Eq1_30; //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
-	Eq2_11;	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+	Eq1_30(); 	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq2_11();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
 
 	avgSurfaceTemp = (0.3*avgAmbientTemp) + (0.7*avgBulkTemp) + (0.009*aRoof*m.insolation);
 }
@@ -539,24 +539,66 @@ function Eq2_11() {
 
 //La Eq2_12 se omitió porque es una simplificación de la Eq2_11 en base a un supuesto.
 
-//CONTINUARÁ.... xD
+//Eq2_13 Pérdidas totales a través de los accesorios de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
+function Eq2_13() {
+	if (t.type=="EFR") {
+		Eq2_14();	//Calcula el factor de pérdidas totales a través de los accesorios en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
+	} else {
+		Eq2_16();	//Calcula el factor de pérdidas totales a través de los accesorios en tanques IFR y DEFR (o.deckFittingLossFactor) (lb-mole/yr)
+	}
 
+	if (liquidCategory == "Other organic liquids") {
+		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.molWeight*productFactor
+	} else {
+		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.vapMolWeight*productFactor
+	}
+}
 
-//Agregado por Ramiro: (MODIFICAR!)
-function Eq2_14(){      //esta quiza mejor ponela en js/calculos.js
-
-        Kv=1.0  // borrar cuando tengas definido de donde sale el verdadero valor de Kv
-        v=m.u;  //es la velocidad?
+//Eq2_14 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
+function Eq2_14(){    
 
         Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
         for (i=0;i<t.deckFittings.length;i++){
 
                 f=t.deckFittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
-                //Eq2_15:
-                Ff+=(f.Kfa + f.Kfb*(Kv*v)**f.m);        //Revisar si es que es así
+                //DUDA SABRI: ¿Cómo hago para cambiarle acá el nombre a la variable de salida de la sumatoria? Así le puedo poner el mismo nombre que en la Eq2_13
+				//Eq2_15: Calcula el factor de pérdida individual de cada accesorio
+                Ff+=( f.Kfa + f.Kfb * Math.pow((0.7*m.u),f.m) );  
         };
-
 };
+
+//Eq2_16 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques IFR o DEFR (o.deckFittingLossFactor) (lb-mole/yr)
+function Eq2_16() {
+
+		Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
+        for (i=0;i<t.deckFittings.length;i++){
+
+                f=t.deckFittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
+                //DUDA SABRI: ¿Cómo hago para cambiarle acá el nombre a la variable de salida de la sumatoria? Así le puedo poner el mismo nombre que en la Eq2_13
+				//Eq2_16: Calcula el factor de pérdida individual de cada accesorio
+                Ff+=f.Kfa;  
+        };
+};
+
+//Eq2_17: LA INCLUIMOS? Sirve para estimar el loss factor de tipos de fittings que no aparezcan en la base de datos y SOLO en tanques IFR o DEFR. Si la incluimos habría que ver cómo podemos agregarla a la sumatoria de todos los tipos que sí están en la base de datos.
+
+//Eq2_18 Pérdidas a través de las "costuras" de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
+function Eq2_18() {
+	if(t.construction=="welded") {
+		Kd=0;
+	} else {
+		Kd=0.14;
+	}
+	
+	if(liquidCategory=="Other organic liquids") {
+		o.deckSeamLosses = Kd*totalSeamLength*(4/Math.PI)*vaporPressureFunction*c.molWeight*productFactor  
+	} else {
+		o.deckSeamLosses = Kd*totalSeamLength*(4/Math.PI)*vaporPressureFunction*c.vapMolWeight*productFactor  
+	};
+	//RECORDATORIO SABRI: Agregar la estimacion del totalSeamLength por si el usuario no tiene el dato
+};
+
+
 
 //FIGURAS=================================================================================================================================================
 

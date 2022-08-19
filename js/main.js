@@ -139,13 +139,15 @@ function loadTankParameters(){
 			minBulkTemp:"460",	//document.getElementById("").value; //temperatura minima del liquido [grados Kelvin]
 			maxBulkTemp:"480",	//document.getElementById("").value; //temperatura maxima del liquido [grados Kelvin]
 		},
+		construction: "welded", //document.getElementById("").value; //(welded|riveted) 
+		rimSeal:{
+			fit:"Average-Fitting Seal",	//document.getElementById("").value; //(Average-Fitting Seal|Tight-Fitting Seal)
+			type:"Liquid-mounted seal",	//document.getElementById("").value; //(Mechanical-shoe Seal|Liquid-mounted seal|Vapor-mounted Seal)
+			secondary:"Primary only",	//document.getElementById("").value; //(Primary only|Shoe-mounted secondary|Rim-mounted secondary|Weather shield)
+		},	
 		deckFittings:[],		//acá agrego array con "accesorios"
-		//rimSeal:{//ACLARACIÓN: Estos tres inputs que siguen en realidad no los ingresa el usuario sino que salen de una tabla en función de ciertas características del tanque (Habría que ver cómo armamos eso)
-		//	uIndepLossFactor:"",	//document.getElementById("").value; //wind speed independent rim seal loss factor [lb-mole/ft*yr]
-		//	uDepLossFactor:"",		//document.getElementById("").value; //wind speed dependent rim seal loss factor [lb-mole/ft*yr]
-		//	n:"",					//document.getElementById("").value; //seal-related wind speed exponent [dimensionless]
-		//},
-		deckType: "double",		//document.getElementById("").value; //(pontoon|double) 
+		deckType: "double",		//document.getElementById("").value; //(pontoon|double)
+		totalSeamLength:"",		//document.getElementById("").value; //medida total de todas las "costuras" de la plataforma flotante [ft]
 	};
 
 	return t;
@@ -173,8 +175,7 @@ function calculateSolarAbsorbance(t){
 };
 
 
-
-//Agregado por RAMIRO:
+//DUDA SABRI: Si no entiendo mal, esta función habría que correrla para cada tipo distinto de Fitting que ingrese el usuario, cómo haríamos eso?
 function addDeckFitting(t,fittingName,fittingType,n){
 	
 	databaseDeckFittings=getDeckFittingsProperties(); //levanto de base de datos de deckFittings (tablaa/deckFittings.js)
@@ -184,3 +185,11 @@ function addDeckFitting(t,fittingName,fittingType,n){
 
 };
 
+
+function findRimSealProp(t){
+	
+	databaseRimSeals=getRimSealProperties(); //levanto de base de datos de Rim Seals (tablas/rimSeal.js)
+	t.rimSeal=databaseRimSeals.find(element => (element.sealFit==t.rimSeal.fit & element.tankConstruction==t.construction & element.sealType==t.rimSeal.type & element.secondSeal==t.rimSeal.secondary)) //me quedo con el que me interesa
+	
+	return t.rimSeal;
+};

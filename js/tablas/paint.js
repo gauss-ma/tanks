@@ -16,8 +16,8 @@ function getPaintProperties() {
 	var paint12 = {paintName:"tan", new:0.43, average:0.49, aged:0.55};
 	var paint13 = {paintName:"aluminum: mill finish, unpainted", new:0.1, average:0.12, aged:0.15};
 	//put paint objects into array
-	var aryPaintProp = [paint1, paint2, paint3, paint4, paint5, paint6, paint7, paint8, paint9, paint10, paint11, paint12, paint13];	
+	var arrayPaintProp = [paint1, paint2, paint3, paint4, paint5, paint6, paint7, paint8, paint9, paint10, paint11, paint12, paint13];	
 	
-	return aryPaintProp;
+	return arrayPaintProp;
 }
 
