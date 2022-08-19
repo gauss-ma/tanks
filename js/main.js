@@ -27,7 +27,11 @@ function main(){
 	
 	//  (1c) datos del tanque:
 	t=loadTankParameters();	//estos valores los provee el usuario.
-
+	
+	//Ejemplo: Así el usuario iria agregando accesorios:
+	addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3)
+	addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2)
+	
 	//  (1d) inicializar objeto con datos de salida:
 	o={};
 
@@ -175,14 +179,12 @@ function calculateSolarAbsorbance(t){
 };
 
 
-//DUDA SABRI: Si no entiendo mal, esta función habría que correrla para cada tipo distinto de Fitting que ingrese el usuario, cómo haríamos eso?
 function addDeckFitting(t,fittingName,fittingType,n){
 	
 	databaseDeckFittings=getDeckFittingsProperties(); //levanto de base de datos de deckFittings (tablaa/deckFittings.js)
 	for (i=0;i<n;i++){	//lo agrego n veces!
 		t.deckFittings.push( databaseDeckFittings.find( element => (element.fittingName==fittingName & element.fittingType==fittingType) ) ); 
 	};
-
 };
 
 

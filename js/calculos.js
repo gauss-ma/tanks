@@ -542,9 +542,9 @@ function Eq2_11() {
 //Eq2_13 Pérdidas totales a través de los accesorios de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
 function Eq2_13() {
 	if (t.type=="EFR") {
-		Eq2_14();	//Calcula el factor de pérdidas totales a través de los accesorios en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
+		o.deckFittingLossFactor=Eq2_14();//Calcula el factor de pérdidas totales a través de los accesorios en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
 	} else {
-		Eq2_16();	//Calcula el factor de pérdidas totales a través de los accesorios en tanques IFR y DEFR (o.deckFittingLossFactor) (lb-mole/yr)
+		o.deckFittingLossFactor=Eq2_16();//Calcula el factor de pérdidas totales a través de los accesorios en tanques IFR y DEFR (o.deckFittingLossFactor) (lb-mole/yr)
 	}
 
 	if (liquidCategory == "Other organic liquids") {
@@ -557,30 +557,30 @@ function Eq2_13() {
 //Eq2_14 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
 function Eq2_14(){    
 
-        Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
+        Ff=0; //Inicializo las perdidas en 0 y luego las voy sumando:
         for (i=0;i<t.deckFittings.length;i++){
 
                 f=t.deckFittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
-                //DUDA SABRI: ¿Cómo hago para cambiarle acá el nombre a la variable de salida de la sumatoria? Así le puedo poner el mismo nombre que en la Eq2_13
-				//Eq2_15: Calcula el factor de pérdida individual de cada accesorio
+		//Eq2_15: Calcula el factor de pérdida individual de cada accesorio
                 Ff+=( f.Kfa + f.Kfb * Math.pow((0.7*m.u),f.m) );  
         };
+	return Ff;
 };
 
 //Eq2_16 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques IFR o DEFR (o.deckFittingLossFactor) (lb-mole/yr)
 function Eq2_16() {
 
-		Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
+	Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
         for (i=0;i<t.deckFittings.length;i++){
 
                 f=t.deckFittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
-                //DUDA SABRI: ¿Cómo hago para cambiarle acá el nombre a la variable de salida de la sumatoria? Así le puedo poner el mismo nombre que en la Eq2_13
-				//Eq2_16: Calcula el factor de pérdida individual de cada accesorio
+		//Eq2_16: Calcula el factor de pérdida individual de cada accesorio
                 Ff+=f.Kfa;  
         };
+	return Ff;
 };
 
-//Eq2_17: LA INCLUIMOS? Sirve para estimar el loss factor de tipos de fittings que no aparezcan en la base de datos y SOLO en tanques IFR o DEFR. Si la incluimos habría que ver cómo podemos agregarla a la sumatoria de todos los tipos que sí están en la base de datos.
+//Eq2_17: LA INCLUIMOS? Sirve para estimar el loss factor de tipos de fittings que no aparezcan en la base de datos y SOLO en tanques IFR o DEFR. Si la incluimos habría que ver cómo podemos agregarla a la sumatoria de todos los tipos que sí están en la base de datos. (RAMIRO: Ahora no lo incluiría, en todo caso que quede como mejora una vez que hayamos terminado de implementar el resto de las cosas)
 
 //Eq2_18 Pérdidas a través de las "costuras" de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
 function Eq2_18() {
