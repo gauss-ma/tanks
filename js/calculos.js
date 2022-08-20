@@ -470,7 +470,7 @@ function Eq2_4() {
 	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
 	if (t.type == "IFR" || t.type == "DEFR") {
 		Eq2_5();
-	} else if (t.deckType == "pontoon") {
+	} else if (t.deck.type == "pontoon") {
 		Eq2_7();
 	} else {
 		Eq2_10();
@@ -545,22 +545,22 @@ function Eq2_13() {
 		o.deckFittingLossFactor=Eq2_14();//Calcula el factor de pérdidas totales a través de los accesorios en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
 	} else {
 		o.deckFittingLossFactor=Eq2_16();//Calcula el factor de pérdidas totales a través de los accesorios en tanques IFR y DEFR (o.deckFittingLossFactor) (lb-mole/yr)
-	}
+	};
 
 	if (liquidCategory == "Other organic liquids") {
-		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.molWeight*productFactor
+		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.molWeight*productFactor;
 	} else {
-		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.vapMolWeight*productFactor
-	}
-}
+		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.vapMolWeight*productFactor;
+	};
+};
 
 //Eq2_14 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
 function Eq2_14(){    
 
         Ff=0; //Inicializo las perdidas en 0 y luego las voy sumando:
-        for (i=0;i<t.deckFittings.length;i++){
+        for (i=0;i<t.deck.fittings.length;i++){
 
-                f=t.deckFittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
+                f=t.deck.fittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
 		//Eq2_15: Calcula el factor de pérdida individual de cada accesorio
                 Ff+=( f.Kfa + f.Kfb * Math.pow((0.7*m.u),f.m) );  
         };
@@ -571,31 +571,81 @@ function Eq2_14(){
 function Eq2_16() {
 
 	Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
-        for (i=0;i<t.deckFittings.length;i++){
+        for (i=0;i<t.deck.fittings.length;i++){
 
-                f=t.deckFittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
+                f=t.deck.fittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
 		//Eq2_16: Calcula el factor de pérdida individual de cada accesorio
                 Ff+=f.Kfa;  
         };
 	return Ff;
 };
 
-//Eq2_17: LA INCLUIMOS? Sirve para estimar el loss factor de tipos de fittings que no aparezcan en la base de datos y SOLO en tanques IFR o DEFR. Si la incluimos habría que ver cómo podemos agregarla a la sumatoria de todos los tipos que sí están en la base de datos. (RAMIRO: Ahora no lo incluiría, en todo caso que quede como mejora una vez que hayamos terminado de implementar el resto de las cosas)
+//Eq2_17: Por ahora no la incluimos. Quizás más adelante, una vez que hayamos terminado de implementar el resto de las cosas. (Sirve para calcular los factores de perdida desde tipos de fittings que NO estén en la base de datos)
 
-//Eq2_18 Pérdidas a través de las "costuras" de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
+//Eq2_18 Pérdidas a través de las uniones de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
 function Eq2_18() {
+	//Si la plataforma está soldada, se asume que no tiene pérdidas a través de las uniones
 	if(t.construction=="welded") {
 		Kd=0;
 	} else {
 		Kd=0.14;
-	}
-	
-	if(liquidCategory=="Other organic liquids") {
-		o.deckSeamLosses = Kd*totalSeamLength*(4/Math.PI)*vaporPressureFunction*c.molWeight*productFactor  
-	} else {
-		o.deckSeamLosses = Kd*totalSeamLength*(4/Math.PI)*vaporPressureFunction*c.vapMolWeight*productFactor  
 	};
-	//RECORDATORIO SABRI: Agregar la estimacion del totalSeamLength por si el usuario no tiene el dato
+	//Calcula el factor de pérdidas a través de las uniones de la plataforma (seamLengthFactor) (ft/ft2)
+	if ( t.deck.seamLength=="" || t.deck.seamLength==null || t.deck.seamLength==0 ) {
+		if(t.deck.construction=="Continuous sheet") {
+			seamLengthFactor = ( 1 / t.deck.sheetWidth );
+		} else if(t.deck.construction=="Panel") {
+			seamLengthFactor = ( t.deck.panelLength + t.deck.panelWidth ) / ( t.deck.panelLength * t.deck.panelWidth );
+		} else {
+			seamLengthFactor = 0.2;
+		}
+	} else {
+		seamLengthFactor = t.deck.seamLength/(Math.PI*Math.pow(t.diameter,2)/4);
+	};
+	//Eq2_18
+	if(liquidCategory=="Other organic liquids") {
+		o.deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.molWeight*productFactor  
+	} else {
+		o.deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.vapMolWeight*productFactor  
+	};
+};
+
+//Eq2_19 Pérdidas por vaciado del tanque (o.workingLosses) (lbs/yr)
+function Eq2_19() {
+	Eq2_20();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (annualNetThroughput) (bbl/yr) 
+	//Determina el factor de adhesión del líquido a las paredes (t.shellClingageFactor) [bbl/1000 ft2]
+	if (t.shellClingageFactor=="" || t.shellClingageFactor==null || t.shellClingageFactor==0) {
+		if(liquidCategory=="Crude Oils") {
+			if(t.shellTexture=="Light Rust") {
+				shellClingageFactor = 0.006
+			} else if (t.shellTexture=="Dense Rust") {
+				shellClingageFactor = 0.03
+			} else {shellClingageFactor = 0.6}
+		} else {
+			if(t.shellTexture=="Light Rust") {
+				shellClingageFactor = 0.0015
+			} else if (t.shellTexture=="Dense Rust") {
+				shellClingageFactor = 0.0075
+			} else {shellClingageFactor = 0.15}
+		};
+	};
+	//Obtiene el diámetro efectivo de las columnas internas de soporte que tiene el tanque (effectiveColumnDiameter) (ft)
+	if(t.columns.type=="Built-up Columns"){
+		effectiveColumnDiameter = 1.1
+	} else if(t.columns.type=="Pipe Columns") {
+		effectiveColumnDiameter = 0.7
+	} else {
+		effectiveColumnDiameter = 1
+	};
+	//Eq2_19
+	o.workingLosses = ((0.943*annualNetThroughput*shellClingageFactor*c.liqDensity)/t.diameter)*(1+((t.columns.number*effectiveColumnDiameter)/t.diameter));
+};
+
+//Eq2_20 Volumen neto total introducido en el tanque a lo largo del año (annualNetThroughput) (bbl/yr) 
+function Eq2_20() {
+	if( t.annualNetThroughput=="" || t.annualNetThroughput==null || t.annualNetThroughput==0 ) {
+		annualNetThroughput = (t.turnoversPerYear*(t.maxLiquidHeight-t.minLiquidHeight)*(Math.PI/4)*Math.pow(t.diameter,2))/5.614;
+	} else {annualNetThroughput = (t.annualNetThroughput)/42}
 };
 
 

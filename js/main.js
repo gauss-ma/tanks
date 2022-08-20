@@ -27,10 +27,12 @@ function main(){
 	
 	//  (1c) datos del tanque:
 	t=loadTankParameters();	//estos valores los provee el usuario.
+
+	findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
 	
 	//Ejemplo: Así el usuario iria agregando accesorios:
-	addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3)
-	addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2)
+	addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
+	addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
 	
 	//  (1d) inicializar objeto con datos de salida:
 	o={};
@@ -149,9 +151,21 @@ function loadTankParameters(){
 			type:"Liquid-mounted seal",	//document.getElementById("").value; //(Mechanical-shoe Seal|Liquid-mounted seal|Vapor-mounted Seal)
 			secondary:"Primary only",	//document.getElementById("").value; //(Primary only|Shoe-mounted secondary|Rim-mounted secondary|Weather shield)
 		},	
-		deckFittings:[],		//acá agrego array con "accesorios"
-		deckType: "double",		//document.getElementById("").value; //(pontoon|double)
-		totalSeamLength:"",		//document.getElementById("").value; //medida total de todas las "costuras" de la plataforma flotante [ft]
+		deck: {
+			type:"double",		//document.getElementById("").value; //(pontoon|double)
+			fittings:[],		//acá agrego array con "accesorios"
+			seamLength:"",		//document.getElementById("").value; //medida total de las "costuras" de la plataforma flotante [ft] //si no se conoce, se debe dejar en blanco o ingresar cero
+			construction:"Panel",	//document.getElementById("").value; //(Continuous sheet|Panel|Unknown)//si no se conocen las MEDIDAS de las hojas o paneles con los que está construida la plataforma, se debe elegir la opción "Unknown" 
+			sheetWidth:"",			//document.getElementById("").value; //ancho de las hojas de metal con las que está construida la plataforma flotante [ft]
+			panelWidth:5,			//document.getElementById("").value; //ancho de los paneles rectangulares de metal con los que está construida la plataforma flotante [ft]
+			panelLength:12,			//document.getElementById("").value; //largo de los paneles rectangulares de metal con los que está construida la plataforma flotante [ft]
+		},
+		shellClingageFactor:"",		//document.getElementById("").value; //factor de adhesión del líquido a las paredes [bbl/1000 ft2]//si no se conoce, se debe dejar en blanco o ingresar cero
+		shellTexture:"Light Rust",	//document.getElementById("").value; //(Light Rust|Dense Rust|Gunite Lining)//estado del interior de las paredes del tanque 	
+		columns:{
+			number:4,	//document.getElementById("").value; //número de columnas internas de soporte que tiene el tanque (si es de los flotantes con techo fijo)
+			type:"Built-up Columns",	//document.getElementById("").value; //(Built-up Columns|Pipe Columns|Unknown)
+		},
 	};
 
 	return t;
@@ -179,16 +193,16 @@ function calculateSolarAbsorbance(t){
 };
 
 
-function addDeckFitting(t,fittingName,fittingType,n){
+function addDeckFitting(t,fittingName,fittingType,n) {
 	
 	databaseDeckFittings=getDeckFittingsProperties(); //levanto de base de datos de deckFittings (tablaa/deckFittings.js)
 	for (i=0;i<n;i++){	//lo agrego n veces!
-		t.deckFittings.push( databaseDeckFittings.find( element => (element.fittingName==fittingName & element.fittingType==fittingType) ) ); 
+		t.deck.fittings.push( databaseDeckFittings.find( element => (element.fittingName==fittingName & element.fittingType==fittingType) ) ); 
 	};
 };
 
 
-function findRimSealProp(t){
+function findRimSealProp(t) {
 	
 	databaseRimSeals=getRimSealProperties(); //levanto de base de datos de Rim Seals (tablas/rimSeal.js)
 	t.rimSeal=databaseRimSeals.find(element => (element.sealFit==t.rimSeal.fit & element.tankConstruction==t.construction & element.sealType==t.rimSeal.type & element.secondSeal==t.rimSeal.secondary)) //me quedo con el que me interesa
