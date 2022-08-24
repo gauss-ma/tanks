@@ -315,7 +315,7 @@ function Eq1_30() {
 //Eq1_31 Temperatura diaria promedio en el seno del líquido (avgBulkTemp) (degrees R) 
 function Eq1_31() {
 
-	if (t.heating.minBulkTemp != "" && isNaN(t.heating.minBulkTemp) == false) {
+	if (t.heating.minBulkTemp != "" && isNaN(t.heating.minBulkTemp) == false && t.type !="IFR" && t.type !="DEFR") {
 		maxBulkTemp = parseFloat(t.heating.maxBulkTemp);				
 		minBulkTemp = parseFloat(t.heating.minBulkTemp);				
 		avgBulkTemp = (maxBulkTemp + minBulkTemp) / 2;}
@@ -502,9 +502,9 @@ function Eq2_4() {
 //Eq2_5 Temperatura diaria promedio en la superficie del líquido en tanques tipo IFR o DEFR (avgSurfaceTemp) (degrees R)
 function Eq2_5() {
 	Eq1_30();	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
-	
-	avgSurfaceTemp = (((2.86*(t.height/t.diameter)+1.43)*avgAmbientTemp)+((3.52*(t.height/t.diameter)+3.79)*avgBulkTemp)+(0.027*aRoof*m.insolation)+(0.017*(t.height/t.diameter)*aShell*m.insolation))/(6.38*(t.height/t.diameter)+5.22)
-	//RECORDATORIO SABRI: Ver qué onda la avgBulkTemp de este tipo de tanques, que no aparece la ecuacion para calcularla en el AP-42
+	Eq1_31();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+
+	avgSurfaceTemp = (((2.86*(t.height/t.diameter)+1.43)*avgAmbientTemp)+((3.52*(t.height/t.diameter)+3.79)*avgBulkTemp)+(0.027*aRoof*m.insolation)+(0.017*(t.height/t.diameter)*aShell*m.insolation))/(6.38*(t.height/t.diameter)+5.22);
 }
 
 //La Eq2_6 se omitió porque es una simplificación de la Eq2_5 en base a un supuesto.

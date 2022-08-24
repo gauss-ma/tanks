@@ -8,11 +8,11 @@ function main(){
 	unitsOut="Imperial"		//document.getElementById("unitsOutput").value; //Unidades de Output [SI/Imperial] 
 
 	//  (1a) datos meteorologicos:
-        siteName="Austin, TX";          //document.getElementById("siteName").value;
+        siteName="Rochester, MN";          //document.getElementById("siteName").value;
         m=loadMeteorologicalParameters(siteName);
 
 	//  (1b) datos de combustible:
-	liquidCategory="Crude Oils"	//document.getElementById("liquidCategory").value; //Crude Oils, Refined Petroleum Liquids, Other organic liquids
+	liquidCategory="Refined Petroleum Liquids"	//document.getElementById("liquidCategory").value; //Crude Oils, Refined Petroleum Liquids, Other organic liquids
 	
  	console.log("      Tipo de liquido: "+liquidCategory);
 
@@ -21,7 +21,7 @@ function main(){
 		c=loadCompoundParameters(compoundName);
 	}
 	else{
-		liquidName="Midcontinent Crude Oil"; //document.getElementById("liquidName").value;
+		liquidName="Motor Gasoline RVP 7"; //document.getElementById("liquidName").value;
 		c=loadLiquidParameters(liquidName);
 	};
 	
@@ -114,14 +114,14 @@ function loadTankParameters(){
 	console.log("   Tomando características del tanque.. ");
 
 	t={
-		type:"VFR",	    		//document.getElementById("tankType").value; //(VFR|HFR|EFR|DEFR|IFR)
-		height:10,		    	//document.getElementById("tankheight").value; //altura [m] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
-		diameter:5,    	    		//document.getElementById("tankDiamter").value; //diametro [m]
-		minLiquidHeight:1, 	    	//document.getElementById("").value; //altura minima de liquido [m]
-		avgLiquidHeight:2, 	    	//document.getElementById("").value; //altura promedio de liquido [m]
-		maxLiquidHeight:3, 	    	//document.getElementById("").value; //altura maxima de liquido [m]
-		turnoversPerYear:0.02,      	//document.getElementById("").value; //número de veces que el tanque se llenó totalmente en el año
-		annualNetThroughput:5.88,	//document.getElementById("").value; //volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
+		type:"IFR",	    		//document.getElementById("tankType").value; //(VFR|HFR|EFR|DEFR|IFR)
+		height:10,		    	//document.getElementById("tankheight").value; //altura [ft] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
+		diameter:5,    	    		//document.getElementById("tankDiamter").value; //diametro [ft]
+		minLiquidHeight:1, 	    	//document.getElementById("").value; //altura minima de liquido [ft]
+		avgLiquidHeight:2, 	    	//document.getElementById("").value; //altura promedio de liquido [ft]
+		maxLiquidHeight:3, 	    	//document.getElementById("").value; //altura maxima de liquido [ft]
+		turnoversPerYear:"",      	//document.getElementById("").value; //número de veces que el tanque se llenó totalmente en el año
+		annualNetThroughput:6,	//document.getElementById("").value; //volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
 		vaporbalanced:true, 		//document.getElementById("").value; //esta en equilibrio con el vapor?
 		shell:{
 			color:"black",		//document.getElementById("").value; //color
@@ -131,28 +131,28 @@ function loadTankParameters(){
 			type:"dome", 	 	//document.getElementById("").value; //(cone|dome)
 			color:"white",		//document.getElementById("").value; //color
 			condition:"new",	//document.getElementById("").value; //(new|aged|average)
-			height:0,		//document.getElementById("").value; //altura del techo [m] // ACLARACIÓN: Si el usuario no tiene el valor de la altura del techo, en esta variable se debe ingresar cero.
-			slope:"",		//document.getElementById("").value; //pendiente del techo (si es cónico) [m/m]
-			radius:5,		//document.getElementById("").value; //radio del techo (si es en forma de domo) [m] // ACLARACIÓN: Si el usuario no tiene el valor del radio del techo, en esta variable se debe ingresar el mismo valor que se haya ingresado para el diámetro del tanque (así lo recomienda el AP-42).
+			height:0,		//document.getElementById("").value; //altura del techo [ft] // ACLARACIÓN: Si el usuario no tiene el valor de la altura del techo, en esta variable se debe ingresar cero.
+			slope:"",		//document.getElementById("").value; //pendiente del techo (si es cónico) [ft/ft]
+			radius:5,		//document.getElementById("").value; //radio del techo (si es en forma de domo) [ft] // ACLARACIÓN: Si el usuario no tiene el valor del radio del techo, en esta variable se debe ingresar el mismo valor que se haya ingresado para el diámetro del tanque (así lo recomienda el AP-42).
 		},
 		ventPressureSetting:0.03,	//document.getElementById("").value; //presión a la cual están seteadas las válvulas de ventilación [psig]
 		ventVacuumSetting:-0.03,	//document.getElementById("").value; //presión de vacío de las válvulas de ventilación [psig]
 		gaugePressure:"",			//document.getElementById("").value; //presión manométrica en la fase vapor en condiciones de operación normales [psig] // ACLARACIÓN: sólo se debe ingresar si la ventPressureRange ingresada es mayor que 0,06. Si el tanque está a temperatura atmosférica, debe ingresarse cero.
-		insulation:"shellAndRoof",	//document.getElementById("").value; //none, shell, shellAndRoof, underground
+		insulation:"none",			//document.getElementById("").value; //none, shell, shellAndRoof, underground //ACLARACIÓN: El AP-42 sólo permite incorporar el aislamiento térmico en los cálculos para tanques de techo fijo
 		heating:{
-			heating: true,		//document.getElementById("").value; //considerar calentamiento?
-			cyclesPerYear:"365",	//document.getElementById("").value; //numero de ciclos de calentamiento
-			minBulkTemp:"460",	//document.getElementById("").value; //temperatura minima del liquido [grados Kelvin]
-			maxBulkTemp:"480",	//document.getElementById("").value; //temperatura maxima del liquido [grados Kelvin]
+			heating: false,		//document.getElementById("").value; //considerar calentamiento? //ACLARACIÓN: El AP-42 sólo permite incorporar el calentamiento en los cálculos para tanques de techo fijo
+			cyclesPerYear:"",	//document.getElementById("").value; //numero de ciclos de calentamiento
+			minBulkTemp:"",		//document.getElementById("").value; //temperatura minima del liquido [grados Kelvin] 
+			maxBulkTemp:"",		//document.getElementById("").value; //temperatura maxima del liquido [grados Kelvin]
 		},
-		construction: "welded", //document.getElementById("").value; //(welded|riveted) 
+		construction:"riveted", 		//document.getElementById("").value; //(welded|riveted) 
 		rimSeal:{
 			fit:"Average-Fitting Seal",	//document.getElementById("").value; //(Average-Fitting Seal|Tight-Fitting Seal)
-			type:"Liquid-mounted seal",	//document.getElementById("").value; //(Mechanical-shoe Seal|Liquid-mounted seal|Vapor-mounted Seal)
+			type:"Mechanical-shoe seal",	//document.getElementById("").value; //(Mechanical-shoe Seal|Liquid-mounted seal|Vapor-mounted Seal)
 			secondary:"Primary only",	//document.getElementById("").value; //(Primary only|Shoe-mounted secondary|Rim-mounted secondary|Weather shield)
 		},	
 		deck: {
-			type:"double",		//document.getElementById("").value; //(pontoon|double)
+			type:"",		//document.getElementById("").value; //(pontoon|double)
 			fittings:[],		//acá agrego array con "accesorios"
 			seamLength:"",		//document.getElementById("").value; //medida total de las "costuras" de la plataforma flotante [ft] //si no se conoce, se debe dejar en blanco o ingresar cero
 			construction:"Panel",	//document.getElementById("").value; //(Continuous sheet|Panel|Unknown)//si no se conocen las MEDIDAS de las hojas o paneles con los que está construida la plataforma, se debe elegir la opción "Unknown" 
@@ -163,8 +163,8 @@ function loadTankParameters(){
 		shellClingageFactor:"",		//document.getElementById("").value; //factor de adhesión del líquido a las paredes [bbl/1000 ft2]//si no se conoce, se debe dejar en blanco o ingresar cero
 		shellTexture:"Light Rust",	//document.getElementById("").value; //(Light Rust|Dense Rust|Gunite Lining)//estado del interior de las paredes del tanque 	
 		columns:{
-			number:4,	//document.getElementById("").value; //número de columnas internas de soporte que tiene el tanque (si es de los flotantes con techo fijo)
-			type:"Built-up Columns",	//document.getElementById("").value; //(Built-up Columns|Pipe Columns|Unknown)
+			number:1,	//document.getElementById("").value; //número de columnas internas de soporte que tiene el tanque (sólo cuando es un tanque IFR, porque los DEFR tienen techos autoportantes)
+			type:"Pipe Columns",	//document.getElementById("").value; //(Built-up Columns|Pipe Columns|Unknown)
 		},
 	};
 
