@@ -3,8 +3,8 @@
 //Eq1_1 Pérdidas totales desde tanques de techo fijo (o.totalLosses) (lbs/yr)
 function Eq1_1() {
 
-	o.standingLosses=Eq1_4();	//ecuacion general de Standing Losses (Pérdidas durante el almacenamiento)
-	o.workingLosses =Eq1_35();	//ecuacion general de Working Losses (Pérdidas por llenado y vaciado del tanque)
+	Eq1_4();	//ecuacion general de Standing Losses (Pérdidas durante el almacenamiento)
+	Eq1_35();	//ecuacion general de Working Losses (Pérdidas por llenado y vaciado del tanque)
 	
 	o.totalLosses = o.standingLosses + o.workingLosses;
 }
@@ -13,7 +13,7 @@ function Eq1_1() {
 
 //Eq1_3 Volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
 function Eq1_3() {
-	return (Math.PI*Math.pow(t.effectiveDiameter,2)/4)*t.vaporSpaceOutage;
+	t.vaporSpaceVolume=(Math.PI*Math.pow(t.effectiveDiameter,2)/4)*t.vaporSpaceOutage;
 }
 
 //Eq1_4 Standing Losses: Pérdidas durante el almacenamiento desde tanques de techo fijo (o.standingLosses) (lbs/yr)
@@ -31,29 +31,28 @@ function Eq1_4() {
 		t.heating.cyclesPerYear = 365;	//Si el usuario no ingresa el dato, se asume que el líquido se calienta una vez por día, es decir, 365 veces al año.
 	}
 	
-	t.effectiveDiameter =Eq1_14();	//Obtiene el diámetro o el diámetro efectivo (según si el tanque es vertical u horizontal) (feet)
-	t.vaporSpaceOutage  =Eq1_16();	//Obtiene la altura de la columna de vapor (t.vaporSpaceOutage) (tanto para tanques horizontales como verticales) (feet)
-	vaporExpansionFactor=Eq1_5();	//Obtiene la fracción del vapor dentro del tanque que se pierde diariamente al exterior (vaporExpansionFactor) (dimensionless)
-	ventedVapSatFactor  =Eq1_21();	//Obtiene el factor de saturación del vapor que se pierde al exterior (ventedVapSatFactor) (dimensionless)
-	vaporDensity        =Eq1_22();	//Obtiene la densidad del vapor dentro del tanque (vaporDensity) (lbs/ft^3)
+	Eq1_14();	//Obtiene el diámetro o el diámetro efectivo (según si el tanque es vertical u horizontal) (feet)
+	Eq1_16();	//Obtiene la altura de la columna de vapor (t.vaporSpaceOutage) (tanto para tanques horizontales como verticales) (feet)
+	Eq1_5();	//Obtiene la fracción del vapor dentro del tanque que se pierde diariamente al exterior (vaporExpansionFactor) (dimensionless)
+	Eq1_21();	//Obtiene el factor de saturación del vapor que se pierde al exterior (ventedVapSatFactor) (dimensionless)
+	Eq1_22();	//Obtiene la densidad del vapor dentro del tanque (vaporDensity) (lbs/ft^3)
+	Eq1_3();	//Obtiene el volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
 	
 	if (t.insulation == "underground" && t.type == "VFR" && t.heating.heating == false) {
-		standingLosses = 0;
+		o.standingLosses = 0;
 	} else {
-		t.vaporSpaceVolume=Eq1_3(); //Obtiene el volumen de la fase vapor (t.vaporSpaceVolume) (ft3)  //OJO! LO CALCULAS Y  NUNCA LO USAS!
+		Eq1_3(); //Obtiene el volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
 		//Eq1_4
-		standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * (Math.PI * Math.pow(t.effectiveDiameter,2) / 4) * t.vaporSpaceOutage * ventedVapSatFactor * vaporDensity;
+		o.standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * (Math.PI * Math.pow(t.effectiveDiameter,2) / 4) * t.vaporSpaceOutage * ventedVapSatFactor * vaporDensity;
 	}
-
-	return standingLosses;
 }
 
 //Eq1_5 Fracción del vapor dentro del tanque que se pierde diariamente al exterior (vaporExpansionFactor) [prefered method]
 function Eq1_5() {
 
-	avgAmbientTemp=Eq1_30();	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R)
-	avgBulkTemp   =Eq1_31();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
-	avgSurfaceTemp=Eq1_27();	//Obtiene la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
+	Eq1_30();	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R)
+	Eq1_31();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+	Eq1_27();	//Obtiene la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
 	
 	//Calcula la presión de vapor del compuesto (c.vaporPressure) a la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp)
 	if (liquidCategory == "Crude Oils") {
@@ -74,9 +73,9 @@ function Eq1_5() {
 		c.vaporPressure = Eq1_26(avgSurfaceTemp);	//Calcula la presión de vapor de otros líquidos orgánicos
 	}
 	
-	avgVapTempRange    =Eq1_6();	//Obtiene la variación diaria promedio de la temperatura del vapor (avgVapTempRange) (degrees R)
-	avgVapPressureRange=Eq1_9();	//Obtiene la variación diaria promedio de la presión de vapor (avgVapPressureRange) (psia)
-	ventPressureRange  =Eq1_10();	//Obtiene el rango de presión que están ajustadas para soportar las válvulas de ventilación (ventPressureRange) (psig)
+	Eq1_6();	//Obtiene la variación diaria promedio de la temperatura del vapor (avgVapTempRange) (degrees R)
+	Eq1_9();	//Obtiene la variación diaria promedio de la presión de vapor (avgVapPressureRange) (psia)
+	Eq1_10();	//Obtiene el rango de presión que están ajustadas para soportar las válvulas de ventilación (ventPressureRange) (psig)
 	
 	//Eq1_5
 	vaporExpansionFactor = (avgVapTempRange / avgSurfaceTemp) + ((avgVapPressureRange - ventPressureRange) / (m.atmPressure - c.vaporPressure));
@@ -86,22 +85,20 @@ function Eq1_5() {
 	} else if (vaporExpansionFactor < 0) {
 		vaporExpansionFactor = 0;
 	}
-
-	return vaporExpansionFactor;
 }
 
 //Eq1_6 Variación diaria promedio de la temperatura del vapor (avgVapTempRange) (degrees R) [prefered method]
 function Eq1_6() {
 	
-	avgAmbientTempRange=Eq1_11();	//Obtiene la variación diaria promedio de la temperatura ambiente (avgAmbientTempRange) (degrees R)
+	Eq1_11();	//Obtiene la variación diaria promedio de la temperatura ambiente (avgAmbientTempRange) (degrees R)
 	
 	if (t.insulated == "shell") {
-		avgVapTempRange=Eq1_8();
+		Eq1_8();
 	} else if (t.insulated == "full") {
 		if (t.heating.heating == false ) {
-			avgVapTempRange=avgVapTempRange = 0;
+			avgVapTempRange = 0;
 		} else {
-			avgVapTempRange=Eq8_1();//en tanques con aislamiento térmico total y calentamiento, la variación en la temperatura del vapor será igual a la variación en la temperatura en el seno del líquido por el calentamiento (sección 7.1.3.8.4 del AP-42)
+			Eq8_1();	//en tanques con aislamiento térmico total y calentamiento, la variación en la temperatura del vapor será igual a la variación en la temperatura en el seno del líquido por el calentamiento (sección 7.1.3.8.4 del AP-42)
 		}
 	} else {
 		//en tanques sin aislamiento térmico, la variación en la temperatura del vapor depende del intercambio de calor con el exterior.
@@ -113,7 +110,7 @@ function Eq1_6() {
 
 //Eq1_8 Variación diaria promedio de la temperatura del vapor para tanques con aislamiento térmico sólo en las paredes (avgVapTempRange) (degrees R)
 function Eq1_8() {
-	return (0.6 * avgAmbientTempRange) + (0.02 * aRoof * m.insolation);
+	avgVapTempRange = (0.6 * avgAmbientTempRange) + (0.02 * aRoof * m.insolation);
 }
 
 //Eq1_9 Variación diaria promedio de la presión de vapor (avgVapPressureRange) (psia)
@@ -150,7 +147,7 @@ function Eq1_10() {
 
 //Eq1_11 Variación diaria promedio de la temperatura ambiente (avgAmbientTempRange) (degrees R)
 function Eq1_11() {
-	return (m.maxAmbientTemp - m.minAmbientTemp);
+	avgAmbientTempRange = (m.maxAmbientTemp - m.minAmbientTemp);
 }
 
 //La Eq1_12 y la Eq1_13 se omitieron porque son simplificaciones de la Eq1_5 que implican una reducción en la confiabilidad del resultado.
@@ -159,16 +156,15 @@ function Eq1_11() {
 function Eq1_14() {
 	
 	if (t.type == "VFR") {
-		effectiveDiameter = t.diameter;
+		t.effectiveDiameter = t.diameter;
 	} else if (t.type == "HFR") {
-		effectiveDiameter = Math.sqrt((t.height * t.diameter) / (Math.PI / 4));
+		t.effectiveDiameter = Math.sqrt((t.height * t.diameter) / (Math.PI / 4));
 	} 
-	return effectiveDiameter;
 }
 
 //Eq1_15 Altura Efectiva para Tanques Horizontales (feet)
 function Eq1_15() {
-	return Math.PI * t.diameter / 4;
+	t.effectiveHeight = Math.PI * t.diameter / 4;
 }
 
 //Eq1_16 Altura de la Columna de Vapor (t.vaporSpaceOutage) (feet)
@@ -176,43 +172,41 @@ function Eq1_16() {
 	
 	if (t.type == "VFR") {
 		if (t.roof.type == "cone") {
-			t.roofOutage=Eq1_17();	//altura efectiva de un techo con forma de cono (feet?)
+			Eq1_17();
 		} else if (t.roof.type == "dome") {
-			t.roofOutage=Eq1_19();	//altura efectiva de un techo con forma de domo (feet)
+			Eq1_19();
 		}
 		//Eq1_16
-		vaporSpaceOutage = t.height - t.avgLiquidHeight + t.roofOutage;
+		t.vaporSpaceOutage = t.height - t.avgLiquidHeight + t.roofOutage;
 	} else if (t.type == "HFR") {
-		t.effectiveHeight=Eq1_15();	//Calcula la altura efectiva para tanques horizontales
-		vaporSpaceOutage = t.effectiveHeight / 2;
+		Eq1_15();	//Calcula la altura efectiva para tanques horizontales
+		t.vaporSpaceOutage = t.effectiveHeight / 2;
 	}
-	return vaporSpaceOutage;
 }
 
 //Eq1_17 Altura efectiva de un techo con forma de cono (t.roofOutage) (feet)
 function Eq1_17() {
-	t.roof.height=Eq1_18();	//Obtiene la altura real del techo (feet?)
-	return t.roof.height / 3;
+
+	Eq1_18();	//Obtiene la altura real del techo
+	t.roofOutage = t.roof.height / 3;
 }
 
 //Eq1_18 Altura real de un techo con forma de cono (feet)
 function Eq1_18() {
 	t.roof.slope = parseFloat(t.roof.slope);
 	t.shellRadius = t.diameter/2;
-	roofHeight = parseFloat(t.roof.height);
+	t.roof.height = parseFloat(t.roof.height);
 	
 	if (t.roof.height == 0) {
-		roofHeight = t.roof.slope * t.shellRadius;
+		t.roof.height = t.roof.slope * t.shellRadius;
 	}
-	return roofHeight;
 }
 
 //Eq1_19 Altura efectiva de un techo con forma de domo (t.roofOutage) (feet)
 function Eq1_19() {
 	t.roof.radius = parseFloat(t.roof.radius);
 	t.shellRadius = t.diameter/2;
-	//Eq1_20();	//Obtiene la altura real del techo
-	t.roof.height=Eq1_20();	//Obtiene la altura real del techo
+	Eq1_20();	//Obtiene la altura real del techo
 	if (t.roof.radius == t.diameter) {
 		t.roofOutage = 0.137 * t.shellRadius;
 	} else {
@@ -225,20 +219,16 @@ function Eq1_20() {
 	t.roof.height = parseFloat(t.roof.height);
 	if (t.roof.height == 0) { 
 		if (t.roof.radius == t.diameter) {
-			//t.roof.height = 0.268 * t.shellRadius;
-			roofHeight = 0.268 * t.shellRadius;
+			t.roof.height = 0.268 * t.shellRadius;
 		} else {
-			//t.roof.height = t.roof.radius - Math.pow(Math.pow(t.roof.radius,2) - Math.pow(t.shellRadius,2), 0.5);
-			roofHeight = t.roof.radius - Math.pow(Math.pow(t.roof.radius,2) - Math.pow(t.shellRadius,2), 0.5);
+			t.roof.height = t.roof.radius - Math.pow(Math.pow(t.roof.radius,2) - Math.pow(t.shellRadius,2), 0.5);
 		}
 	}
-	return roofHeight;
 }
 
 //Eq1_21 Factor de saturación del vapor que se pierde al exterior (dimensionless) (ventedVapSatFactor)
 function Eq1_21() {
-	//ventedVapSatFactor= 1 / (1 + (0.053 * c.vaporPressure  * t.vaporSpaceOutage));
-	return( 1 / (1 + (0.053 * c.vaporPressure  * t.vaporSpaceOutage)) );
+	ventedVapSatFactor = 1 / (1 + (0.053 * c.vaporPressure  * t.vaporSpaceOutage));
 }
 
 //Eq1_22 Densidad del vapor dentro del tanque (vaporDensity) (lbs/ft^3)
@@ -246,11 +236,11 @@ function Eq1_22() {
 	
 	//Obtiene la temperatura promedio del vapor (avgVapTemp) (degrees R)
 	if (t.insulated == "shell") {
-		avgVapTemp=Eq1_34();
+		Eq1_34();
 	} else if (t.insulated == "full") {
 		avgVapTemp = avgBulkTemp;
 	} else {
-		avgVapTemp=Eq1_32();
+		Eq1_32();
 	}	
 	
 	//constante de los gases ideales (psia*ft3/lb-mole*°R)
@@ -261,8 +251,6 @@ function Eq1_22() {
 	} else {
 		vaporDensity = (c.vapMolWeight * c.vaporPressure) / (rConstant * avgVapTemp);
 	}
-
-	return vaporDensity;
 }
 
 //La Eq1_23 y la Eq1_24 por el momento las omitimos porque sirven para MEZCLAS (de las cuales se conozca su composición, es decir, NO como los Crude Oils ni los Refined Petroleum Liquids).
@@ -290,37 +278,38 @@ function Eq1_27() {
 					
 	if (t.insulated == "full") {				
 		//en los tanques con aislamiento térmico total, la temperatura en la superficie del líquido es igual a la temperatura en el seno del líquido (sección 7.1.3.8.4 del AP-42)
-		avgSurfaceTemp=Eq8_2();
+		Eq8_2();
 	} else if (t.insulated == "shell") {
 		if (t.heating.heating == true && avgBulkTemp > avgAmbientTemp) {
 			//si se cumplen esas dos condiciones, la temperatura en la superficie del líquido es igual a la temperatura en el seno del líquido (sección 7.1.3.8.4 del AP-42)
-			avgSurfaceTemp=Eq8_2();
+			Eq8_2();
 		} else {
 			//si no se cumple alguna de esas dos condiciones, la temperatura en la superficie del líquido depende del intercambio de calor con el exterior a través del techo.
-			avgSurfaceTemp=Eq1_29();
+			Eq1_29();
 		}
 	} else if (t.insulated == "none") {
 		if (t.heating.heating == true && avgBulkTemp > avgAmbientTemp) {
 			//si se cumplen esas dos condiciones, la temperatura en la superficie del líquido es igual a la temperatura en el seno del líquido (sección 7.1.3.8.4 del AP-42)
-			avgSurfaceTemp=Eq8_2();
+			Eq8_2();
 	} else {
 			//Eq1_27: si no se cumple alguna de esas dos condiciones, la temperatura en la superficie del líquido depende del intercambio de calor con el exterior.
 			avgSurfaceTemp =  ((0.5 - (0.8 / (4.4 * (t.height / t.diameter) + 3.8))) * avgAmbientTemp) + ((0.5 + (0.8 / (4.4 * (t.height / t.diameter) + 3.8))) * avgBulkTemp) + (((0.021 * aRoof * m.insolation) + (0.013 * (t.height / t.diameter) * aShell * m.insolation)) / (4.4 * (t.height / t.diameter) + 3.8));
 		}
 	}
-	return avgSurfaceTemp;
 }
 
 //La Eq1_28 se omitió porque es una simplificación de la Eq1_29 en base a un supuesto.
 
 //Eq1_29 Temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R) 
 function Eq1_29() {
-	return (0.3 * avgAmbientTemp) + (0.7 * avgBulkTemp) + (0.005 * aRoof * m.insolation);
+
+	avgSurfaceTemp = (0.3 * avgAmbientTemp) + (0.7 * avgBulkTemp) + (0.005 * aRoof * m.insolation);
 }
 
 //Eq1_30  Temperatura Ambiente Diaria Promedio (avgAmbientTemp) (degrees R) 
 function Eq1_30() {
-	return (m.maxAmbientTemp + m.minAmbientTemp) / 2;
+	
+	avgAmbientTemp = (m.maxAmbientTemp + m.minAmbientTemp) / 2;
 }
 
 //Eq1_31 Temperatura diaria promedio en el seno del líquido (avgBulkTemp) (degrees R) 
@@ -334,27 +323,26 @@ function Eq1_31() {
 		//Eq1_31
 		avgBulkTemp = avgAmbientTemp + (0.003 * aShell * m.insolation);
 	}
-	return avgBulkTemp;
 }
 
 //Eq1_32 Temperatura promedio del vapor en tanques sin aislamiento térmico (avgVapTemp) (degrees R) 
 function Eq1_32() {
-	return (((2.2 * (t.height / t.diameter) +1.1) * avgAmbientTemp) + (0.8 * avgBulkTemp) + (0.021 * aRoof * m.insolation) + (0.013 * (t.height / t.diameter) * aShell * m.insolation)) / (2.2 * (t.height / t.diameter) +1.9);
+	avgVapTemp =  (((2.2 * (t.height / t.diameter) +1.1) * avgAmbientTemp) + (0.8 * avgBulkTemp) + (0.021 * aRoof * m.insolation) + (0.013 * (t.height / t.diameter) * aShell * m.insolation)) / (2.2 * (t.height / t.diameter) +1.9);
 }
 
 //La Eq1_33 se omitió porque es una simplificación de la Eq1_32 en base a un supuesto
 
 //Eq1_34 Temperatura promedio del vapor en tanques con aislamiento térmico sólo en las paredes (avgVapTemp) (degrees R) 
 function Eq1_34() {
-	return (0.6 * avgAmbientTemp) + (0.4 * avgBulkTemp) + (0.01 * aRoof * m.insolation);
+	avgVapTemp = (0.6 * avgAmbientTemp) + (0.4 * avgBulkTemp) + (0.01 * aRoof * m.insolation);
 }
 
 //Eq1_35 Working Losses: Pérdidas por llenado y vaciado de tanques de techo fijo (o.workingLosses) (lbs/yr)
 function Eq1_35() {
 	
-	sumLiquidIncreases      =Eq1_37();	//Obtiene la suma anual de aumentos en el nivel del líquido (sumLiquidIncreases) (ft/yr)
-	netWorkingLossThroughput=Eq1_38();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr)
-	turnoversPerYear        =Eq1_36();	//Obtiene el número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless)
+	Eq1_37();	//Obtiene la suma anual de aumentos en el nivel del líquido (sumLiquidIncreases) (ft/yr)
+	Eq1_38();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr)
+	Eq1_36();	//Obtiene el número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless)
 	
 	//Obtiene el factor de saturación de las pérdidas por llenado y vaciado del tanque (workingLossTurnover) (dimensionless)
 		if (t.vaporbalanced == true) {
@@ -371,10 +359,10 @@ function Eq1_35() {
 			workingLossProductFactor = 1;
 		}
 	//Obtiene el factor de corrección del ajuste de presión de las válvulas de ventilación (ventCorrectionFactor) (dimensionless)
-	ventCorrectionFactor=Eq1_41();
+	Eq1_41();
 	
 	//Eq1_35
-	return netWorkingLossThroughput * workingLossTurnover * workingLossProductFactor * vaporDensity * ventCorrectionFactor;
+	o.workingLosses = netWorkingLossThroughput * workingLossTurnover * workingLossProductFactor * vaporDensity * ventCorrectionFactor;
 }
 
 //Eq1_36 Número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless) 
@@ -382,7 +370,7 @@ function Eq1_36() {
 	maxLiquidHeight = parseFloat(t.maxLiquidHeight)
 	minLiquidHeight = parseFloat(t.minLiquidHeight)
 	//Eq1_36
-	return sumLiquidIncreases / (maxLiquidHeight - minLiquidHeight);
+	turnoversPerYear = sumLiquidIncreases / (maxLiquidHeight - minLiquidHeight);
 }
 
 //Eq1_37 Suma anual de aumentos en el nivel del líquido (sumLiquidIncreases) (ft/yr) 
@@ -390,17 +378,17 @@ function Eq1_37() {
 	//Convierte el valor de annualNetThroughput ingresado, de "gal/year" a "barrels/year" 
 	annualNetThroughput = parseFloat(t.annualNetThroughput)/42;
 	//Eq1_37
-	return (5.614 * annualNetThroughput) / ((Math.PI / 4) * Math.pow(t.effectiveDiameter,2));
+	sumLiquidIncreases = (5.614 * annualNetThroughput) / ((Math.PI / 4) * Math.pow(t.effectiveDiameter,2));
 }
 
 //Eq1_38 Volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr) 
 function Eq1_38() {
-	return sumLiquidIncreases * (Math.PI / 4) * Math.pow(t.effectiveDiameter,2);
+	netWorkingLossThroughput = sumLiquidIncreases * (Math.PI / 4) * Math.pow(t.effectiveDiameter,2);
 }
 
 //Eq1_39 Volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr) [Esta ecuación en realidad NO es necesaria porque es la combinación de la Eq1_37 y la Eq1_38]
 function Eq1_39() {
-	return 5.614 * annualNetThroughput; //El AP-42 las nombra diferente pero estas dos variables en realidad son lo mismo, sólo que netWorkingLossThroughput está expresada en "ft3/yr" y annualNetThroughput, en "barrels/yr".
+	netWorkingLossThroughput = 5.614 * annualNetThroughput; //El AP-42 las nombra diferente pero estas dos variables en realidad son lo mismo, sólo que netWorkingLossThroughput está expresada en "ft3/yr" y annualNetThroughput, en "barrels/yr".
 }
 
 //Eq1_40 Condición que determina si es necesario incluir el factor de corrección del ajuste de presión de las válvulas de ventilación 
@@ -429,37 +417,37 @@ function Eq1_41() {
 
 //Eq8_1 Variación diaria promedio de la temperatura del vapor en tanques con aislamiento térmico total y calentamiento (avgVapTempRange) (degrees R)
 function Eq8_1() {
-	return maxBulkTemp - minBulkTemp;
+	avgVapTempRange = maxBulkTemp - minBulkTemp;
 }
 
 //Eq8_2 Temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
 function Eq8_2() {
-	return avgBulkTemp;
+	avgSurfaceTemp = avgBulkTemp;
 }
 
 //Eq2_1 Pérdidas totales desde tanques de techo flotante (o.totalLosses) (lbs/yr)
 function Eq2_1() {
 
-	o.standingLosses=Eq2_2();	//ecuacion general de Standing Losses (Pérdidas durante el almacenamiento)
-	o.workingLosses =Eq2_19();	//ecuacion general de Working Losses (Pérdidas por vaciado del tanque)
+	Eq2_2();	//ecuacion general de Standing Losses (Pérdidas durante el almacenamiento)
+	Eq2_19();	//ecuacion general de Working Losses (Pérdidas por vaciado del tanque)
 	
-	return o.standingLosses + o.workingLosses;
+	o.totalLosses = o.standingLosses + o.workingLosses;
 }
 
 //Eq2_2 Standing Losses: Pérdidas durante el almacenamiento (o.standingLosses) (lbs/yr)
 function Eq2_2() {
 
-	o.rimSealLosses    =Eq2_3();	//Calcula las pérdidas a través del sello (o.rimSealLosses) (lbs/yr)
-	o.deckFittingLosses=Eq2_13();	//Calcula las pérdidas a través de los accesorios de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
-	o.deckSeamLosses   =Eq2_18();	//Calcula las pérdidas a través de las "costuras" de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
+	Eq2_3();	//Calcula las pérdidas a través del sello (o.rimSealLosses) (lbs/yr)
+	Eq2_13();	//Calcula las pérdidas a través de los accesorios de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
+	Eq2_18();	//Calcula las pérdidas a través de las "costuras" de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
 
-	return o.rimSealLosses + o.deckFittingLosses + o.deckSeamLosses;
+	o.standingLosses = o.rimSealLosses + o.deckFittingLosses + o.deckSeamLosses
 }
 
 //Eq2_3 Pérdidas a través del sello de la plataforma flotante (o.rimSealLosses) (lbs/yr)
 function Eq2_3() {
 
-	vaporPressureFunction=Eq2_4();	//Calcula un factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
+	Eq2_4();	//Calcula un factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
 
 	//Determina el factor de producto correspondiente (productFactor) (adimensional)
 	if (liquidCategory == "Crude Oils"){
@@ -470,11 +458,10 @@ function Eq2_3() {
 	
 	//Eq2_3
 	if (liquidCategory == "Other organic liquids") {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
+		o.rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
 	} else {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
+		o.rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
 	}
-	return rimSealLosses;
 }
 
 //Eq2_4	Factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
@@ -482,11 +469,11 @@ function Eq2_4() {
 
 	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
 	if (t.type == "IFR" || t.type == "DEFR") {
-		avgSurfaceTemp=Eq2_5();
+		Eq2_5();
 	} else if (t.deck.type == "pontoon") {
-		avgSurfaceTemp=Eq2_7();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
+		Eq2_7();
 	} else {
-		avgSurfaceTemp=Eq2_10();
+		Eq2_10();
 	}
 
 	//Calcula la presión de vapor del compuesto (c.vaporPressure) a la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp)
@@ -509,45 +496,45 @@ function Eq2_4() {
 	}
 
 	//Eq2_4
-	return (c.vaporPressure/m.atmPressure)/Math.pow((1+Math.pow((1-(c.vaporPressure/m.atmPressure)),0.5)),2);
+	vaporPressureFunction = (c.vaporPressure/m.atmPressure)/Math.pow((1+Math.pow((1-(c.vaporPressure/m.atmPressure)),0.5)),2)
 }
 
 //Eq2_5 Temperatura diaria promedio en la superficie del líquido en tanques tipo IFR o DEFR (avgSurfaceTemp) (degrees R)
 function Eq2_5() {
-	avgAmbientTemp=Eq1_30();	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
-	avgBulkTemp   =Eq1_31();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+	Eq1_30();	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq1_31();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
 
-	return (((2.86*(t.height/t.diameter)+1.43)*avgAmbientTemp)+((3.52*(t.height/t.diameter)+3.79)*avgBulkTemp)+(0.027*aRoof*m.insolation)+(0.017*(t.height/t.diameter)*aShell*m.insolation))/(6.38*(t.height/t.diameter)+5.22);
+	avgSurfaceTemp = (((2.86*(t.height/t.diameter)+1.43)*avgAmbientTemp)+((3.52*(t.height/t.diameter)+3.79)*avgBulkTemp)+(0.027*aRoof*m.insolation)+(0.017*(t.height/t.diameter)*aShell*m.insolation))/(6.38*(t.height/t.diameter)+5.22);
 }
 
 //La Eq2_6 se omitió porque es una simplificación de la Eq2_5 en base a un supuesto.
 
 //Eq2_7 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
 function Eq2_7() {
-	avgAmbientTemp=Eq1_30(); //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
-	avgBulkTemp   =Eq2_8();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+	Eq1_30(); //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq2_8();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
 
-	return (0.7*avgAmbientTemp) + (0.3*avgBulkTemp) + (0.008*aRoof*m.insolation);
+	avgSurfaceTemp = (0.7*avgAmbientTemp) + (0.3*avgBulkTemp) + (0.008*aRoof*m.insolation);
 }
 
 //Eq2_8 Temperatura promedio en el seno del líquido en tanques tipo EFR con pontoon deck (avgBulkTemp) (degrees R)
 function Eq2_8() {
-	return avgAmbientTemp + (((0.71*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+57));
+	avgBulkTemp = avgAmbientTemp + (((0.71*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+57))
 }
 
 //La Eq2_9 se omitió porque es una simplificación de la Eq2_8 en base a un supuesto.
 
 //Eq2_10 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con double deck (avgSurfaceTemp) (degrees R)
 function Eq2_10() {
-	avgAmbientTemp=Eq1_30(); 	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
-	avgBulkTemp   =Eq2_11();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
+	Eq1_30(); 	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
+	Eq2_11();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
 
-	return (0.3*avgAmbientTemp) + (0.7*avgBulkTemp) + (0.009*aRoof*m.insolation);
+	avgSurfaceTemp = (0.3*avgAmbientTemp) + (0.7*avgBulkTemp) + (0.009*aRoof*m.insolation);
 }
 
 //Eq2_11 Temperatura promedio en el seno del líquido en tanques tipo EFR con double deck (avgBulkTemp) (degrees R)
 function Eq2_11() {
-	return avgAmbientTemp + (((0.39*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+45));
+	avgBulkTemp = avgAmbientTemp + (((0.39*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+45))
 }
 
 //La Eq2_12 se omitió porque es una simplificación de la Eq2_11 en base a un supuesto.
@@ -561,11 +548,10 @@ function Eq2_13() {
 	};
 
 	if (liquidCategory == "Other organic liquids") {
-		deckFittingLosses =o.deckFittingLossFactor*vaporPressureFunction*c.molWeight*productFactor;
+		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.molWeight*productFactor;
 	} else {
-		deckFittingLosses =o.deckFittingLossFactor*vaporPressureFunction*c.vapMolWeight*productFactor;
+		o.deckFittingLosses = o.deckFittingLossFactor*vaporPressureFunction*c.vapMolWeight*productFactor;
 	};
-	return deckFittingLosses;
 };
 
 //Eq2_14 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
@@ -618,16 +604,15 @@ function Eq2_18() {
 	};
 	//Eq2_18
 	if(liquidCategory=="Other organic liquids") {
-		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.molWeight*productFactor  
+		o.deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.molWeight*productFactor  
 	} else {
-		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.vapMolWeight*productFactor  
+		o.deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.vapMolWeight*productFactor  
 	};
-	return deckSeamLosses;
 };
 
 //Eq2_19 Pérdidas por vaciado del tanque (o.workingLosses) (lbs/yr)
 function Eq2_19() {
-	annualNetThroughput=Eq2_20();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (annualNetThroughput) (bbl/yr) 
+	Eq2_20();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (annualNetThroughput) (bbl/yr) 
 	//Determina el factor de adhesión del líquido a las paredes (t.shellClingageFactor) [bbl/1000 ft2]
 	if (t.shellClingageFactor=="" || t.shellClingageFactor==null || t.shellClingageFactor==0) {
 		if(liquidCategory=="Crude Oils") {
@@ -653,7 +638,7 @@ function Eq2_19() {
 		effectiveColumnDiameter = 1
 	};
 	//Eq2_19
-	return ((0.943*annualNetThroughput*shellClingageFactor*c.liqDensity)/t.diameter)*(1+((t.columns.number*effectiveColumnDiameter)/t.diameter));
+	o.workingLosses = ((0.943*annualNetThroughput*shellClingageFactor*c.liqDensity)/t.diameter)*(1+((t.columns.number*effectiveColumnDiameter)/t.diameter));
 };
 
 //Eq2_20 Volumen neto total introducido en el tanque a lo largo del año (annualNetThroughput) (bbl/yr) 
@@ -661,7 +646,6 @@ function Eq2_20() {
 	if( t.annualNetThroughput=="" || t.annualNetThroughput==null || t.annualNetThroughput==0 ) {
 		annualNetThroughput = (t.turnoversPerYear*(t.maxLiquidHeight-t.minLiquidHeight)*(Math.PI/4)*Math.pow(t.diameter,2))/5.614;
 	} else {annualNetThroughput = (t.annualNetThroughput)/42}
-	return annualNetThroughput;
 };
 
 
@@ -708,4 +692,6 @@ function Fig1_17() {
 	}
 	
 }
+
+
 
