@@ -3,20 +3,22 @@
 Cosas a resolver:
 
 [x]	Adaptar codigo
-[x]	Validar salidas con tanks u otros códigos.
 [x]	Agregar capacidad de hacer calculo con blends/mezclas 
-[ ]	Adaptar para incluir "floating" tanks (EFR e IFRs).
-[ ]	Armar base de datos climaticos para Argentina.
-[ ]	Armar/modificar base de datos de compuestos organicos, curdos y destilados (caracterizar crudos nacionales)..
-[ ]	Hacer interfaz de usuario (modificar: index.html para que tenga todos los inputs necesarios).
-[ ]     Preparar funciones para conversion de unidades a S.I ó Imperial en input (antes del main) y output (antes de escribir la salida).
+[x]	Adaptar para incluir "floating" tanks (EFR e IFRs).
+[ ]	Validar salidas con oklahoma, minesotta, tanks y cualuier otro soft disponible.
+[ ]	Hacer interfaz de usuario (index.html).
 [ ]	Construir reporte de salida (js/output.js)
-[ ]	Mejorar estetica de pagina web (./css/style.css)
-[ ] 	Escribir documentacion de uso del programa, explicitar validacion (va como anexo de la tesis).
+
+[ ]	Armar base de datos climaticos para Argentina (./js/tablas/meteo.js).
+[ ]	Armar base de datos de compuestos organicos, solventes curdos y destilados (./js/tablas/petroleum.js y ./js/tablas/chems.js). 
+
+[ ] Escribir documentacion de uso del programa, explicitar validaciones.
 
 Opcional:
+[ ] Preparar funciones para conversion de unidades a S.I ó Imperial en input (antes del main) y output (antes de escribir la salida).
 [ ] Hacer codigo para validación de datos de entrada (./js/validacion.js) y test case automatizado (./js/testcase.js).
 [ ] Validar con caso de estudio local, y comparar con datos de softs preexistentes (tanks, etc.)
+[ ]	Mejorar estetica de pagina web (./css/style.css)
 
 Convenciones:
   - Variables, objetos y funciones en Inglés, (si es multi palabra usamos: "hiHowAreYou")
