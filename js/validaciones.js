@@ -3,8 +3,7 @@ function validacion(validacionID){
 	//Corridas de validación:
 	console.log(">>> Corrida de validación: "+validacionID+"...");
 	
-	//"CASO BASE": valores default para tanque (nos ahorra tener que definir todo siempre).
-	//(cambialo si queres por otro más simple)
+	//"CASO BASE": valores default para tanque (nos ahorra tener que definir todo siempre)
 	t={
         	type:"VFR",	    		
         	height:10,		    	
@@ -13,19 +12,19 @@ function validacion(validacionID){
         	avgLiquidHeight:2, 	    	
         	maxLiquidHeight:3, 	    	
         	turnoversPerYear:"",      	
-        	annualNetThroughput:6,	//docume
+        	annualNetThroughput:6,
         	vaporbalanced:true, 		
         	shell:{
         		color:"black",		
         		condition:"aged",	
         	},
         	roof:{
-        		type:"dome", 	 	
+        		type:"cone", 	 	
         		color:"white",		
         		condition:"new",	
-        		height:0,		
+        		height:1,		
         		slope:"",		
-        		radius:5,		
+        		radius:"",		
         	},
         	ventPressureSetting:0.03,	
         	ventVacuumSetting:-0.03,	
@@ -37,26 +36,26 @@ function validacion(validacionID){
         		minBulkTemp:"",		
         		maxBulkTemp:"",		
         	},
-        	construction:"riveted", 	
+        	construction:"", 	
         	rimSeal:{
-        		fit:"Average-Fitting Seal",	
-        		type:"Mechanical-shoe seal",	
-        		secondary:"Primary only",	
+        		fit:"",	
+        		type:"",	
+        		secondary:"",	
         	},	
         	deck: {
         		type:"",		
         		fittings:[],		
         		seamLength:"",		
-        		construction:"Panel",	
+        		construction:"",	
         		sheetWidth:"",		
-        		panelWidth:5,		
-        		panelLength:12,		
+        		panelWidth:"",		
+        		panelLength:"",		
         	},
         	shellClingageFactor:"",		
-        	shellTexture:"Light Rust",	
+        	shellTexture:"",	
         	columns:{
-        		number:1,	
-        		type:"Pipe Columns",	
+        		number:"",	
+        		type:"",	
         	},
         };
 
@@ -64,50 +63,46 @@ function validacion(validacionID){
 	switch (validacionID) {
 	  case "Prueba1":
 		//Primera validación:
-        	siteName="Birmingham, AL";
-
+        siteName="Birmingham, AL";
 		liquidCategory="Other Organic Liquids";
 		liquidName="";
 		compoundName="Acetaldehyde";    	
-
-		//la idea acá es que cambies solo las caracteristicas non-default de cada tanque:
-		t.type="VFR"
-        	t.annualNetThroughput=10.0;
-        
+		t.type="VFR";
+        t.annualNetThroughput=10.0;
+        ;
 
 	  case "Prueba2":
-		//Acá cambie solo el compuesto orgánico. (Intentá que los cambios sean varios al mismo tiempo, para cubrir el mayor rango de casos con menor numero de validaciones).
-		siteName="Birmingham, AL";
-		                                                                                  
-		t.type="VFR"
-        	t.annualNetThroughput=10.0;
-		
+		//Acá cambie solo el compuesto orgánico.
+		siteName="Birmingham, AL";                                                                                  
+		t.type="VFR";
+        t.annualNetThroughput=10.0;
 		liquidCategory="Other Organic Liquids";
 		liquidName="";
 		compoundName="Cyclohexene";    	
-		                                                                                  
+		 ;
+
 	  case "Prueba3":
 		//Acá le puse un petroleo, floating roof y le agregue accesorios
 		siteName="Rochester, MN";
 		liquidCategory="Refined Petroleum Liquids";
 		liquidName="Motor Gasoline RVP 7";
 		compoundName="";    	
-
-		t.type="IFR"
+		t.type="IFR";
 		findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
-		
 		addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
 		addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+		;
 
 	  case "Prueba4":
-		//Acá cambie tipo de tanque:
-
-
-
-
-
-
-	  //default:
+		siteName="Rochester, MN";
+		liquidCategory="Refined Petroleum Liquids";
+		liquidName="Motor Gasoline RVP 7";
+		compoundName="";    	
+		t.type="EFR";
+		findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+		addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
+		addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+		;
 
 	};
 

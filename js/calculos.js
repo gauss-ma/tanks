@@ -13,7 +13,7 @@ function Eq1_1() {
 
 //Eq1_3 Volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
 function Eq1_3() {
-	return (Math.PI*Math.pow(t.effectiveDiameter,2)/4)*t.vaporSpaceOutage;
+	return ((Math.PI*Math.pow(t.effectiveDiameter,2)/4)*t.vaporSpaceOutage);
 }
 
 //Eq1_4 Standing Losses: Pérdidas durante el almacenamiento desde tanques de techo fijo (o.standingLosses) (lbs/yr)
@@ -40,9 +40,9 @@ function Eq1_4() {
 	if (t.insulation == "underground" && t.type == "VFR" && t.heating.heating == false) {
 		standingLosses = 0;
 	} else {
-		t.vaporSpaceVolume=Eq1_3(); //Obtiene el volumen de la fase vapor (t.vaporSpaceVolume) (ft3)  //OJO! LO CALCULAS Y  NUNCA LO USAS!
+		t.vaporSpaceVolume=Eq1_3(); //Obtiene el volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
 		//Eq1_4
-		standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * (Math.PI * Math.pow(t.effectiveDiameter,2) / 4) * t.vaporSpaceOutage * ventedVapSatFactor * vaporDensity;
+		standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * t.vaporSpaceVolume * ventedVapSatFactor * vaporDensity;
 	}
 
 	return standingLosses;
