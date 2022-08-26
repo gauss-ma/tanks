@@ -6,15 +6,15 @@ function Eq1_1() {
 	o.standingLosses=Eq1_4();	//ecuacion general de Standing Losses (Pérdidas durante el almacenamiento)
 	o.workingLosses =Eq1_35();	//ecuacion general de Working Losses (Pérdidas por llenado y vaciado del tanque)
 	
-	o.totalLosses = o.standingLosses + o.workingLosses;
-}
+	return o.standingLosses + o.workingLosses;
+};
 
 //La Eq1_2 se omitió porque la Eq1_4 es la combinación de Eq1_2 y Eq1_3
 
 //Eq1_3 Volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
 function Eq1_3() {
 	return ((Math.PI*Math.pow(t.effectiveDiameter,2)/4)*t.vaporSpaceOutage);
-}
+};
 
 //Eq1_4 Standing Losses: Pérdidas durante el almacenamiento desde tanques de techo fijo (o.standingLosses) (lbs/yr)
 function Eq1_4() {
@@ -38,15 +38,15 @@ function Eq1_4() {
 	vaporDensity        =Eq1_22();	//Obtiene la densidad del vapor dentro del tanque (vaporDensity) (lbs/ft^3)
 	
 	if (t.insulation == "underground" && t.type == "VFR" && t.heating.heating == false) {
-		standingLosses = 0;
+		o.standingLosses = 0;
 	} else {
 		t.vaporSpaceVolume=Eq1_3(); //Obtiene el volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
 		//Eq1_4
-		standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * t.vaporSpaceVolume * ventedVapSatFactor * vaporDensity;
+		o.standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * t.vaporSpaceVolume * ventedVapSatFactor * vaporDensity;
 	}
 
-	return standingLosses;
-}
+	return o.standingLosses;
+};
 
 //Eq1_5 Fracción del vapor dentro del tanque que se pierde diariamente al exterior (vaporExpansionFactor) [prefered method]
 function Eq1_5() {
@@ -88,7 +88,7 @@ function Eq1_5() {
 	}
 
 	return vaporExpansionFactor;
-}
+};
 
 //Eq1_6 Variación diaria promedio de la temperatura del vapor (avgVapTempRange) (degrees R) [prefered method]
 function Eq1_6() {
@@ -106,15 +106,17 @@ function Eq1_6() {
 	} else {
 		//en tanques sin aislamiento térmico, la variación en la temperatura del vapor depende del intercambio de calor con el exterior.
 		avgVapTempRange = ((1- (0.8 / (2.2 * (t.height / t.diameter) + 1.9))) * avgAmbientTempRange) + (((0.042 * aRoof * m.insolation) + (0.026 * (t.height/t.diameter) * aShell * m.insolation)) / (2.2 * (t.height/t.diameter) + 1.9));
-	} 
-}
+	};
+	
+	return avgVapTempRange;
+};
 
 //La Eq1_7 se omitió porque es una simplificación de la Eq1_6 en base a un supuesto.
 
 //Eq1_8 Variación diaria promedio de la temperatura del vapor para tanques con aislamiento térmico sólo en las paredes (avgVapTempRange) (degrees R)
 function Eq1_8() {
 	return (0.6 * avgAmbientTempRange) + (0.02 * aRoof * m.insolation);
-}
+};
 
 //Eq1_9 Variación diaria promedio de la presión de vapor (avgVapPressureRange) (psia)
 function Eq1_9() {
@@ -138,20 +140,23 @@ function Eq1_9() {
 	} else {
 		//Eq1_9
 		avgVapPressureRange = maxVapPressure - minVapPressure;
-	}
-}
+	};
+
+	return avgVapPressureRange;
+};
 
 //Eq1_10 Rango de presión que están ajustadas para soportar las válvulas de ventilación (ventPressureRange) (psig)
 function Eq1_10() {
 	t.ventPressureSetting = parseFloat(t.ventPressureSetting);		
-	t.ventVacuumSetting = parseFloat(t.ventVacuumSetting);	
-	ventPressureRange = t.ventPressureSetting - t.ventVacuumSetting;
-}
+	t.ventVacuumSetting = parseFloat(t.ventVacuumSetting);
+
+	return t.ventPressureSetting - t.ventVacuumSetting;
+};
 
 //Eq1_11 Variación diaria promedio de la temperatura ambiente (avgAmbientTempRange) (degrees R)
 function Eq1_11() {
 	return (m.maxAmbientTemp - m.minAmbientTemp);
-}
+};
 
 //La Eq1_12 y la Eq1_13 se omitieron porque son simplificaciones de la Eq1_5 que implican una reducción en la confiabilidad del resultado.
 
@@ -320,7 +325,7 @@ function Eq1_29() {
 
 //Eq1_30  Temperatura Ambiente Diaria Promedio (avgAmbientTemp) (degrees R) 
 function Eq1_30() {
-	return (m.maxAmbientTemp + m.minAmbientTemp) / 2;
+	return ((m.maxAmbientTemp + m.minAmbientTemp)/2);
 }
 
 //Eq1_31 Temperatura diaria promedio en el seno del líquido (avgBulkTemp) (degrees R) 
@@ -374,7 +379,9 @@ function Eq1_35() {
 	ventCorrectionFactor=Eq1_41();
 	
 	//Eq1_35
-	return netWorkingLossThroughput * workingLossTurnover * workingLossProductFactor * vaporDensity * ventCorrectionFactor;
+	o.workingLosses = netWorkingLossThroughput * workingLossTurnover * workingLossProductFactor * vaporDensity * ventCorrectionFactor;
+	
+	return o.workingLosses;
 }
 
 //Eq1_36 Número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless) 
@@ -425,7 +432,9 @@ function Eq1_41() {
 	} else {
 		ventCorrectionFactor = 1;
 	}
-}
+	
+	return ventCorrectionFactor;
+};
 
 //Eq8_1 Variación diaria promedio de la temperatura del vapor en tanques con aislamiento térmico total y calentamiento (avgVapTempRange) (degrees R)
 function Eq8_1() {

@@ -4,6 +4,10 @@ function validacion(validacionID){
 	console.log(">>> Corrida de validación: "+validacionID+"...");
 	
 	//"CASO BASE": valores default para tanque (nos ahorra tener que definir todo siempre)
+	siteName="Birmingham, AL";
+	liquidCategory="Other organic liquids";
+	liquidName="";
+	compoundName="Acetaldehyde"; 
 	t={
         	type:"VFR",	    		
         	height:10,		    	
@@ -61,49 +65,45 @@ function validacion(validacionID){
 
 	//Acá armas tus configuraciones para cada validación:
 	switch (validacionID) {
-	  case "Prueba1":
-		//Primera validación:
-        siteName="Birmingham, AL";
-		liquidCategory="Other Organic Liquids";
-		liquidName="";
-		compoundName="Acetaldehyde";    	
-		t.type="VFR";
-        t.annualNetThroughput=10.0;
-        ;
-
-	  case "Prueba2":
-		//Acá cambie solo el compuesto orgánico.
-		siteName="Birmingham, AL";                                                                                  
-		t.type="VFR";
-        t.annualNetThroughput=10.0;
-		liquidCategory="Other Organic Liquids";
-		liquidName="";
-		compoundName="Cyclohexene";    	
-		 ;
-
-	  case "Prueba3":
-		//Acá le puse un petroleo, floating roof y le agregue accesorios
-		siteName="Rochester, MN";
-		liquidCategory="Refined Petroleum Liquids";
-		liquidName="Motor Gasoline RVP 7";
-		compoundName="";    	
-		t.type="IFR";
-		findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
-		addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
-		addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
-		;
-
-	  case "Prueba4":
-		siteName="Rochester, MN";
-		liquidCategory="Refined Petroleum Liquids";
-		liquidName="Motor Gasoline RVP 7";
-		compoundName="";    	
-		t.type="EFR";
-		findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
-		addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
-		addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
-		;
-
+		case "Prueba1":
+			//Primera validación:
+			siteName="Birmingham, AL";
+			liquidCategory="Other organic liquids";
+			liquidName="";
+			compoundName="Acetaldehyde";    	
+			t.type="VFR";
+			t.annualNetThroughput=10.0;
+		break;
+	  	case "Prueba2":
+			//Acá cambie solo el compuesto orgánico.
+			siteName="Birmingham, AL";                                                                                  
+			t.type="VFR";
+			t.annualNetThroughput=10.0;
+			liquidCategory="Other organic liquids";
+			liquidName="";
+			compoundName="Cyclohexene";    	
+		break;
+	  	case "Prueba3":
+			//Acá le puse un petroleo, floating roof y le agregue accesorios
+			siteName="Rochester, MN";
+			liquidCategory="Refined Petroleum Liquids";
+			liquidName="Motor Gasoline RVP 7";
+			compoundName="";    	
+			t.type="IFR";
+			findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
+			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+		break;
+	  	case "Prueba4":
+			siteName="Rochester, MN";
+			liquidCategory="Refined Petroleum Liquids";
+			liquidName="Motor Gasoline RVP 7";
+			compoundName="";    	
+			t.type="EFR";
+			findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
+			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+		break;
 	};
 
 
@@ -132,11 +132,12 @@ function validacion(validacionID){
 	//  (2.b) calculo de emision:
 
 	if (t.type == "VFR" || t.type == "HFR") {
-                Eq1_1();
+                o.totalLosses = Eq1_1();
 	} else if (t.type == "EFR" || t.type == "DEFR" || t.type == "IFR") {
+				o.totalLosses = Eq2_1();
+    };
 
-		Eq2_1();
-    }
+	
 	//(3) OUTPUT
 	//outputWindow()	//Acá función que crea informe de salida.
 	console.log(" Resultados:");

@@ -51,10 +51,9 @@ function main(){
 	//  (2.b) calculo de emision:
 
 	if (t.type == "VFR" || t.type == "HFR") {
-                Eq1_1();
+                o.totalLosses = Eq1_1();
 	} else if (t.type == "EFR" || t.type == "DEFR" || t.type == "IFR") {
-
-		Eq2_1();
+				o.totalLosses = Eq2_1();
     }
 	
 	//(3) OUTPUT
