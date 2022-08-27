@@ -223,7 +223,8 @@ function Eq1_19() {
 	} else {
 		t.roofOutage = t.roof.height * ((1 / 2) + ((1 / 6) * Math.pow((t.roof.height / t.shellRadius),2)));
 	}
-}
+	return t.roofOutage;
+};
 
 //Eq1_20 Altura real de un techo con forma de domo (feet)
 function Eq1_20() {
@@ -475,16 +476,23 @@ function Eq2_3() {
 		productFactor = 0.4
 	} else {
 		productFactor = 1
-	}
+	};
+
+	if (t.type=="EFR"){
+		windSpeed=m.u
+	} else {
+		windSpeed=0
+	};
 	
 	//Eq2_3
 	if (liquidCategory == "Other organic liquids") {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
+		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
 	} else {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(m.u,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
-	}
+		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
+	};
+
 	return rimSealLosses;
-}
+};
 
 //Eq2_4	Factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
 function Eq2_4() {

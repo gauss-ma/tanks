@@ -179,6 +179,7 @@ function calculateSolarAbsorbance(t){
 	if (t.type == "HFR"){
 		
 		aShell=eval("paint.find( element => element.paintName==\""+t.shell.color+"\")."+t.shell.condition);
+		aRoof=aShell;
 		a=aShell;
 	}
 	else{
@@ -189,6 +190,19 @@ function calculateSolarAbsorbance(t){
 	};
 
 	return a; 
+};
+
+
+function calculateTankVolume(t){
+	if(t.type=="HFR"){
+		t.effectiveDiameter=Eq1_14()
+		t.effectiveHeight=Eq1_15()
+		t.volume = (Math.PI/8)*Math.pow(t.effectiveDiameter,2)*t.effectiveHeight*7.48052;
+	} else {
+		t.volume = t.maxLiquidHeight*(Math.PI/4)*Math.pow(t.diameter,2)*7.48052;
+	};
+
+	return t.volume;
 };
 
 

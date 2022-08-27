@@ -3,8 +3,8 @@ function validacion(validacionID){
 	//Corridas de validación:
 	console.log(">>> Corrida de validación: "+validacionID+"...");
 	
-	//"CASO BASE": valores default para tanque (nos ahorra tener que definir todo siempre)
-	siteName="Birmingham, AL";
+	//"CASO BASE": Valores default para ubicación, tanque y líquido
+	siteName="Rochester, MN";
 	liquidCategory="Other organic liquids";
 	liquidName="";
 	compoundName="Acetaldehyde"; 
@@ -16,17 +16,17 @@ function validacion(validacionID){
         	avgLiquidHeight:2, 	    	
         	maxLiquidHeight:3, 	    	
         	turnoversPerYear:"",      	
-        	annualNetThroughput:6,
+        	annualNetThroughput:10,
         	vaporbalanced:true, 		
         	shell:{
-        		color:"black",		
+        		color:"gray: medium",		
         		condition:"aged",	
         	},
         	roof:{
-        		type:"cone", 	 	
+        		type:"", 	 	
         		color:"white",		
         		condition:"new",	
-        		height:1,		
+        		height:"",		
         		slope:"",		
         		radius:"",		
         	},
@@ -63,46 +63,51 @@ function validacion(validacionID){
         	},
         };
 
-	//Acá armas tus configuraciones para cada validación:
+	//Configuraciones de cada validación:
 	switch (validacionID) {
 		case "Prueba1":
-			//Primera validación:
-			siteName="Birmingham, AL";
-			liquidCategory="Other organic liquids";
-			liquidName="";
+			//Acá cambia sólo el tipo de techo
 			compoundName="Acetaldehyde";    	
-			t.type="VFR";
-			t.annualNetThroughput=10.0;
+			t.roof.type= "dome";
+			t.roof.height=0;
+			t.roof.radius=5;
 		break;
 	  	case "Prueba2":
-			//Acá cambie solo el compuesto orgánico.
-			siteName="Birmingham, AL";                                                                                  
-			t.type="VFR";
-			t.annualNetThroughput=10.0;
-			liquidCategory="Other organic liquids";
-			liquidName="";
-			compoundName="Cyclohexene";    	
+			//Acá cambia el tipo de techo y el compuesto orgánico.                                                                                 
+			compoundName="Hexane (n)";
+			t.roof.type="dome";
+			t.roof.height=0;
+			t.roof.radius=5;
 		break;
 	  	case "Prueba3":
-			//Acá le puse un petroleo, floating roof y le agregue accesorios
-			siteName="Rochester, MN";
+			//Acá cambia el tipo de líquido (petróleo refinado) y el tipo de tanque (IFR) junto con sus ajustes del sello, los accesorios y la plataforma flotante
 			liquidCategory="Refined Petroleum Liquids";
 			liquidName="Motor Gasoline RVP 7";
 			compoundName="";    	
 			t.type="IFR";
+			t.construction="riveted";
+			t.rimSeal.fit="Average-Fitting Seal";
+			t.rimSeal.type="Mechanical-shoe seal";
+			t.rimSeal.secondary="Primary only";
+			t.deck.construction="Panel";
+			t.deck.panelWidth=5;
+			t.deck.panelLength=12;
 			findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
-			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
+			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
 			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+			t.shellTexture="Light Rust";
+			t.columns.number=1;
+			t.columns.type="Pipe Columns";
 		break;
 	  	case "Prueba4":
-			siteName="Rochester, MN";
+			//Acá cambia el tipo de líquido (petróleo refinado) y el tipo de tanque (HFR)
 			liquidCategory="Refined Petroleum Liquids";
 			liquidName="Motor Gasoline RVP 7";
 			compoundName="";    	
-			t.type="EFR";
-			findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
-			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
-			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+			t.type="HFR";
+			t.minLiquidHeight="";
+			t.avgLiquidHeight="";
+			t.maxLiquidHeight="";
 		break;
 	};
 
@@ -127,7 +132,8 @@ function validacion(validacionID){
 	//(2) CALCULOS
 
 	//  (2.a) calculos previos:
-	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura:
+	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura
+	t.volume=calculateTankVolume(t);	//sólo para ingresarlo en el TANKS que me lo pide como input [en gal]
 
 	//  (2.b) calculo de emision:
 
