@@ -141,8 +141,8 @@ function loadTankParameters(){
 		heating:{
 			heating: false,		//document.getElementById("").value; //considerar calentamiento? //ACLARACIÓN: El AP-42 sólo permite incorporar el calentamiento en los cálculos para tanques de techo fijo
 			cyclesPerYear:"",	//document.getElementById("").value; //numero de ciclos de calentamiento
-			minBulkTemp:"",		//document.getElementById("").value; //temperatura minima del liquido [grados Kelvin] 
-			maxBulkTemp:"",		//document.getElementById("").value; //temperatura maxima del liquido [grados Kelvin]
+			minBulkTemp:"",		//document.getElementById("").value; //temperatura minima del liquido [grados Rankine] 
+			maxBulkTemp:"",		//document.getElementById("").value; //temperatura maxima del liquido [grados Rankine]
 		},
 		construction:"riveted", 		//document.getElementById("").value; //(welded|riveted) 
 		rimSeal:{
@@ -218,7 +218,7 @@ function addDeckFitting(t,fittingName,fittingType,n) {
 function findRimSealProp(t) {
 	
 	databaseRimSeals=getRimSealProperties(); //levanto de base de datos de Rim Seals (tablas/rimSeal.js)
-	t.rimSeal=databaseRimSeals.find(element => (element.sealFit==t.rimSeal.fit & element.tankConstruction==t.construction & element.sealType==t.rimSeal.type & element.secondSeal==t.rimSeal.secondary)) //me quedo con el que me interesa
+	t.rimSeal=databaseRimSeals.find(element => (element.fit==t.rimSeal.fit & element.tankConstruction==t.construction & element.type==t.rimSeal.type & element.secondary==t.rimSeal.secondary)) //me quedo con el que me interesa
 	
 	return t.rimSeal;
 };

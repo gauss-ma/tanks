@@ -32,6 +32,7 @@ function Eq1_4() {
 	}
 	
 	t.effectiveDiameter =Eq1_14();	//Obtiene el diámetro o el diámetro efectivo (según si el tanque es vertical u horizontal) (feet)
+	t.effectiveHeight 	=Eq1_15();	//Obtiene la altura o la altura efectiva (según si el tanque es vertical u horizontal) (feet)
 	t.vaporSpaceOutage  =Eq1_16();	//Obtiene la altura de la columna de vapor (t.vaporSpaceOutage) (tanto para tanques horizontales como verticales) (feet)
 	vaporExpansionFactor=Eq1_5();	//Obtiene la fracción del vapor dentro del tanque que se pierde diariamente al exterior (vaporExpansionFactor) (dimensionless)
 	ventedVapSatFactor  =Eq1_21();	//Obtiene el factor de saturación del vapor que se pierde al exterior (ventedVapSatFactor) (dimensionless)
@@ -105,7 +106,7 @@ function Eq1_6() {
 		}
 	} else {
 		//en tanques sin aislamiento térmico, la variación en la temperatura del vapor depende del intercambio de calor con el exterior.
-		avgVapTempRange = ((1- (0.8 / (2.2 * (t.height / t.diameter) + 1.9))) * avgAmbientTempRange) + (((0.042 * aRoof * m.insolation) + (0.026 * (t.height/t.diameter) * aShell * m.insolation)) / (2.2 * (t.height/t.diameter) + 1.9));
+		avgVapTempRange = ((1- (0.8 / (2.2 * (t.effectiveHeight / t.effectiveDiameter) + 1.9))) * avgAmbientTempRange) + (((0.042 * aRoof * m.insolation) + (0.026 * (t.effectiveHeight/t.effectiveDiameter) * aShell * m.insolation)) / (2.2 * (t.effectiveHeight/t.effectiveDiameter) + 1.9));
 	};
 	
 	return avgVapTempRange;
@@ -160,7 +161,7 @@ function Eq1_11() {
 
 //La Eq1_12 y la Eq1_13 se omitieron porque son simplificaciones de la Eq1_5 que implican una reducción en la confiabilidad del resultado.
 
-//Eq1_14 Diámetro Efectivo (feet)
+//Eq1_14 Diámetro efectivo del tanque (feet)
 function Eq1_14() {
 	
 	if (t.type == "VFR") {
@@ -169,12 +170,18 @@ function Eq1_14() {
 		effectiveDiameter = Math.sqrt((t.height * t.diameter) / (Math.PI / 4));
 	} 
 	return effectiveDiameter;
-}
+};
 
-//Eq1_15 Altura Efectiva para Tanques Horizontales (feet)
+//Eq1_15 Altura efectiva del tanque (feet)
 function Eq1_15() {
-	return Math.PI * t.diameter / 4;
-}
+
+	if (t.type == "VFR") {
+		effectiveHeight = t.height;
+	} else if (t.type == "HFR") {
+		effectiveHeight = Math.PI * t.diameter / 4;
+	} 
+	return effectiveHeight;
+};
 
 //Eq1_16 Altura de la Columna de Vapor (t.vaporSpaceOutage) (feet)
 function Eq1_16() {
@@ -186,9 +193,8 @@ function Eq1_16() {
 			t.roofOutage=Eq1_19();	//altura efectiva de un techo con forma de domo (feet)
 		}
 		//Eq1_16
-		vaporSpaceOutage = t.height - t.avgLiquidHeight + t.roofOutage;
+		vaporSpaceOutage = t.effectiveHeight - t.avgLiquidHeight + t.roofOutage;
 	} else if (t.type == "HFR") {
-		t.effectiveHeight=Eq1_15();	//Calcula la altura efectiva para tanques horizontales
 		vaporSpaceOutage = t.effectiveHeight / 2;
 	}
 	return vaporSpaceOutage;
@@ -203,7 +209,7 @@ function Eq1_17() {
 //Eq1_18 Altura real de un techo con forma de cono (feet)
 function Eq1_18() {
 	t.roof.slope = parseFloat(t.roof.slope);
-	t.shellRadius = t.diameter/2;
+	t.shellRadius = t.effectiveDiameter/2;
 	roofHeight = parseFloat(t.roof.height);
 	
 	if (t.roof.height == 0) {
@@ -215,10 +221,10 @@ function Eq1_18() {
 //Eq1_19 Altura efectiva de un techo con forma de domo (t.roofOutage) (feet)
 function Eq1_19() {
 	t.roof.radius = parseFloat(t.roof.radius);
-	t.shellRadius = t.diameter/2;
+	t.shellRadius = t.effectiveDiameter/2;
 	//Eq1_20();	//Obtiene la altura real del techo
 	t.roof.height=Eq1_20();	//Obtiene la altura real del techo
-	if (t.roof.radius == t.diameter) {
+	if (t.roof.radius == t.effectiveDiameter) {
 		t.roofOutage = 0.137 * t.shellRadius;
 	} else {
 		t.roofOutage = t.roof.height * ((1 / 2) + ((1 / 6) * Math.pow((t.roof.height / t.shellRadius),2)));
@@ -230,7 +236,7 @@ function Eq1_19() {
 function Eq1_20() {
 	t.roof.height = parseFloat(t.roof.height);
 	if (t.roof.height == 0) { 
-		if (t.roof.radius == t.diameter) {
+		if (t.roof.radius == t.effectiveDiameter) {
 			//t.roof.height = 0.268 * t.shellRadius;
 			roofHeight = 0.268 * t.shellRadius;
 		} else {
@@ -311,7 +317,7 @@ function Eq1_27() {
 			avgSurfaceTemp=Eq8_2();
 	} else {
 			//Eq1_27: si no se cumple alguna de esas dos condiciones, la temperatura en la superficie del líquido depende del intercambio de calor con el exterior.
-			avgSurfaceTemp =  ((0.5 - (0.8 / (4.4 * (t.height / t.diameter) + 3.8))) * avgAmbientTemp) + ((0.5 + (0.8 / (4.4 * (t.height / t.diameter) + 3.8))) * avgBulkTemp) + (((0.021 * aRoof * m.insolation) + (0.013 * (t.height / t.diameter) * aShell * m.insolation)) / (4.4 * (t.height / t.diameter) + 3.8));
+			avgSurfaceTemp =  ((0.5 - (0.8 / (4.4 * (t.effectiveHeight / t.effectiveDiameter) + 3.8))) * avgAmbientTemp) + ((0.5 + (0.8 / (4.4 * (t.effectiveHeight / t.effectiveDiameter) + 3.8))) * avgBulkTemp) + (((0.021 * aRoof * m.insolation) + (0.013 * (t.effectiveHeight / t.effectiveDiameter) * aShell * m.insolation)) / (4.4 * (t.effectiveHeight / t.effectiveDiameter) + 3.8));
 		}
 	}
 	return avgSurfaceTemp;
@@ -345,7 +351,7 @@ function Eq1_31() {
 
 //Eq1_32 Temperatura promedio del vapor en tanques sin aislamiento térmico (avgVapTemp) (degrees R) 
 function Eq1_32() {
-	return (((2.2 * (t.height / t.diameter) +1.1) * avgAmbientTemp) + (0.8 * avgBulkTemp) + (0.021 * aRoof * m.insolation) + (0.013 * (t.height / t.diameter) * aShell * m.insolation)) / (2.2 * (t.height / t.diameter) +1.9);
+	return (((2.2 * (t.effectiveHeight / t.effectiveDiameter) +1.1) * avgAmbientTemp) + (0.8 * avgBulkTemp) + (0.021 * aRoof * m.insolation) + (0.013 * (t.effectiveHeight / t.effectiveDiameter) * aShell * m.insolation)) / (2.2 * (t.effectiveHeight / t.effectiveDiameter) +1.9);
 }
 
 //La Eq1_33 se omitió porque es una simplificación de la Eq1_32 en base a un supuesto

@@ -92,7 +92,7 @@ function validacion(validacionID){
 			t.deck.construction="Panel";
 			t.deck.panelWidth=5;
 			t.deck.panelLength=12;
-			findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+			t.rimSeal=findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
 			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
 			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
 			t.shellTexture="Light Rust";
@@ -108,6 +108,33 @@ function validacion(validacionID){
 			t.minLiquidHeight="";
 			t.avgLiquidHeight="";
 			t.maxLiquidHeight="";
+		break;
+		case "Prueba5":
+			//Acá cambia el tipo de líquido (petróleo crudo), el tipo de tanque (EFR), el tipo de construcción del tanque y el tipo de sello. 
+			liquidCategory="Crude Oils";
+			liquidName="Midcontinent Crude Oil";
+			compoundName="";    	
+			t.type="EFR";
+			t.construction="welded";
+			t.rimSeal.fit="Average-Fitting Seal";
+			t.rimSeal.type="Liquid-mounted seal";
+			t.rimSeal.secondary="Weather shield";
+			t.rimSeal=findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
+			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+			t.shellTexture="Light Rust";
+			t.columns.number=0;
+		break;
+		case "Prueba6":
+			//Acá cambia la condición de equilibrio del vapor con el líquido, el tipo de techo, el aislamiento térmico y el calentamiento      	
+			t.vaporbalanced=false;
+			t.roof.type="cone";
+			t.roof.height=0;
+			t.roof.slope=0.0625;
+			t.insulation="shellAndRoof";
+			t.heating.heating=true;
+			t.heating.minBulkTemp=460;
+			t.heating.maxBulkTemp=480;
 		break;
 	};
 
@@ -147,22 +174,16 @@ function validacion(validacionID){
 	//(3) OUTPUT
 	//outputWindow()	//Acá función que crea informe de salida.
 	console.log(" Resultados:");
-	console.log("    totalLosses: "+o.totalLosses);
-	console.log("    standingLosses: "+o.standingLosses); 
-	console.log("    workingLosses: "+o.workingLosses);
-	console.log("    deckFittingLossFactor: "+o.deckFittingLossFactor);
-	console.log("    deckFittingLosses: "+o.deckFittingLosses);
-	console.log("    deckSeamLosses: "+o.deckSeamLosses);
-	console.log("    rimSealLosses: "+o.rimSealLosses);
-
+	console.log(o.totalLosses, o.standingLosses, o.workingLosses, o.deckFittingLossFactor, o.deckFittingLosses, o.deckSeamLosses, o.rimSealLosses);
 	console.log(">>> Fin corrida de validación: "+validacionID+"...");
+
 };
 
 
 
 function validarTodo(){
 
-	corridasDeValidacion=["Prueba1","Prueba2","Prueba3"];
+	corridasDeValidacion=["Prueba1","Prueba2","Prueba3","Prueba4","Prueba5","Prueba6"];
 
 	for (let i=0; i<corridasDeValidacion.length; i++){
 		
