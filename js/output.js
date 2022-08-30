@@ -1,8 +1,15 @@
 function printOutput(){
 
 	let outputWindow = window.open();
+	
+	HTMLreport=printReport()
 
-        let HTMLhead=`
+	outputWindow.document.write(HTMLreport);
+};
+
+function printReport(){
+
+	report=`
 <!DOCTYPE html>
 <html lang="en">
         <head>
@@ -14,54 +21,18 @@ function printOutput(){
 
                 <!-- call css -->
                 <link rel="stylesheet" href="css/style.css">
+
                 <!-- call js -->
         </head>
-	<body><section>
-        `;
-	
-	let HTMLbody=printReport();
 
+	<body>
+	<section>
 
-	let HTMLfoot=`
+	${printSeparador("Tank Indentification and Physical Characteristics")}
 
-<button onclick='window.print()'>Print this page</button>";
-
-</section></body>
-</html>
-	`;
-	
-	HTMLstring=HTMLhead+HTMLbody+HTMLfoot;
-
-	outputWindow.document.write(HTMLstring);
-};
-
-function printSeparador(sectionTitle){
-
-	str=`	
-	<table width = "900">
-		<tr> <td align = "center"><font size = "3" face = "Arial"><b>TANKS 4.0.9d</b></font></td> </tr>
-		<tr> <td align = "center"><font size = "3" face = "Arial"><b>Emissions Report - Detailed Format </b></font></td> </tr>
-		<tr> <td align = "center"><font size = "3" face = "Arial"><b> ${sectionTitle}</b></font></td> </tr>
-	</table> 
-	<br>
-	`;
-
-	return str;
-};
-
-
-function printReport(){
-
-//SECCIONES:
-
-//<xsl:template match = "Identification">
-identification=`
 	<!-- *****Identification **** -->
-	<table width = "800" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
-	<tr>
-		<td colspan = "2"><b>Identification</b></td>
-		<td width = "600">&#160;</td>
-	</tr>
+	<h3> Identification </h3>
+	<table width = "80%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">User Identification:</td>
@@ -95,24 +66,14 @@ identification=`
 	</table>
 	<p/>
 	<!-- ***** End Identification **** -->
-`;
-//</xsl:template>
 
-
-
-//<xsl:template match = "Dimensions">
-dimensions=`
 	<!-- *****Tank Dimensions **** -->
-	
-	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
-	<tr>
-		<td colspan = "2"><b>Tank Dimensions</b></td>
-		<td width = "150">&#160;</td>
-	</tr>
+	<h3> Tank dimensions </h3>
+	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 `
 
 if( t.type=='Vertical Fixed Roof Tank'){
-dimensions+=`	<tr>
+report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Shell Height (ft):</td>
 			<td align = "right"> ${ "ShellHeight" } </td>
@@ -120,7 +81,7 @@ dimensions+=`	<tr>
 `;
 }
 if( t.type =='Horizontal Tank'){
-dimensions+=`	<tr>
+report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Shell Length (ft):</td>
 			<td align = "right"> ${ "ShellLength" } </td>
@@ -128,7 +89,7 @@ dimensions+=`	<tr>
 `;
 };
 
-dimensions+=`	
+report+=`	
         <!-- All tanks have diameter -->
 	<tr>
 		<td width = "20">&#160;</td>
@@ -139,12 +100,11 @@ dimensions+=`
 `;
 
 if(t.type == 'Vertical Fixed Roof Tank'){
-dimensions+=`	<tr>
+report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Liquid Height (ft) :</td>
 			<td align = "right"> ${ "LiquidHeight" } </td>
 		</tr>
-
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Avg. Liquid Height (ft):</td>
@@ -153,7 +113,7 @@ dimensions+=`	<tr>
 `
 };
 
-dimensions+=`	<!-- All tanks have volume and turnover -->
+report+=`	<!-- All tanks have volume and turnover -->
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Volume (gallons):</td>
@@ -168,7 +128,7 @@ dimensions+=`	<!-- All tanks have volume and turnover -->
 `;
 
 if (t.type == 'Vertical Fixed Roof Tank' || t.type == 'Horizontal Tank'){
-dimensions+=`	<tr>
+report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Net Throughput(gal/yr):</td>
 			<td align = "right"> ${ "NetThroughput" } </td>
@@ -182,7 +142,7 @@ dimensions+=`	<tr>
 `;
 };
 if ( t.type == 'Internal Floating Roof Tank'){
-dimensions+=`	<tr>
+report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Self Supp. Roof? (y/n):</td>
 			<td> ${ "SuppRoof" } </td>
@@ -197,47 +157,38 @@ dimensions+=`	<tr>
 			<td width = "180">Eff. Col. Diam. (ft):</td>
 			<td align = "right"> ${ "ColDiam" } </td>
 		</tr>
-		
-		
-`
+`;
 };
 if (t.type == 'Horizontal Tank'){
-dimensions+=`		<tr>
+report+=`		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Is Tank Underground (y/n):</td>
 			<td> ${ "Underground" } </td>
 		</tr>
 `;	
 }
-dimensions+=`
+report+=`
 	</table>
-	<br
-	
 	<!-- *****End Tank Dimensions **** -->
-`;
-//</xsl:template>
+	<br>
 
-
-
-//<xsl:template match = "PaintChar">	
-paintChar=`
 	<!-- *****Paint Characteristics **** -->
-	<p/>
 	
-	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
-	<tr>
-		<td colspan = "2"><b>Paint Characteristics</b></td>
-		<td width = "150">&#160;</td>
-	</tr>
-	
-	<xsl:if match = ".[@Type = 'External Floating Roof Tank'  $or$ @Type = 'Internal Floating Roof Tank' $or$ @Type = 'Domed External Floating Roof Tank'] ">
+	<h3>Paint Characteristics</h3>
+	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
+`
+if ( t.type == "EFR"  || t.type== 'IFR' || t.type = "DEFR"){
+
+report+=`
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Internal Shell Condition:</td>
 			<td> ${ "InternalCondition" } </td>
 		</tr>
-	</xsl:if>
-	
+`
+};
+
+report+=`	
 	
 	<!-- All tanks have Shell color and condition -->
 	<tr>
@@ -266,20 +217,13 @@ paintChar=`
 	</table>
 	<p/>
 	<!-- *****Paint Characteristics **** -->
-`;
-//</xsl:template>	
 	
 
-//<xsl:template match = "RoofChar">		
-roofChar=`
 	<!-- *****Roof  Characteristics **** -->
 	<p/>
 	
-	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
-	<tr>
-		<td colspan = "2"><b>Roof Characteristics</b></td>
-		<td width = "150">&#160;</td>
-	</tr>
+	<h3>Roof Characteristics</h3>
+	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Type:</td>
@@ -315,15 +259,11 @@ roofChar=`
 	
 	<p/>
 	<!-- *****Roof Characteristics **** -->
-`;
-//</xsl:template>	
 
-//<xsl:template match = "BreatherVent">
-breatherVent=`	
 	<!-- *****Breather Vent Settings **** -->
 	<p/>
 	
-	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
+	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	<tr>
 		<td colspan = "2"><b>Breather Vent Settings</b></td>
 		<td width = "150">&#160;</td>
@@ -341,16 +281,12 @@ breatherVent=`
 	
 	</table>
 	<p/>
-`;
-//</xsl:template>	
+	
 
-
-//<xsl:template match = "RimSeal">
-rimSeal=`	
 	<!-- *****Rim Seal Vent Settings **** -->
 	<p/>
 	
-	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
+	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	
 	<xsl:if match = ".[@Type = 'Internal Floating Roof Tank'] ">
 		<tr>
@@ -382,15 +318,11 @@ rimSeal=`
 	</tr>
 	</table>
 	<p/>
-`;
-//</xsl:template>	
 
-
-//<xsl:template match = "DeckChar">
-deckChar=`
+	<!-- *****Deck Characteristics   **** -->
 	<p/>
 	
-	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
+	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	<tr>
 		<td colspan = "2"><b>Deck Characteristics</b></td>
 		<td width = "150">&#160;</td>
@@ -425,212 +357,60 @@ deckChar=`
 	
 	</table>
 	<p/>
-`;
-//</xsl:template>	
+	
 
+	<!-- *****Deck Fittings  **** -->
 
-
-//<xsl:template match = "DeckFitting">
-deckFitting=`
 	<p/>
-	<table width = "800" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:8pt">
+	<table width = "80%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	<tr>
 		<td width = "700"><b>Deck Fitting/Status</b></td>
 		<td align = "right"><b>Quantity</b></td>
 	</tr>
 	<tr><td colspan = "2"><hr/></td></tr>
-	<xsl:for-each match = "Fitting">
-	   <tr>
-		<td> ${ "@FitType"}</td>
-		<td> ${ "@CoverType"}</td>
-		<td align = "right"> ${ "@Quantity" } </td>
+`
+for (i=0; i<t.fittings.length; i){
+report+=`<tr>
+		<td> ${ t.fittings[i].type }</td>
+		<td> ${ t.fittings[i].cover}</td>
+		<td align = "right"> ${ t.fittings[i].quantity} </td>
 	   </tr>
-	</xsl:for-each>
+`
+};
+report+=`
 	</table>
 	<p/>
-`;
-//</xsl:template>
 
+	<h3>Roof Fitting Loss Factors</h3>
 
-//<xsl:template match = "COMPONENT">
-COMPONENT=`
-	<tr>
-	<td> ${ "NAME" } </td>
-	<xsl:if match = ".[@Type = 'Vertical Fixed Roof Tank' $or$ @Type = 'Horizontal Tank']">
-		<td width = "140" align = "right"> ${ "WorkingLoss" } </td>		
-		<td width = "140" align = "right"> ${ "BreathingLoss" } </td>	
-		<td width = "140" align = "right"> ${ "TotalEmissions" } </td>
-	</xsl:if>
-	<xsl:if match = ".[@Type != 'Vertical Fixed Roof Tank' $and$ @Type != 'Horizontal Tank']">
-		<td width = "140" align = "right"> ${ "RimSealLoss" } </td>		
-		<td width = "140" align = "right"> ${ "WithdrawlLoss" } </td>	
-		<td width = "140" align = "right"> ${ "DeckFittingLoss" } </td>
-		<td width = "140" align = "right"> ${ "DeckSeamLoss" } </td>	
-		<td width = "140" align = "right"> ${ "TotalEmissions" } </td>	
-	</xsl:if>
-	
-	</tr>
-`;
-//</xsl:template>
-
-
-
-//<xsl:template match = "LiquidContents">
-liquidContents=`
-	<tr>
-		<td> ${ "MixtureComponent" } </td>
-		<td> ${ "Month" } </td>
-		<td align = "center"> ${ "AveDailyTemp" } </td>
-		<td align = "center"> ${ "MinDailyTemp" } </td>
-		<td align = "center"> ${ "MaxDailyTemp" } </td>
-		<td align = "right"> ${ "BulkTemp" } </td>
-		<td>&#160;</td>
-		<td align = "center"> ${ "AvePressure" } </td>
-		<td align = "center"> ${ "MinPressure" } </td>
-		<td align = "center"> ${ "MaxPressure" } </td>
-		<td align = "right"> ${ "VapMolWeight" } </td>
-		<td>&#160;</td>
-		<td align = "right"> ${ "LiquidMassFraction" } </td>
-		<td>&#160;</td>
-		<td align = "right"> ${ "VaporMassFraction" } </td>
-		<td>&#160;</td>
-		<td align = "right"> ${ "MolWeight" } </td>
-		<td>&#160;</td>
-		<td> ${ "Basis" } </td>
-  	</tr>
-`;
-//</xsl:template>
-
-
-
-//<xsl:template match = "TankSum">
-tankSum=`
-	<tr>
-		<td> ${ "@id" } </td>
-		<td> ${ "@company" } </td>
-		<td> ${ "@type" } </td>
-		<td> ${ "@location" } </td>
-		<td align = "right"> ${ "@loss" } </td>
-		
-	</tr>
-	<tr><td colspan = "5"><hr/></td></tr>
-`;
-//</xsl:template>
-
-
-////<xsl:template match = "Data">
-//data=`
-//	<xsl:if match = ".[@Unit = 'Monthly']">
-//		<table width = "900" style = "font-family:arial; font-size:6pt" border = "0" cellpadding = "0" cellspacing = "0">
-//		<tr><td colspan = "13"><hr/></td></tr>
-//		<tr align = "right">
-//			<td width = "204" align = "left">Month:</td>
-//			<td width = "58">January</td>
-//			<td width = "58">February</td>
-//			<td width = "58">March</td>
-//			<td width = "58">April</td>
-//			<td width = "58">May</td>
-//			<td width = "58">June</td>
-//			<td width = "58">July</td>
-//			<td width = "58">August</td>
-//			<td width = "58">September</td>
-//			<td width = "58">October</td>
-//			<td width = "58">November</td>
-//			<td width = "58">December</td>	
-//		</tr>
-//		<tr><td colspan = "13"><hr/></td></tr>
-//		<xsl:for-each match = "Value">	
-//			<tr align = "right">
-//			<td align = "left"> ${ "@label" } </td>
-//			<td> ${ "@month_1" } </td>	
-//			<td> ${ "@month_2" } </td>	
-//			<td> ${ "@month_3" } </td>	
-//			<td> ${ "@month_4" } </td>	
-//			<td> ${ "@month_5" } </td>	
-//			<td> ${ "@month_6" } </td>	
-//			<td> ${ "@month_7" } </td>	
-//			<td> ${ "@month_8" } </td>	
-//			<td> ${ "@month_9" } </td>	
-//			<td> ${ "@month_10" } </td>	
-//			<td> ${ "@month_11" } </td>	
-//			<td> ${ "@month_12" } </td>	
-//			</tr>			
-//		</xsl:for-each>
-//		</table>
-//	</xsl:if>
-//	<xsl:if match =  ".[@Unit = 'Annual']">
-//		<table width = "262" style = "font-family:arial; font-size:6pt" cellpadding = "0" cellspacing = "0">
-//		<tr><td colspan = "2"><hr/></td></tr>
-//		<tr align = "right">
-//			<td width = "204" align = "left">Annual Emission Calcaulations</td>
-//			<td width = "58">&#160;</td>
-//		</tr>
-//		<tr><td colspan = "2"><hr/></td></tr>
-//	
-//		<xsl:for-each match = "Value">	
-//			<tr align = "right">
-//			<td align = "left"> ${ "@label" } </td>
-//			<td> ${ "@month_0" } </td>	
-//			</tr>			
-//		</xsl:for-each>
-//		</table>
-//		
-//	</xsl:if>
-//	
-//`;	
-////</xsl:template>
-
-
-//<xsl:template match = "RoofStatus">
-roofStatus=`
-	<table width = "840" style = "font-family:arial; font-size:6pt" border = "0" cellpadding = "0" cellspacing = "0">
-		<tr><td colspan = "6"><hr/></td></tr>
-		<tr>
-			<td>&#160;</td>
-			<td colspan = "5" align = "center">Roof Fitting Loss Factors</td>
-		</tr>
-		<tr>
-			<td width = "350">Roof Fitting/Status</td>
-			<td width = "98" align = "right">Quantity</td>
-			<td width = "98" align = "right">KFa(lb-mole/yr)</td>
-			<td width = "98" align = "right">KFb(lb-mole/(yr mph^n))</td>
-			<td width = "98" align = "right">m</td>
-			<td width = "98" align = "right">Losses(lb)</td>
-		</tr>
-		<tr><td colspan = "6"><hr/></td></tr>
-		<xsl:for-each match = "Value">
-			<tr align = "right">
-				<td align = "left"> ${ "@label" } </td>
-				<td> ${ "@quantity" } </td>
-				<td> ${ "@KFa" } </td>
-				<td> ${ "@KFb" } </td>
-				<td> ${ "@m" } </td>
-				<td> ${ "@losses" } </td>
-			</tr>
-		</xsl:for-each>	
+	 	<table width = "840" style = "font-family:arial; font-size:6pt" border = "0" cellpadding = "0" cellspacing = "0">
+		   <tr>
+		   	<td width = "350">Roof Fitting/Status</td>
+		   	<td width = "98" align = "right">Quantity</td>
+		   	<td width = "98" align = "right">KFa(lb-mole/yr)</td>
+		   	<td width = "98" align = "right">KFb(lb-mole/(yr mph^n))</td>
+		   	<td width = "98" align = "right">m</td>
+		   	<td width = "98" align = "right">Losses(lb)</td>
+		   </tr>
+		   <tr><td colspan = "6"><hr/></td></tr>
+		   <xsl:for-each match = "Value">
+		   	<tr align = "right">
+		   		<td align = "left"> ${ "@label" } </td>
+		   		<td> ${ "@quantity" } </td>
+		   		<td> ${ "@KFa" } </td>
+		   		<td> ${ "@KFb" } </td>
+		   		<td> ${ "@m" } </td>
+		   		<td> ${ "@losses" } </td>
+		   	</tr>
+		   </xsl:for-each>	
 		</table>		
 	
-	
-`;//</xsl:template>
 
-//<xsl:template match="/">
-report=`
-	<xsl:for-each select = "REPORT/Tank">
-
-		${printSeparador("Tank Indentification and Physical Characteristics")}
-
-				${identification}
-				${dimensions}
-				${paintChar}
-				${roofChar}
-				${breatherVent}
-
-
-		<table width = "900" style = "font-family:arial; font-size:8pt">
+		<table width = "90%" style = "font-family:arial; font-size:11pt">
 			<tr><td>Meterological Data used in Emissions Calculations:  ${m.siteName} (Avg Atmospheric Pressure = ${m.atmPressure} psia) </td></tr>
 		</table>
 		
-		<p style="page-break-before: always"></p>
+	<p style="page-break-before: always"></p>
 	
 		<!-- Liquid Contents Report  -->
 		${printSeparador("Liquid Contents of Storage Tank")}
@@ -684,15 +464,34 @@ report=`
 		   <tr>	
 		   	<td colspan = "19"><hr/></td>
 		   </tr>
-		   <!--<xsl:for-each select = "Tank">-->
-				<xsl:apply-templates/>
-		   <!--</xsl:for-each>-->
+		   
+		   <tr>
+		   	<td> ${ "MixtureComponent" } </td>
+		   	<td> ${ "Month" } </td>
+		   	<td align = "center"> ${ "AveDailyTemp" } </td>
+		   	<td align = "center"> ${ "MinDailyTemp" } </td>
+		   	<td align = "center"> ${ "MaxDailyTemp" } </td>
+		   	<td align = "right"> ${ "BulkTemp" } </td>
+		   	<td>&#160;</td>
+		   	<td align = "center"> ${ "AvePressure" } </td>
+		   	<td align = "center"> ${ "MinPressure" } </td>
+		   	<td align = "center"> ${ "MaxPressure" } </td>
+		   	<td align = "right"> ${ "VapMolWeight" } </td>
+		   	<td>&#160;</td>
+		   	<td align = "right"> ${ "LiquidMassFraction" } </td>
+		   	<td>&#160;</td>
+		   	<td align = "right"> ${ "VaporMassFraction" } </td>
+		   	<td>&#160;</td>
+		   	<td align = "right"> ${ "MolWeight" } </td>
+		   	<td>&#160;</td>
+		   	<td> ${ "Basis" } </td>
+  		   </tr>
 		</table>
-		<p style="page-break-before: always"></p>
-`;
+	
 
-//<xsl:for-each select = "Detail">
-report+=`
+
+	<p style="page-break-before: always"></p>
+
 		<!--this is the detail page-->
 		${printSeparador("Detail Calculations (AP-42)")}
 	
@@ -700,17 +499,32 @@ report+=`
 		<span><font size = "2" face = "Arial"><b> ${ "TankLocation" } </b></font></span>
 		<p/>
 		<p/>
-				<xsl:apply-templates/>
-				
-			<p style="page-break-before: always"></p>	
+	
+		<h4>Annual Emission Calcaulations</h4>
+		
+		<table width = "262" style = "font-family:arial; font-size:6pt" cellpadding = "0" cellspacing = "0">
+		<tr><td colspan = "2"><hr/></td></tr>
+	
+			<xsl:for-each match = "Value">	
+				<tr align = "right">
+				<td align = "left"> ${ "@label" } </td>
+				<td> ${ "@month_0" } </td>	
+				</tr>			
+			</xsl:for-each>
+		</table>
+
+
+	<p style="page-break-before: always"></p>	
 
 		<!-- Now we need to add in the code that does the "brief" part of the report -->
-		<p style="page-break-before: always"></p>
+
+
+	<p style="page-break-before: always"></p>
+
 		${printSeparador("Individual Tank Emission Totals")}
 		
 		<p/>
-		<span><font size = "3" face = "Arial"><b>Emissions Report for:  ${ "TimePeriod" } 		
-		</b></font></span>
+		<h3>Emissions Report for:  ${ "TimePeriod" } 	</h3>
 		<p/>
 		
 		<p/>
@@ -721,7 +535,7 @@ report+=`
  if( t.type== 'Vertical Fixed Roof Tank' ||  t.type == 'Horizontal Tank'){
 
 	report+=`
-		<table width = "620" border = "1" style = "font-family:arial; font-size:8pt">
+		<table width = "100%" border = "1" style = "font-family:arial; font-size:11pt">
 			<tr>
 				<td width = "200">&#160;</td>
 				<td colspan = "3" align = "center">Losses(lbs)</td>
@@ -732,15 +546,17 @@ report+=`
 				<td width = "140" align = "right">Breathing Loss</td>
 				<td width = "140" align = "right">Total Emissions</td>
 			</tr>
-			<xsl:for-each select = "EmissionTotals">		
-				<xsl:apply-templates/>
-			</xsl:for-each>
-			${COMPONENT}
+			<tr>
+			<td> ${ "NAME" } </td>
+				<td width = "140" align = "right"> ${ o.workingLosses } </td>		
+				<td width = "140" align = "right"> ${ "BreathingLoss" } </td>	
+				<td width = "140" align = "right"> ${ "TotalEmissions" } </td>
+			</tr>
 		</table>
 	`;
 };
 if (t.type !='Vertical Fixed Roof Tank'&& t.type != 'Horizontal Tank'){
-report+=`			<table width = "900" border = "1" style = "font-family:arial; font-size:8pt">
+report+=`			<table width = "100%" border = "1" style = "font-family:arial; font-size:11pt">
 			<tr>
 				<td width = "200">&#160;</td>
 				<td colspan = "5" align = "center">Losses(lbs)</td>
@@ -752,26 +568,26 @@ report+=`			<table width = "900" border = "1" style = "font-family:arial; font-s
 				<td width = "140" align = "right">Deck Fitting Loss</td>
 				<td width = "140" align = "right">Deck Seam Loss</td>
 				<td width = "140" align = "right">Total Emissions</td>
-				
 			</tr>
-			<xsl:for-each select = "EmissionTotals">
-				<xsl:apply-templates/>
-			</xsl:for-each>
-			${COMPONENT}	
+				<td> ${ "NAME" } </td>
+				<td width = "140" align = "right"> ${ "RimSealLoss" } </td>		
+				<td width = "140" align = "right"> ${ "WithdrawlLoss" } </td>	
+				<td width = "140" align = "right"> ${ "DeckFittingLoss" } </td>
+				<td width = "140" align = "right"> ${ "DeckSeamLoss" } </td>	
+				<td width = "140" align = "right"> ${ "TotalEmissions" } </td>	
+			</tr>
 			</table>
-			
-`
+`;
 };
 		
-report+=`		<p style="page-break-before: always"></p>
-
+report+=`	
 		<p style="page-break-before: always"></p>
 		${printSeparador("Total Emissions Summaries - All Tanks in Report")}
 		
 		<span><font size = "3" face = "Arial"><b>Emissions Report for:  ${ "@months" } </b></font></span>
 		<p/>
 		
-		<table width = "900" border = "0" style = "font-family:arial; font-size:8pt" cellpadding = "0" cellspacing = "0">
+		<table width = "90%" border = "0" style = "font-family:arial; font-size:11pt" cellpadding = "0" cellspacing = "0">
 			<tr><td colspan = "5"><hr/></td></tr>
 			<tr>
 				<td width = "180">Tank Identification</td>
@@ -791,11 +607,28 @@ report+=`		<p style="page-break-before: always"></p>
 			<tr><td colspan = "5"><hr/></td></tr>
 		</table>
 	
-	
+	<br>
+        <button onclick='window.print()'>Imprimir reporte</button>";
+        <br>
+        
+	</section>
+	</body>
+</html>
 `;	
-
-
-
-
 	return report;
+};
+
+//=====================================================================
+function printSeparador(sectionTitle){
+
+	str=`	
+	<center>
+		<h1 style="color:#303030;">TANKS 4.0.9d</h1>
+		<h2>Emissions Report - Detailed Format </h2>
+		<h2>${sectionTitle}</h2>
+	</center> 
+	<br>
+	`;
+
+	return str;
 };
