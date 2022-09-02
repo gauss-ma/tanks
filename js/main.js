@@ -2,6 +2,16 @@ function main(){
 
 	console.log(">>> Iniciando ejecución..");
 
+	//IDENTIFICACIÓN DEL REPORTE DE SALIDA
+	i={
+		userID:"Sabrina",
+		city:"Buenos Aires",
+		state:"",
+		company:"",
+		tankType:"",
+		description:"",
+	};
+
 	//(1) INPUTS
 	//  (0) Opciones globales:
 	unitsInp="Imperial"		//document.getElementById("unitsInput").value;  //Unidades de Input  [SI/Imperial]  
@@ -46,7 +56,8 @@ function main(){
 	};
 
 	//  (2.a) calculos previos:
-	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura:
+	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura
+	t.workingVolume=calculateWorkingVolume(t);	//calcula el volumen máximo de líquido que puede contener el tanque [gal]
 
 	//  (2.b) calculo de emision:
 
@@ -121,7 +132,7 @@ function loadTankParameters(){
 		maxLiquidHeight:3, 	    	//document.getElementById("").value; //altura maxima de liquido [ft]
 		turnoversPerYear:"",      	//document.getElementById("").value; //número de veces que el tanque se llenó totalmente en el año
 		annualNetThroughput:6,	//document.getElementById("").value; //volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
-		vaporbalanced:true, 		//document.getElementById("").value; //esta en equilibrio con el vapor?
+		flashing:false, 		//document.getElementById("").value; //ACLARACIÓN: El flashing ocurre cuando el liquido ingresa al tanque a mucha presión con moléculas de gas atrapadas en su interior y estas escapan cuando se libera esa presión al ingresar el líquido al tanque.
 		shell:{
 			color:"black",		//document.getElementById("").value; //color
 			condition:"aged",	//document.getElementById("").value; //(new|aged|average)
@@ -137,21 +148,22 @@ function loadTankParameters(){
 		ventPressureSetting:0.03,	//document.getElementById("").value; //presión a la cual están seteadas las válvulas de ventilación [psig]
 		ventVacuumSetting:-0.03,	//document.getElementById("").value; //presión de vacío de las válvulas de ventilación [psig]
 		gaugePressure:"",		//document.getElementById("").value; //presión manométrica en la fase vapor en condiciones de operación normales [psig] // ACLARACIÓN: sólo se debe ingresar si la ventPressureRange ingresada es mayor que 0,06. Si el tanque está a temperatura atmosférica, debe ingresarse cero.
-		insulation:"none",		//document.getElementById("").value; //none, shell, shellAndRoof, underground //ACLARACIÓN: El AP-42 sólo permite incorporar el aislamiento térmico en los cálculos para tanques de techo fijo
+		insulation:"none",		//document.getElementById("").value; //none, shell, shellAndRoof, underground //ACLARACIÓN: El AP-42 sólo permite incorporar el aislamiento térmico en los cálculos para tanques de techo fijo //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
 		heating:{
 			heating: false,		//document.getElementById("").value; //considerar calentamiento? //ACLARACIÓN: El AP-42 sólo permite incorporar el calentamiento en los cálculos para tanques de techo fijo
 			cyclesPerYear:"",	//document.getElementById("").value; //numero de ciclos de calentamiento
-			minBulkTemp:"",		//document.getElementById("").value; //temperatura minima del liquido [grados Rankine] 
-			maxBulkTemp:"",		//document.getElementById("").value; //temperatura maxima del liquido [grados Rankine]
+			minBulkTemp:"",		//document.getElementById("").value; //temperatura minima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
+			maxBulkTemp:"",		//document.getElementById("").value; //temperatura maxima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
 		},
-		construction:"riveted", 		//document.getElementById("").value; //(welded|riveted) 
+		construction:"riveted", 		//document.getElementById("").value; //(welded|riveted) //ACLARACIÓN: Si no se sabe, el AP-42 recomienda asumir que es "welded".
 		rimSeal:{
 			fit:"Average-Fitting Seal",	//document.getElementById("").value; //(Average-Fitting Seal|Tight-Fitting Seal)
 			type:"Mechanical-shoe seal",	//document.getElementById("").value; //(Mechanical-shoe Seal|Liquid-mounted seal|Vapor-mounted Seal)
 			secondary:"Primary only",	//document.getElementById("").value; //(Primary only|Shoe-mounted secondary|Rim-mounted secondary|Weather shield)
 		},	
 		deck: {
-			type:"",		//document.getElementById("").value; //(pontoon|double)
+			type:"",		//document.getElementById("").value; //(welded|bolted)
+			support:"",		//document.getElementById("").value; //(pontoon|double|unknown) //ACLARACIÓN: Si se ingresa "unknown", el programa hace los cálculos como si fuera pontoon (así lo recomienda el AP-42).
 			fittings:[],		//acá agrego array con "accesorios"
 			seamLength:"",		//document.getElementById("").value; //medida total de las "costuras" de la plataforma flotante [ft] //si no se conoce, se debe dejar en blanco o ingresar cero
 			construction:"Panel",	//document.getElementById("").value; //(Continuous sheet|Panel|Unknown)//si no se conocen las MEDIDAS de las hojas o paneles con los que está construida la plataforma, se debe elegir la opción "Unknown" 
@@ -193,16 +205,16 @@ function calculateSolarAbsorbance(t){
 };
 
 
-function calculateTankVolume(t){
+function calculateWorkingVolume(t) {
 	if(t.type=="HFR"){
-		t.effectiveDiameter=Eq1_14()
-		t.effectiveHeight=Eq1_15()
-		t.volume = (Math.PI/8)*Math.pow(t.effectiveDiameter,2)*t.effectiveHeight*7.48052;
+		t.effectiveDiameter=Eq1_14();
+		t.effectiveHeight=Eq1_15();
+		t.workingVolume = (Math.PI/8)*Math.pow(t.effectiveDiameter,2)*t.effectiveHeight*7.48052;
 	} else {
-		t.volume = t.maxLiquidHeight*(Math.PI/4)*Math.pow(t.diameter,2)*7.48052;
+		t.workingVolume = t.maxLiquidHeight*(Math.PI/4)*Math.pow(t.diameter,2)*7.48052;
 	};
 
-	return t.volume;
+	return t.workingVolume;
 };
 
 

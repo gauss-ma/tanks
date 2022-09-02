@@ -36,32 +36,32 @@ function printReport(){
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">User Identification:</td>
-		<td> ${ "UserID" } </td>
+		<td> ${ i.userID } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">City:</td>
-		<td> ${ "City" } </td>
+		<td> ${ i.city } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">State:</td>
-		<td> ${ "State" } </td>
+		<td> ${ i.state } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Company:</td>
-		<td> ${ "Company" } </td>
+		<td> ${ i.company } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Type of Tank:</td>
-		<td> ${ "TankType" } </td>
+		<td> ${ i.tankType } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Description:</td>
-		<td> ${ "Description" } </td>
+		<td> ${ i.description } </td>
 	</tr>
 	</table>
 	<p/>
@@ -72,19 +72,19 @@ function printReport(){
 	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 `
 
-if( t.type=='Vertical Fixed Roof Tank'){
+if( t.type=='VFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Shell Height (ft):</td>
-			<td align = "right"> ${ "ShellHeight" } </td>
+			<td align = "right"> ${ t.height } </td>
 		</tr>
 `;
 }
-if( t.type =='Horizontal Tank'){
+if( t.type =='HFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Shell Length (ft):</td>
-			<td align = "right"> ${ "ShellLength" } </td>
+			<td align = "right"> ${ t.height } </td>
 		</tr>
 `;
 };
@@ -94,21 +94,26 @@ report+=`
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Diameter (ft):</td>
-		<td align = "right"> ${ "Diameter" } </td>
+		<td align = "right"> ${ t.diameter } </td>
 	</tr>
 	<!-- End diameter -->
 `;
 
-if(t.type == 'Vertical Fixed Roof Tank'){
+if(t.type == 'VFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Liquid Height (ft) :</td>
-			<td align = "right"> ${ "LiquidHeight" } </td>
+			<td width = "180">Maximum Liquid Height (ft) :</td>
+			<td align = "right"> ${ t.maxLiquidHeight } </td>
+		</tr>
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Minimum Liquid Height (ft):</td>
+			<td align = "right"> ${ t.minLiquidHeight } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Avg. Liquid Height (ft):</td>
-			<td align = "right"> ${ "AveLiquidHeight" } </td>
+			<td align = "right"> ${ t.avgLiquidHeight } </td>
 		</tr>
 `
 };
@@ -117,21 +122,21 @@ report+=`	<!-- All tanks have volume and turnover -->
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Volume (gallons):</td>
-		<td align = "right"> ${ "Volume" } </td>
+		<td align = "right"> ${ t.workingVolume } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Turnovers:</td>
-		<td align = "right"> ${ "Turnovers" } </td>
+		<td align = "right"> ${ turnoversPerYear } </td>
 	</tr>
 	<!-- end volume and turnover -->
 `;
 
-if (t.type == 'Vertical Fixed Roof Tank' || t.type == 'Horizontal Tank'){
+if (t.type == 'VFR' || t.type == 'HFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Net Throughput(gal/yr):</td>
-			<td align = "right"> ${ "NetThroughput" } </td>
+			<td align = "right"> ${ "NetThroughput" } </td>		<!--NOTA SABRI: Ver como ingresarlo en el output en funcion de turnoversPerYer (si el usuario no lo ingreso) -->
 		</tr>
 	
 		<tr>
@@ -141,7 +146,7 @@ report+=`	<tr>
 		</tr>
 `;
 };
-if ( t.type == 'Internal Floating Roof Tank'){
+if ( t.type == 'IFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Self Supp. Roof? (y/n):</td>
@@ -159,7 +164,7 @@ report+=`	<tr>
 		</tr>
 `;
 };
-if (t.type == 'Horizontal Tank'){
+if (t.type == 'HFR'){
 report+=`		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Is Tank Underground (y/n):</td>
@@ -177,15 +182,14 @@ report+=`
 	<h3>Paint Characteristics</h3>
 	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 `
-if ( t.type == "EFR"  || t.type== 'IFR' || t.type = "DEFR"){
-
-report+=`
+if ( t.type == "EFR"  || t.type== 'IFR' || t.type == "DEFR"){
+	report+=`
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Internal Shell Condition:</td>
-			<td> ${ "InternalCondition" } </td>
+			<td> ${ t.shellTexture } </td>
 		</tr>
-`
+	`
 };
 
 report+=`	
@@ -194,26 +198,32 @@ report+=`
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Shell Color/Shade:</td>
-		<td> ${ "ShellColor" } </td>
+		<td> ${ t.shell.color } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Shell Condition</td>
-		<td> ${ "ShellCondition" } </td>
+		<td> ${ t.shell.condition } </td>
 	</tr>
 	<!-- end color and condition -->
-	<xsl:if match = ".[@Type = 'Vertical Fixed Roof Tank'  $or$ @Type = 'Internal Floating Roof Tank'] ">
+`;
+
+if (t.type == "VFR" || t.type == "IFR") {
+	report+=`
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Roof Color/Shade:</td>
-			<td> ${ "RoofColor" } </td>
+			<td> ${ t.roof.color } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Roof Condition:</td>
-			<td> ${ "RoofCondition" } </td>
+			<td> ${ t.roof.condition } </td>
 		</tr>
-	</xsl:if>
+	`
+};	
+
+report+=` 
 	</table>
 	<p/>
 	<!-- *****Paint Characteristics **** -->
@@ -227,34 +237,54 @@ report+=`
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Type:</td>
-		<td> ${ "Type" } </td>
+		<td> ${ t.roof.type } </td>
 	</tr>
-	<xsl:if match = ".[@Type = 'Vertical Fixed Roof Tank']">
-		<tr>
+`
+if(t.type =="VFR") {
+	report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Height (ft)</td>
-			<td align = "right"> ${ "Height" } </td>
+			<td align = "right"> ${ t.roof.height } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<xsl:if match = ".[Type = 'Dome']">
-				<td width = "180">Radius (ft) (Dome Roof)</td>
-			</xsl:if>
-			<xsl:if match = ".[Type = 'Cone']">
-				<td width = "180">Slope (ft/ft) (Cone Roof)</td>
-			</xsl:if>
-			<td align = "right"> ${ "Size" } </td>
-		</tr>
-	</xsl:if>
-	<xsl:if match = ".[@Type = 'External Floating Roof Tank' $or$ @Type = 'Domed External Floating Roof Tank']">
-		<tr>
+	`		
+	if (t.roof.type == "dome") {
+		report+=`<tr>
+		<td width = "20">&#160;</td>
+		<td width = "180">Radius (ft) (Dome Roof)</td>
+		<td align = "right"> ${ t.roof.radius } </td>
+	</tr>
+	<tr>
+		<td width = "20">&#160;</td>		
+		`
+	} else if (t.roof.type == "cone") {
+		report+=`<tr>
+		<td width = "20">&#160;</td>
+		<td width = "180">Slope (ft/ft) (Cone Roof)</td>
+		<td align = "right"> ${ t.roof.slope } </td>
+	</tr>
+	<tr>
+		<td width = "20">&#160;</td>		
+		`
+	};
+
+	report+=`
+			<td align = "right"> ${ "Size" } </td>  	<!--NOTA SABRI: No se a que haría referencia ese Size -->
+			</tr>
+	`
+};
+		
+	if(t.type == "EFR" || t.type == "DEFR" ) {
+		report+=`<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Fitting Category</td>
 			<td> ${ "Category" } </td>
 		</tr>
-	</xsl:if>
+		`
+	};
 	
-	
+	report+=`
 	</table>
 	
 	<p/>

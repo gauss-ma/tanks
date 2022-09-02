@@ -5,9 +5,9 @@ function validacion(validacionID){
 	
 	//"CASO BASE": Valores default para ubicación, tanque y líquido
 	siteName="Rochester, MN";
-	liquidCategory="Other organic liquids";
+	liquidCategory="";
 	liquidName="";
-	compoundName="Acetaldehyde"; 
+	compoundName=""; 
 	t={
         	type:"VFR",	    		
         	height:10,		    	
@@ -17,7 +17,7 @@ function validacion(validacionID){
         	maxLiquidHeight:3, 	    	
         	turnoversPerYear:"",      	
         	annualNetThroughput:10,
-        	vaporbalanced:true, 		
+        	flashing:false, 		
         	shell:{
         		color:"gray: medium",		
         		condition:"aged",	
@@ -47,7 +47,8 @@ function validacion(validacionID){
         		secondary:"",	
         	},	
         	deck: {
-        		type:"",		
+        		type:"",
+				support:"",		
         		fittings:[],		
         		seamLength:"",		
         		construction:"",	
@@ -66,14 +67,16 @@ function validacion(validacionID){
 	//Configuraciones de cada validación:
 	switch (validacionID) {
 		case "Prueba1":
-			//Acá cambia sólo el tipo de techo
-			compoundName="Acetaldehyde";    	
-			t.roof.type= "dome";
+			//Acá cambia sólo el tipo de techo y el compuesto orgánico	
+			liquidCategory="Other organic liquids";
+			compoundName="Acetaldehyde";
+			t.roof.type="dome";
 			t.roof.height=0;
 			t.roof.radius=5;
 		break;
 	  	case "Prueba2":
-			//Acá cambia el tipo de techo y el compuesto orgánico.                                                                                 
+			//Acá cambia sólo el compuesto orgánico.                                                                                 
+			liquidCategory="Other organic liquids";
 			compoundName="Hexane (n)";
 			t.roof.type="dome";
 			t.roof.height=0;
@@ -82,17 +85,17 @@ function validacion(validacionID){
 	  	case "Prueba3":
 			//Acá cambia el tipo de líquido (petróleo refinado) y el tipo de tanque (IFR) junto con sus ajustes del sello, los accesorios y la plataforma flotante
 			liquidCategory="Refined Petroleum Liquids";
-			liquidName="Motor Gasoline RVP 7";
-			compoundName="";    	
+			liquidName="Motor Gasoline RVP 7";   	
 			t.type="IFR";
 			t.construction="riveted";
 			t.rimSeal.fit="Average-Fitting Seal";
 			t.rimSeal.type="Mechanical-shoe seal";
 			t.rimSeal.secondary="Primary only";
+			t.deck.type="bolted";
 			t.deck.construction="Panel";
 			t.deck.panelWidth=5;
 			t.deck.panelLength=12;
-			t.rimSeal=findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+			t.rimSeal=findRimSealProp(t);	//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
 			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
 			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
 			t.shellTexture="Light Rust";
@@ -100,10 +103,9 @@ function validacion(validacionID){
 			t.columns.type="Pipe Columns";
 		break;
 	  	case "Prueba4":
-			//Acá cambia el tipo de líquido (petróleo refinado) y el tipo de tanque (HFR)
+			//Acá cambia el tipo de tanque (HFR)
 			liquidCategory="Refined Petroleum Liquids";
-			liquidName="Motor Gasoline RVP 7";
-			compoundName="";    	
+			liquidName="Motor Gasoline RVP 7";   	
 			t.type="HFR";
 			t.minLiquidHeight="";
 			t.avgLiquidHeight="";
@@ -112,29 +114,79 @@ function validacion(validacionID){
 		case "Prueba5":
 			//Acá cambia el tipo de líquido (petróleo crudo), el tipo de tanque (EFR), el tipo de construcción del tanque y el tipo de sello. 
 			liquidCategory="Crude Oils";
-			liquidName="Midcontinent Crude Oil";
-			compoundName="";    	
+			liquidName="Midcontinent Crude Oil";    	
 			t.type="EFR";
 			t.construction="welded";
 			t.rimSeal.fit="Average-Fitting Seal";
 			t.rimSeal.type="Liquid-mounted seal";
 			t.rimSeal.secondary="Weather shield";
 			t.rimSeal=findRimSealProp(t);		//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+			t.deck.type="welded";
+			t.deck.support="double";
 			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
 			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
 			t.shellTexture="Light Rust";
 			t.columns.number=0;
 		break;
 		case "Prueba6":
-			//Acá cambia la condición de equilibrio del vapor con el líquido, el tipo de techo, el aislamiento térmico y el calentamiento      	
-			t.vaporbalanced=false;
+			//Acá cambia el tipo de techo y el aislamiento térmico (sin calentamiento)      	
+			liquidCategory="Other organic liquids";
+			compoundName="Acetaldehyde";
 			t.roof.type="cone";
 			t.roof.height=0;
 			t.roof.slope=0.0625;
 			t.insulation="shellAndRoof";
+			t.heating.minBulkTemp=470;
+			t.heating.maxBulkTemp=470;
+		break;
+		case "Prueba7":
+			///Acá se agrega flashing y calentamiento
+			liquidCategory="Other organic liquids";
+			compoundName="Acetaldehyde";
+			t.roof.type="cone";
+			t.roof.height=0;
+			t.roof.slope=0.0625;
+			t.flashing=true;
 			t.heating.heating=true;
 			t.heating.minBulkTemp=460;
 			t.heating.maxBulkTemp=480;
+		break;
+		case "Prueba8":
+			///Acá cambia la presión a la que están seteadas las válvulas de ventilación
+			liquidCategory="Other organic liquids";
+			compoundName="Acetaldehyde";
+			t.roof.type="cone";
+			t.roof.height=0;
+			t.roof.slope=0.0625;
+			t.ventPressureSetting=0.04;
+        	t.ventVacuumSetting=-0.04;	
+        	t.gaugePressure=0.01;		
+		break;
+		case "Prueba9":
+			///Acá se ingresan los turnoversPerYear en lugar del annualNetThroughput
+			liquidCategory="Other organic liquids";
+			compoundName="Acetaldehyde";
+			t.roof.type="cone";
+			t.roof.height=0;
+			t.roof.slope=0.0625;
+			t.turnoversPerYear=5;
+			t.annualNetThroughput="";
+		break;
+		case "Prueba10":
+			///Acá cambia el tipo de tanque (DEFR), el tipo de construcción del tanque y de la plataforma flotante, y la textura de las paredes
+			liquidCategory="Other organic liquids";
+			compoundName="Acetaldehyde";
+			t.type="DEFR";
+			t.construction="welded";
+			t.rimSeal.fit="Average-Fitting Seal";
+			t.rimSeal.type="Mechanical-shoe seal";
+			t.rimSeal.secondary="Primary only";
+			t.deck.type="bolted";
+			t.deck.construction="Unknown";
+			t.rimSeal=findRimSealProp(t);	//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
+			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
+			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+			t.shellTexture="Dense Rust";
 		break;
 	};
 
@@ -160,7 +212,7 @@ function validacion(validacionID){
 
 	//  (2.a) calculos previos:
 	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura
-	t.volume=calculateTankVolume(t);	//sólo para ingresarlo en el TANKS que me lo pide como input [en gal]
+	t.workingVolume=calculateWorkingVolume(t);	//calcula el volumen máximo de líquido que puede contener el tanque [gal]
 
 	//  (2.b) calculo de emision:
 
@@ -174,7 +226,14 @@ function validacion(validacionID){
 	//(3) OUTPUT
 	//outputWindow()	//Acá función que crea informe de salida.
 	console.log(" Resultados:");
-	console.log(o.totalLosses, o.standingLosses, o.workingLosses, o.deckFittingLossFactor, o.deckFittingLosses, o.deckSeamLosses, o.rimSealLosses);
+
+	console.log("    totalLosses: "+o.totalLosses);
+	console.log("    standingLosses: "+o.standingLosses); 
+	console.log("    workingLosses: "+o.workingLosses);
+	console.log("    deckFittingLosses: "+o.deckFittingLosses);
+	console.log("    deckSeamLosses: "+o.deckSeamLosses);
+	console.log("    rimSealLosses: "+o.rimSealLosses);
+
 	console.log(">>> Fin corrida de validación: "+validacionID+"...");
 
 };

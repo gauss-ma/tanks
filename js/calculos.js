@@ -100,7 +100,7 @@ function Eq1_6() {
 		avgVapTempRange=Eq1_8();
 	} else if (t.insulated == "full") {
 		if (t.heating.heating == false ) {
-			avgVapTempRange=avgVapTempRange = 0;
+			avgVapTempRange=0;
 		} else {
 			avgVapTempRange=Eq8_1();//en tanques con aislamiento térmico total y calentamiento, la variación en la temperatura del vapor será igual a la variación en la temperatura en el seno del líquido por el calentamiento (sección 7.1.3.8.4 del AP-42)
 		}
@@ -363,13 +363,15 @@ function Eq1_34() {
 
 //Eq1_35 Working Losses: Pérdidas por llenado y vaciado de tanques de techo fijo (o.workingLosses) (lbs/yr)
 function Eq1_35() {
-	
-	sumLiquidIncreases      =Eq1_37();	//Obtiene la suma anual de aumentos en el nivel del líquido (sumLiquidIncreases) (ft/yr)
-	netWorkingLossThroughput=Eq1_38();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr)
-	turnoversPerYear        =Eq1_36();	//Obtiene el número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless)
-	
+	if(t.annualNetThroughput!= "" && isNaN(t.annualNetThroughput)==false) {
+		netWorkingLossThroughput=Eq1_39();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr)
+		sumLiquidIncreases      =Eq1_37();	//Obtiene la suma anual de aumentos en el nivel del líquido (sumLiquidIncreases) (ft/yr)
+		turnoversPerYear        =Eq1_36();	//Obtiene el número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless)
+	} else if (t.turnoversPerYear!= "" && isNaN(t.turnoversPerYear)==false) {
+		netWorkingLossThroughput=Eq1_38();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr)
+	}
 	//Obtiene el factor de saturación de las pérdidas por llenado y vaciado del tanque (workingLossTurnover) (dimensionless)
-		if (t.vaporbalanced == true) {
+		if (t.flashing == true) {
 			workingLossTurnover = 1;
 		}else if (turnoversPerYear > 36) {
 			workingLossTurnover = (180 + turnoversPerYear) / (6 * turnoversPerYear);
@@ -384,7 +386,6 @@ function Eq1_35() {
 		}
 	//Obtiene el factor de corrección del ajuste de presión de las válvulas de ventilación (ventCorrectionFactor) (dimensionless)
 	ventCorrectionFactor=Eq1_41();
-	
 	//Eq1_35
 	o.workingLosses = netWorkingLossThroughput * workingLossTurnover * workingLossProductFactor * vaporDensity * ventCorrectionFactor;
 	
@@ -393,36 +394,38 @@ function Eq1_35() {
 
 //Eq1_36 Número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless) 
 function Eq1_36() {
-	maxLiquidHeight = parseFloat(t.maxLiquidHeight)
-	minLiquidHeight = parseFloat(t.minLiquidHeight)
+	maxLiquidHeight = parseFloat(t.maxLiquidHeight);
+	minLiquidHeight = parseFloat(t.minLiquidHeight);
 	//Eq1_36
 	return sumLiquidIncreases / (maxLiquidHeight - minLiquidHeight);
 }
 
 //Eq1_37 Suma anual de aumentos en el nivel del líquido (sumLiquidIncreases) (ft/yr) 
 function Eq1_37() {
-	//Convierte el valor de annualNetThroughput ingresado, de "gal/year" a "barrels/year" 
-	annualNetThroughput = parseFloat(t.annualNetThroughput)/42;
-	//Eq1_37
 	return (5.614 * annualNetThroughput) / ((Math.PI / 4) * Math.pow(t.effectiveDiameter,2));
 }
 
 //Eq1_38 Volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr) 
 function Eq1_38() {
-	return sumLiquidIncreases * (Math.PI / 4) * Math.pow(t.effectiveDiameter,2);
+	maxLiquidHeight = parseFloat(t.maxLiquidHeight);
+	minLiquidHeight = parseFloat(t.minLiquidHeight);
+	turnoversPerYear = parseFloat(t.turnoversPerYear);
+	return turnoversPerYear * (maxLiquidHeight - minLiquidHeight) * (Math.PI/4) * Math.pow(t.effectiveDiameter,2);
 }
 
-//Eq1_39 Volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr) [Esta ecuación en realidad NO es necesaria porque es la combinación de la Eq1_37 y la Eq1_38]
+//Eq1_39 Volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr)
 function Eq1_39() {
-	return 5.614 * annualNetThroughput; //El AP-42 las nombra diferente pero estas dos variables en realidad son lo mismo, sólo que netWorkingLossThroughput está expresada en "ft3/yr" y annualNetThroughput, en "barrels/yr".
+	//Convierte el valor de annualNetThroughput ingresado, de "gal/year" a "barrels/year" 
+	annualNetThroughput = parseFloat(t.annualNetThroughput)/42;
+	return 5.614 * annualNetThroughput; //El AP-42 las nombra diferente pero estas dos variables en realidad son lo mismo
 }
 
 //Eq1_40 Condición que determina si es necesario incluir el factor de corrección del ajuste de presión de las válvulas de ventilación 
 function Eq1_40() {
 	
 	if (ventPressureRange > 0.06) {
-		gaugePressure = parseFloat(gaugePressure);
-		if ( workingLossTurnover * ((t.ventPressureSetting + m.atmPressure) / (gaugePressure + m.atmPressure)) > 1) {
+		t.gaugePressure = parseFloat(t.gaugePressure);
+		if ( workingLossTurnover * ((t.ventPressureSetting + m.atmPressure) / (t.gaugePressure + m.atmPressure)) > 1) {
 			return 1;
 		} else {
 			return 0;
@@ -435,7 +438,7 @@ function Eq1_40() {
 //Eq1_41 Factor de corrección del ajuste de presión de las válvulas de ventilación (ventCorrectionFactor) (dimensionless)
 function Eq1_41() {
 	if (Eq1_40() == 1) {			
-		ventCorrectionFactor = (((gaugePressure + m.atmPressure) / workingLossTurnover) - c.vaporPressure) / (t.ventPressureSetting + m.atmPressure - c.vaporPressure);
+		ventCorrectionFactor = (((t.gaugePressure + m.atmPressure) / workingLossTurnover) - c.vaporPressure) / (t.ventPressureSetting + m.atmPressure - c.vaporPressure);
 	} else {
 		ventCorrectionFactor = 1;
 	}
@@ -506,11 +509,13 @@ function Eq2_4() {
 	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
 	if (t.type == "IFR" || t.type == "DEFR") {
 		avgSurfaceTemp=Eq2_5();
-	} else if (t.deck.type == "pontoon") {
-		avgSurfaceTemp=Eq2_7();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
-	} else {
-		avgSurfaceTemp=Eq2_10();
-	}
+	} else if (t.type == "EFR") { 
+		if (t.deck.support == "double") {
+			avgSurfaceTemp=Eq2_10();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con double deck (avgSurfaceTemp) (degrees R)
+		} else {
+			avgSurfaceTemp=Eq2_7();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
+		};
+	};
 
 	//Calcula la presión de vapor del compuesto (c.vaporPressure) a la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp)
 	if (liquidCategory == "Crude Oils") {
@@ -622,7 +627,7 @@ function Eq2_16() {
 //Eq2_18 Pérdidas a través de las uniones de la plataforma flotante (o.deckSeamLosses) (lbs/yr)
 function Eq2_18() {
 	//Si la plataforma está soldada, se asume que no tiene pérdidas a través de las uniones
-	if(t.construction=="welded") {
+	if(t.deck.type=="welded") {
 		Kd=0;
 	} else {
 		Kd=0.14;
