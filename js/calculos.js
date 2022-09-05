@@ -688,7 +688,9 @@ function Eq2_19() {
 function Eq2_20() {
 	if( t.annualNetThroughput=="" || t.annualNetThroughput==null || t.annualNetThroughput==0 ) {
 		annualNetThroughput = (t.turnoversPerYear*(t.maxLiquidHeight-t.minLiquidHeight)*(Math.PI/4)*Math.pow(t.diameter,2))/5.614;
-	} else {annualNetThroughput = (t.annualNetThroughput)/42}
+	} else {
+		annualNetThroughput = (t.annualNetThroughput)/42
+	}
 	return annualNetThroughput;
 };
 

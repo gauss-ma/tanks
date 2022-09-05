@@ -135,43 +135,47 @@ report+=`	<!-- All tanks have volume and turnover -->
 if (t.type == 'VFR' || t.type == 'HFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Net Throughput(gal/yr):</td>
-			<td align = "right"> ${ "NetThroughput" } </td>		<!--NOTA SABRI: Ver como ingresarlo en el output en funcion de turnoversPerYer (si el usuario no lo ingreso) -->
+			<td width = "180">Net Throughput(ft3/yr):</td>
+			<td align = "right"> ${ netWorkingLossThroughput } </td>		
 		</tr>
 	
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Is Tank Heated (y/n):</td>
-			<td> ${ "Heated" } </td>
+			<td> ${ "Heated" } </td>   <!--NOTA SABRI: Ver como hacer para que este input que lo tenemos como boolean, aca nos devuelva yes/no -->
 		</tr>
 `;
 };
+
 if ( t.type == 'IFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Self Supp. Roof? (y/n):</td>
-			<td> ${ "SuppRoof" } </td>
+			<td> ${ "SuppRoof" } </td>		<!--NOTA SABRI: En nuestros calculos no fue necesario incluir esta variable -->
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">No. of Columns:</td>
-			<td align = "right"> ${ "NumCols" } </td>
+			<td align = "right"> ${ t.columns.number } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Eff. Col. Diam. (ft):</td>
-			<td align = "right"> ${ "ColDiam" } </td>
+			<td align = "right"> ${ effectiveColumnDiameter } </td>
 		</tr>
 `;
 };
+
 if (t.type == 'HFR'){
-report+=`		<tr>
+	report+=`		
+		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Is Tank Underground (y/n):</td>
-			<td> ${ "Underground" } </td>
+			<td> ${ "Underground" } </td>	 <!--NOTA SABRI: Nosotros solo tenemos la opcion underground como una de las posibles en t.insulation -->
 		</tr>
-`;	
+	`;	
 }
+
 report+=`
 	</table>
 	<!-- *****End Tank Dimensions **** -->
@@ -226,132 +230,104 @@ if (t.type == "VFR" || t.type == "IFR") {
 report+=` 
 	</table>
 	<p/>
-	<!-- *****Paint Characteristics **** -->
+	<!-- *****End of Paint Characteristics **** -->
 	
 
-	<!-- *****Roof  Characteristics **** -->
-	<p/>
-	
-	<h3>Roof Characteristics</h3>
-	<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
-	<tr>
-		<td width = "20">&#160;</td>
-		<td width = "180">Type:</td>
-		<td> ${ t.roof.type } </td>
-	</tr>
+<!-- *****Roof  Characteristics **** -->
+<p/>
 `
 if(t.type =="VFR") {
-	report+=`	<tr>
+	report+=`
+		<h3>Roof Characteristics</h3>
+		<table width = "350" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">	
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Type:</td>
+			<td> ${ t.roof.type } </td>
+		</tr>
+		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Height (ft)</td>
 			<td align = "right"> ${ t.roof.height } </td>
 		</tr>
-		<tr>
-			<td width = "20">&#160;</td>
 	`		
 	if (t.roof.type == "dome") {
-		report+=`<tr>
-		<td width = "20">&#160;</td>
-		<td width = "180">Radius (ft) (Dome Roof)</td>
-		<td align = "right"> ${ t.roof.radius } </td>
-	</tr>
-	<tr>
-		<td width = "20">&#160;</td>		
+		report+=`
+			<tr>
+				<td width = "20">&#160;</td>
+				<td width = "180">Radius (ft) (Dome Roof)</td>
+				<td align = "right"> ${ t.roof.radius } </td>
+			</tr>	
 		`
 	} else if (t.roof.type == "cone") {
-		report+=`<tr>
-		<td width = "20">&#160;</td>
-		<td width = "180">Slope (ft/ft) (Cone Roof)</td>
-		<td align = "right"> ${ t.roof.slope } </td>
-	</tr>
-	<tr>
-		<td width = "20">&#160;</td>		
-		`
-	};
-
-	report+=`
-			<td align = "right"> ${ "Size" } </td>  	<!--NOTA SABRI: No se a que haría referencia ese Size -->
-			</tr>
-	`
-};
-		
-	if(t.type == "EFR" || t.type == "DEFR" ) {
-		report+=`<tr>
-			<td width = "20">&#160;</td>
-			<td width = "180">Fitting Category</td>
-			<td> ${ "Category" } </td>
-		</tr>
-		`
-	};
-	
-	report+=`
-	</table>
-	
-	<p/>
-	<!-- *****Roof Characteristics **** -->
-
-	<!-- *****Breather Vent Settings **** -->
-	<p/>
-	
-	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
-	<tr>
-		<td colspan = "2"><b>Breather Vent Settings</b></td>
-		<td width = "150">&#160;</td>
-	</tr>
-	<tr>
-		<td width = "20">&#160;</td>
-		<td width = "180">Vacuum Settings (psig):</td>
-		<td align = "right"> ${ "Vacuum" } </td>
-	</tr>
-	<tr>
-		<td width = "20">&#160;</td>
-		<td width = "180">Pressure Settings (psig)</td>
-		<td align = "right"> ${ "Pressure" } </td>
-	</tr>
-	
-	</table>
-	<p/>
-	
-
-	<!-- *****Rim Seal Vent Settings **** -->
-	<p/>
-	
-	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
-	
-	<xsl:if match = ".[@Type = 'Internal Floating Roof Tank'] ">
+		report+=`
 		<tr>
-			<td colspan = "2"><b>Rim-Seal System</b></td>
+			<td width = "20">&#160;</td>
+			<td width = "180">Slope (ft/ft) (Cone Roof)</td>
+			<td align = "right"> ${ t.roof.slope } </td>
+		</tr>	
+		`
+	}
+};
+report+=`
+		</table>
+<p/>
+<!-- *****End of Roof Characteristics **** -->
+
+<!-- *****Breather Vent Settings **** -->
+<p/>	
+	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
+		<tr>
+			<td colspan = "2"><b>Breather Vent Settings</b></td>
 			<td width = "150">&#160;</td>
 		</tr>
-	</xsl:if>
-	<xsl:if match = ".[@Type = 'External Floating Roof Tank'  $or$ @Type = 'Domed External Floating Roof Tank'] ">
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Vacuum Settings (psig):</td>
+			<td align = "right"> ${ t.ventVacuumSetting } </td>
+		</tr>
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Pressure Settings (psig)</td>
+			<td align = "right"> ${ t.ventPressureSetting } </td>
+		</tr>
+	</table>
+<p/>
+	
+<!-- *****Rim Seal Vent Settings **** -->
+<p/>	
+`	
+if(t.type == "EFR"|| t.type == "IFR"|| t.type == "DEFR") {
+	report+=`
+	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt"></table>
 		<tr>
 			<td colspan = "3"><b>Tank Construction and Rim-Seal System</b></td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Construction:</td>
-			<td> ${ "Construction" } </td>
+			<td width = "180">Tank Construction:</td>
+			<td> ${ t.construction } </td>
 		</tr>
-		
-	
-	</xsl:if>
-	<tr>
-		<td width = "20">&#160;</td>
-		<td width = "180">Primary Seal:</td>
-		<td> ${ "Primary" } </td>
-	</tr>
-	<tr>
-		<td width = "20">&#160;</td>
-		<td width = "180">Secondary Seal</td>
-		<td> ${ "Secondary" } </td>
-	</tr>
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Rim Seal Fit:</td>
+			<td> ${ t.rimSeal.fit } </td>
+		</tr>
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Primary Seal:</td>
+			<td> ${ t.rimSeal.type} </td>
+		</tr>
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Secondary Seal</td>
+			<td> ${ t.rimSeal.secondary } </td>
+		</tr>
 	</table>
-	<p/>
-
-	<!-- *****Deck Characteristics   **** -->
-	<p/>
+<p/>
 	
+<!-- *****Deck Characteristics   **** -->
+<p/>
 	<table width = "35%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	<tr>
 		<td colspan = "2"><b>Deck Characteristics</b></td>
@@ -359,102 +335,103 @@ if(t.type =="VFR") {
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Deck Fitting Category:</td>
-		<td> ${ "Fitting" } </td>
-	</tr>
-	<tr>
-		<td width = "20">&#160;</td>
 		<td width = "180">Deck Type:</td>
-		<td> ${ "Type" } </td>
+	`	
+	if (t.type == "EFR") {
+		report+=`<td> ${ t.deck.support } </td>
+		`
+	} else {
+		report+=`<td> ${ t.deck.type } </td>
+		`
+	}
+	report+=`	 
 	</tr>
-	<xsl:if match = ".[Type = 'Bolted']">
+	`
+	if (t.deck.type == "bolted") {
+		report+=`
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Construction:</td>
-			<td> ${ "Construction" } </td>
+			<td width = "180">Deck Construction:</td>
+			<td> ${ t.deck.construction } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Deck Seam:</td>
-			<td> ${ "DeckSeam" } </td>
+			<td width = "180">Deck Seam Length (ft):</td>
+			<td align = "right"> ${ t.deck.seamLength } </td>		<!--NOTA SABRI: Este dato no es imprescindible que esté (osea el usuario puede no saberlo y se calcula en base a otros inputs) -->
 		</tr>
-		<tr>
-			<td width = "20">&#160;</td>
-			<td width = "180">Deck Seam Len. (ft):</td>
-			<td align = "right"> ${ "SeamLength" } </td>
-		</tr>
-	</xsl:if>
-	
+		`
+	};
+report+=`
 	</table>
-	<p/>
+<p/>
 	
-
-	<!-- *****Deck Fittings  **** -->
-
-	<p/>
+<!-- *****Deck Fittings  **** -->
+<p/>
 	<table width = "80%" border = "0" cellpadding = "0" cellspacing = "0" style = "font-family:arial; font-size:11pt">
 	<tr>
 		<td width = "700"><b>Deck Fitting/Status</b></td>
 		<td align = "right"><b>Quantity</b></td>
 	</tr>
 	<tr><td colspan = "2"><hr/></td></tr>
-`
-for (i=0; i<t.fittings.length; i){
-report+=`<tr>
-		<td> ${ t.fittings[i].type }</td>
-		<td> ${ t.fittings[i].cover}</td>
-		<td align = "right"> ${ t.fittings[i].quantity} </td>
-	   </tr>
-`
-};
+	`
+	for (i=0; i<t.deck.fittings.length; i){
+	report+=`<tr>
+		<td> ${ t.deck.fittings[i].fittingName }</td>
+		<td> ${ t.deck.fittings[i].fittingType}</td>
+		<td align = "right"> ${ t.deck.fittings[i].quantity} </td>   <!--NOTA SABRI: Me parece que acá no nos va a devolver la cantidad de cada tipo de fitting sino que nos va a listar todos los fittings que haya, incluso los que estén repetidos -->
+	</tr>
+	`
+	};
 report+=`
 	</table>
-	<p/>
+<p/>
 
-	<h3>Roof Fitting Loss Factors</h3>
-
-	 	<table width = "840" style = "font-family:arial; font-size:6pt" border = "0" cellpadding = "0" cellspacing = "0">
-		   <tr>
-		   	<td width = "350">Roof Fitting/Status</td>
-		   	<td width = "98" align = "right">Quantity</td>
-		   	<td width = "98" align = "right">KFa(lb-mole/yr)</td>
-		   	<td width = "98" align = "right">KFb(lb-mole/(yr mph^n))</td>
-		   	<td width = "98" align = "right">m</td>
-		   	<td width = "98" align = "right">Losses(lb)</td>
-		   </tr>
-		   <tr><td colspan = "6"><hr/></td></tr>
-		   <xsl:for-each match = "Value">
-		   	<tr align = "right">
-		   		<td align = "left"> ${ "@label" } </td>
-		   		<td> ${ "@quantity" } </td>
-		   		<td> ${ "@KFa" } </td>
-		   		<td> ${ "@KFb" } </td>
-		   		<td> ${ "@m" } </td>
-		   		<td> ${ "@losses" } </td>
-		   	</tr>
-		   </xsl:for-each>	
+	<h3>Deck Fitting Loss Factors</h3>
+		<table width = "840" style = "font-family:arial; font-size:6pt" border = "0" cellpadding = "0" cellspacing = "0">
+		<tr>
+			<td width = "350">Deck Fitting/Status</td>
+			<td width = "98" align = "right">Quantity</td>
+			<td width = "98" align = "right">KFa(lb-mole/yr)</td>
+			<td width = "98" align = "right">KFb(lb-mole/(yr mph^n))</td>
+			<td width = "98" align = "right">m</td>
+			<td width = "98" align = "right">Losses(lb)</td>
+		</tr>
+		<tr><td colspan = "6"><hr/></td></tr>
+		`	
+		for (i=0; i<t.deck.fittings.length; i){
+			report+=`
+			<tr align = "right">
+				<td align = "left"> ${ t.deck.fittings[i].fittingName && "/" && t.deck.fittings[i].fittingType }</td>
+				<td> ${ t.deck.fittings[i].quantity}</td>  <!--NOTA SABRI: Me parece que acá no nos va a devolver la cantidad de cada tipo de fitting sino que nos va a listar todos los fittings que haya, incluso los que estén repetidos -->
+				<td> ${ t.deck.fittings[i].Kfa } </td>
+				<td> ${ t.deck.fittings[i].Kfb } </td>
+				<td> ${ t.deck.fittings[i].m } </td>
+				<td> ${ "@losses" } </td>  <!--NOTA SABRI: Ver cómo puedo hacer para que me muestre sólo las pérdidas de un tipo de fitting -->
+			</tr>
+			`
+		};
+		report+=`	
 		</table>		
-	
+		`
+};	
 
+report+=`
 		<table width = "90%" style = "font-family:arial; font-size:11pt">
 			<tr><td>Meterological Data used in Emissions Calculations:  ${m.siteName} (Avg Atmospheric Pressure = ${m.atmPressure} psia) </td></tr>
 		</table>
 		
-	<p style="page-break-before: always"></p>
-	
+		<p style="page-break-before: always"></p>
 		<!-- Liquid Contents Report  -->
 		${printSeparador("Liquid Contents of Storage Tank")}
+		<span><font size = "2" face = "Arial"><b> ${ i.userID &&"-"&& i.tankType }</b></font></span><br> 
+		<span><font size = "2" face = "Arial"><b> ${ i.city &&","&& i.state }</b></font></span>
 		
-		<span><font size = "2" face = "Arial"><b> ${ "TankName" }</b></font></span><br> 
-		<span><font size = "2" face = "Arial"><b> ${ "Location" }</b></font></span>
-		<p/>
-		
-		
+	<p/>		
 		<table width = "900" cellpadding = "1" cellspacing = "0" style = "font-family:arial; font-size:6pt">
-		  <tr>
+		<tr>
 		  	<td colspan = "19"><hr/></td>
-		  </tr>
-		  <tr valign = "bottom">
+		</tr>
+		<tr valign = "bottom">
 		  	<td colspan = "2">&#160;</td>
 		  	<td colspan = "3" align = "center">Daily Liquid Surf.<br/>Temperature (deg F)</td>
 		  	<td align = "right">Liquid<br/>Bulk<br/>Temp</td>
@@ -466,11 +443,11 @@ report+=`
 		  	<td>&#160;</td>
 		  	<td align = "right">Vapor<br/>Mass</td>
 		  	<td>&#160;</td>
-		  	<td align = "right">Mol.</td>
+		  	<td align = "right">Liquid<br/>Mol.</td>
 		  	<td>&#160;</td>
 		  	<td>Basis for Vapor Pressure</td>
-		  </tr>
-		  <tr>
+		</tr>
+		<tr>
 			<td width = "160">Mixture/Component</td>
 			<td width = "30" align = "right">Month</td>
 			<td width = "40" align = "center">Avg.</td>
@@ -490,52 +467,77 @@ report+=`
 			<td width = "30" align = "right">Weight</td>
 			<td width = "20">&#160;</td>
 			<td width = "220">Calculations</td>
-		   </tr>
-		   <tr>	
+		</tr>
+		<tr>	
 		   	<td colspan = "19"><hr/></td>
-		   </tr>
-		   
-		   <tr>
-		   	<td> ${ "MixtureComponent" } </td>
-		   	<td> ${ "Month" } </td>
-		   	<td align = "center"> ${ "AveDailyTemp" } </td>
-		   	<td align = "center"> ${ "MinDailyTemp" } </td>
-		   	<td align = "center"> ${ "MaxDailyTemp" } </td>
-		   	<td align = "right"> ${ "BulkTemp" } </td>
+		</tr>
+		<tr>
+`  
+		if (liquidCategory == "Other organic liquids") {  
+		report+=`		
+		   	<td> ${ c.compoundName } </td>
+		`
+		} else {
+		report+=`		
+			<td> ${ c.liquidName } </td>
+ 		`
+		};	
+		report+=`
+		   	<td> ${ "Month" } </td>		<!--NOTA SABRI: Nosotros por ahora estamos haciendo solo el resultado anual, así que esto no iría-->
+		   	<td align = "center"> ${ avgSurfaceTemp } </td>
+		   	<td align = "center"> ${ minSurfaceTemp } </td>
+		   	<td align = "center"> ${ maxSurfaceTemp } </td>
+		   	<td align = "right"> ${ avgBulkTemp } </td>
 		   	<td>&#160;</td>
-		   	<td align = "center"> ${ "AvePressure" } </td>
-		   	<td align = "center"> ${ "MinPressure" } </td>
-		   	<td align = "center"> ${ "MaxPressure" } </td>
-		   	<td align = "right"> ${ "VapMolWeight" } </td>
+		   	<td align = "center"> ${ c.vaporPressure } </td>
+		   	<td align = "center"> ${ minVapPressure } </td>
+		   	<td align = "center"> ${ maxVapPressure } </td>
+		`
+		if (liquidCategory == "Other organic liquids") {  
+		report+=`	
+			<td align = "right"> ${ c.molWeight } </td>
+		`
+		} else {
+		report+=`
+			<td align = "right"> ${ c.vapMolWeight } </td>
+		 `
+		};		   	
+		report+=`	
 		   	<td>&#160;</td>
-		   	<td align = "right"> ${ "LiquidMassFraction" } </td>
+		   	<td align = "right"> ${ "LiquidMassFraction" } </td>  <!--NOTA SABRI: Nosotros por ahora no estamos considerando mezclas-->
 		   	<td>&#160;</td>
-		   	<td align = "right"> ${ "VaporMassFraction" } </td>
+		   	<td align = "right"> ${ "VaporMassFraction" } </td>  <!--NOTA SABRI: Nosotros por ahora no estamos considerando mezclas-->
 		   	<td>&#160;</td>
-		   	<td align = "right"> ${ "MolWeight" } </td>
-		   	<td>&#160;</td>
-		   	<td> ${ "Basis" } </td>
-  		   </tr>
+		`
+		if (liquidCategory == "Other organic liquids") {  
+		report+=`		
+			<td align = "right"> ${ c.molWeight } </td>
+		`
+		} else {
+		report+=`
+			<td align = "right"> ${ c.liqMolWeight } </td>
+		`
+		};		   	
+		report+=`
+			<td>&#160;</td>
+		   	<td> ${ "Basis" } </td>   <!--NOTA SABRI: Esto no lo inclui por ahora-->
+  		</tr>
 		</table>
-	
-
-
-	<p style="page-break-before: always"></p>
-
+		
+		<p style="page-break-before: always"></p>
 		<!--this is the detail page-->
 		${printSeparador("Detail Calculations (AP-42)")}
+		<span><font size = "2" face = "Arial"><b> ${ i.userID &&"-"&& i.tankType } </b></font></span><br> 
+		<span><font size = "2" face = "Arial"><b> ${ i.city &&","&& i.state } </b></font></span>
+	<p/>
 	
-		<span><font size = "2" face = "Arial"><b> ${ "TankName" } </b></font></span><br> 
-		<span><font size = "2" face = "Arial"><b> ${ "TankLocation" } </b></font></span>
-		<p/>
-		<p/>
-	
-		<h4>Annual Emission Calcaulations</h4>
+	<p/>
+		<h4>Annual Emission Calculations</h4>
 		
 		<table width = "262" style = "font-family:arial; font-size:6pt" cellpadding = "0" cellspacing = "0">
 		<tr><td colspan = "2"><hr/></td></tr>
 	
-			<xsl:for-each match = "Value">	
+			<xsl:for-each match = "Value">	 <!-- NOTA SABRI: No entiendo lo que hace esta función, acá debería ir el reporte detallado-->
 				<tr align = "right">
 				<td align = "left"> ${ "@label" } </td>
 				<td> ${ "@month_0" } </td>	
@@ -544,77 +546,97 @@ report+=`
 		</table>
 
 
-	<p style="page-break-before: always"></p>	
+		<p style="page-break-before: always"></p>	
 
 		<!-- Now we need to add in the code that does the "brief" part of the report -->
 
 
-	<p style="page-break-before: always"></p>
+		<p style="page-break-before: always"></p>
 
 		${printSeparador("Individual Tank Emission Totals")}
 		
 		<p/>
-		<h3>Emissions Report for:  ${ "TimePeriod" } 	</h3>
+		<h3>Emissions Report for:  ${ "TimePeriod" } 	</h3> <!--NOTA SABRI: Esto, a menos que incorporemos los calculos mensuales no habría que incluirlo-->
 		<p/>
 		
 		<p/>
-		<span><font size = "2" face = "Arial"><b> ${ "TankName" }</b></font></span><br> 
-		<span><font size = "2" face = "Arial"><b> ${ "Location" } </b></font></span>
+		<span><font size = "2" face = "Arial"><b> ${ i.userID &&"-"&& i.tankType }</b></font></span><br> 
+		<span><font size = "2" face = "Arial"><b> ${ i.city &&","&& i.state } </b></font></span>
 		<p/>
-`
- if( t.type== 'Vertical Fixed Roof Tank' ||  t.type == 'Horizontal Tank'){
-
-	report+=`
-		<table width = "100%" border = "1" style = "font-family:arial; font-size:11pt">
-			<tr>
-				<td width = "200">&#160;</td>
-				<td colspan = "3" align = "center">Losses(lbs)</td>
-			</tr>
-			<tr>
-				<td>Components</td>
-				<td width = "140" align = "right">Working Loss</td>
-				<td width = "140" align = "right">Breathing Loss</td>
-				<td width = "140" align = "right">Total Emissions</td>
-			</tr>
-			<tr>
-			<td> ${ "NAME" } </td>
-				<td width = "140" align = "right"> ${ o.workingLosses } </td>		
-				<td width = "140" align = "right"> ${ "BreathingLoss" } </td>	
-				<td width = "140" align = "right"> ${ "TotalEmissions" } </td>
-			</tr>
-		</table>
-	`;
-};
-if (t.type !='Vertical Fixed Roof Tank'&& t.type != 'Horizontal Tank'){
-report+=`			<table width = "100%" border = "1" style = "font-family:arial; font-size:11pt">
-			<tr>
-				<td width = "200">&#160;</td>
-				<td colspan = "5" align = "center">Losses(lbs)</td>
-			</tr>
-			<tr>
-				<td>Components</td>
-				<td width = "140" align = "right">Rim Seal Loss</td>
-				<td width = "140" align = "right">Withdrawl Loss</td>
-				<td width = "140" align = "right">Deck Fitting Loss</td>
-				<td width = "140" align = "right">Deck Seam Loss</td>
-				<td width = "140" align = "right">Total Emissions</td>
-			</tr>
-				<td> ${ "NAME" } </td>
-				<td width = "140" align = "right"> ${ "RimSealLoss" } </td>		
-				<td width = "140" align = "right"> ${ "WithdrawlLoss" } </td>	
-				<td width = "140" align = "right"> ${ "DeckFittingLoss" } </td>
-				<td width = "140" align = "right"> ${ "DeckSeamLoss" } </td>	
-				<td width = "140" align = "right"> ${ "TotalEmissions" } </td>	
-			</tr>
+		`
+ 
+		if( t.type== 'VFR' ||  t.type == 'HFR'){
+		report+=`
+			<table width = "100%" border = "1" style = "font-family:arial; font-size:11pt">
+				<tr>
+					<td width = "200">&#160;</td>
+					<td colspan = "3" align = "center">Losses(lbs)</td>
+				</tr>
+				<tr>
+					<td>Components</td>
+					<td width = "140" align = "right">Working Loss</td>
+					<td width = "140" align = "right">Breathing Loss</td>
+					<td width = "140" align = "right">Total Emissions</td>
+				</tr>
+				<tr>
+		`	
+				if (liquidCategory == "Other organic liquids") {  
+				report+=`		
+					<td> ${ c.compoundName } </td>
+				`
+				} else {
+				report+=`		
+					<td> ${ c.liquidName } </td>
+				`
+				};	
+		report+=`		
+					<td width = "140" align = "right"> ${ o.workingLosses } </td>		
+					<td width = "140" align = "right"> ${ o.standingLosses } </td>	
+					<td width = "140" align = "right"> ${ o.totalLosses } </td>
+				</tr>
 			</table>
-`;
-};
+		`;
+		} else {
+		report+=`			
+			<table width = "100%" border = "1" style = "font-family:arial; font-size:11pt">
+				<tr>
+					<td width = "200">&#160;</td>
+					<td colspan = "5" align = "center">Losses(lbs)</td>
+				</tr>
+				<tr>
+					<td>Components</td>
+					<td width = "140" align = "right">Rim Seal Loss</td>
+					<td width = "140" align = "right">Withdrawl Loss</td>
+					<td width = "140" align = "right">Deck Fitting Loss</td>
+					<td width = "140" align = "right">Deck Seam Loss</td>
+					<td width = "140" align = "right">Total Emissions</td>
+				</tr>
+		`		
+				if (liquidCategory == "Other organic liquids") {  
+				report+=`		
+					<td> ${ c.compoundName } </td>
+				`
+				} else {
+				report+=`		
+					<td> ${ c.liquidName } </td>
+				`
+				};	
+		report+=`		
+					<td width = "140" align = "right"> ${ o.rimSealLosses } </td>		
+					<td width = "140" align = "right"> ${ o.workingLosses } </td>	
+					<td width = "140" align = "right"> ${ o.deckFittingLosses } </td>
+					<td width = "140" align = "right"> ${ o.deckSeamLoss } </td>	
+					<td width = "140" align = "right"> ${ o.totalLosses } </td>	
+				</tr>
+			</table>
+		`;
+		};
 		
 report+=`	
 		<p style="page-break-before: always"></p>
 		${printSeparador("Total Emissions Summaries - All Tanks in Report")}
 		
-		<span><font size = "3" face = "Arial"><b>Emissions Report for:  ${ "@months" } </b></font></span>
+		<span><font size = "3" face = "Arial"><b>Emissions Report for:  ${ "@months" } </b></font></span>  <!--NOTA SABRI: Esto, a menos que incorporemos los calculos mensuales no habría que incluirlo-->
 		<p/>
 		
 		<table width = "90%" border = "0" style = "font-family:arial; font-size:11pt" cellpadding = "0" cellspacing = "0">
@@ -632,7 +654,7 @@ report+=`
 			
 			<tr>
 				<td colspan = "4">Total Emissions for all Tanks:</td>
-				<td align = "right"> ${ "Total" } </td>
+				<td align = "right"> ${ "Total" } </td>				<!--NOTA SABRI: Por ahora, no tenemos la opción de hacer los cálculos para más de un tanque a la vez-->
 			</tr>
 			<tr><td colspan = "5"><hr/></td></tr>
 		</table>

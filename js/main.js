@@ -130,7 +130,7 @@ function loadTankParameters(){
 		minLiquidHeight:1, 	    	//document.getElementById("").value; //altura minima de liquido [ft]
 		avgLiquidHeight:2, 	    	//document.getElementById("").value; //altura promedio de liquido [ft]
 		maxLiquidHeight:3, 	    	//document.getElementById("").value; //altura maxima de liquido [ft]
-		turnoversPerYear:"",      	//document.getElementById("").value; //número de veces que el tanque se llenó totalmente en el año
+		turnoversPerYear:"",      	//document.getElementById("").value; //número de veces que el tanque se llenó totalmente en el año [adimensional]
 		annualNetThroughput:6,	//document.getElementById("").value; //volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
 		flashing:false, 		//document.getElementById("").value; //ACLARACIÓN: El flashing ocurre cuando el liquido ingresa al tanque a mucha presión con moléculas de gas atrapadas en su interior y estas escapan cuando se libera esa presión al ingresar el líquido al tanque.
 		shell:{
