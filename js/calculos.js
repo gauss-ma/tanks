@@ -378,16 +378,16 @@ function Eq1_35() {
 		} else {
 			workingLossTurnover = 1;
 		}
-	//Obtiene el factor de producto de las pérdidas por llenado y vaciado del tanque (workingLossProductFactor) (dimensionless)
+	//Obtiene el factor de producto de las pérdidas por llenado y vaciado del tanque (i.productFactor) (dimensionless)
 		if (liquidCategory == "Crude Oils") {
-			workingLossProductFactor = 0.75;
+			i.productFactor = 0.75;
 		} else {
-			workingLossProductFactor = 1;
+			i.productFactor = 1;
 		}
 	//Obtiene el factor de corrección del ajuste de presión de las válvulas de ventilación (ventCorrectionFactor) (dimensionless)
 	ventCorrectionFactor=Eq1_41();
 	//Eq1_35
-	o.workingLosses = netWorkingLossThroughput * workingLossTurnover * workingLossProductFactor * vaporDensity * ventCorrectionFactor;
+	o.workingLosses = netWorkingLossThroughput * workingLossTurnover * i.productFactor * vaporDensity * ventCorrectionFactor;
 	
 	return o.workingLosses;
 }
@@ -478,13 +478,13 @@ function Eq2_2() {
 //Eq2_3 Pérdidas a través del sello de la plataforma flotante (o.rimSealLosses) (lbs/yr)
 function Eq2_3() {
 
-	vaporPressureFunction=Eq2_4();	//Calcula un factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
+	i.vaporPressureFunction=Eq2_4();	//Calcula un factor relacionado con la presión de vapor (i.vaporPressureFunction) (adimensional)
 
-	//Determina el factor de producto correspondiente (productFactor) (adimensional)
+	//Determina el factor de producto correspondiente (i.productFactor) (adimensional)
 	if (liquidCategory == "Crude Oils"){
-		productFactor = 0.4
+		i.productFactor = 0.4
 	} else {
-		productFactor = 1
+		i.productFactor = 1
 	};
 
 	if (t.type=="EFR"){
@@ -495,15 +495,15 @@ function Eq2_3() {
 	
 	//Eq2_3
 	if (liquidCategory == "Other organic liquids") {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
+		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*i.vaporPressureFunction*c.molWeight*i.productFactor
 	} else {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
+		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*i.vaporPressureFunction*c.vapMolWeight*i.productFactor
 	};
 
 	return rimSealLosses;
 };
 
-//Eq2_4	Factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
+//Eq2_4	Factor relacionado con la presión de vapor (i.vaporPressureFunction) (adimensional)
 function Eq2_4() {
 
 	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
@@ -589,9 +589,9 @@ function Eq2_13() {
 	};
 
 	if (liquidCategory == "Other organic liquids") {
-		deckFittingLosses =o.deckFittingLossFactor*vaporPressureFunction*c.molWeight*productFactor;
+		deckFittingLosses =o.deckFittingLossFactor*i.vaporPressureFunction*c.molWeight*i.productFactor;
 	} else {
-		deckFittingLosses =o.deckFittingLossFactor*vaporPressureFunction*c.vapMolWeight*productFactor;
+		deckFittingLosses =o.deckFittingLossFactor*i.vaporPressureFunction*c.vapMolWeight*i.productFactor;
 	};
 	return deckFittingLosses;
 };
@@ -646,9 +646,9 @@ function Eq2_18() {
 	};
 	//Eq2_18
 	if(liquidCategory=="Other organic liquids") {
-		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.molWeight*productFactor  
+		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*i.vaporPressureFunction*c.molWeight*i.productFactor  
 	} else {
-		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.vapMolWeight*productFactor  
+		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*i.vaporPressureFunction*c.vapMolWeight*i.productFactor  
 	};
 	return deckSeamLosses;
 };

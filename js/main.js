@@ -44,7 +44,12 @@ function main(){
 	addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
 	addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
 	
-	//  (1d) inicializar objeto con datos de salida:
+	// (1d) inicializar objeto con resultados de variables intermedias:
+	i={};
+	resultadosIntermedios=[];
+	addIntermediateResults(i);
+ 
+	//  (1e) inicializar objeto con datos de salida:
 	o={};
 
 	//
@@ -234,3 +239,10 @@ function findRimSealProp(t) {
 	
 	return t.rimSeal;
 };
+
+function addIntermediateResults (i) {
+
+	intermediateResults=getIntermediateResults();
+	resultadosIntermedios.push(intermediateResults.find(element=>(element.value==i)));
+
+}; 

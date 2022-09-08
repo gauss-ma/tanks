@@ -16,7 +16,7 @@ function printReport(){
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>TANKS - FAUBA</title>
+                <title>HERRAMIENTA TANQUES - FAUBA</title>
                 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 
                 <!-- call css -->
@@ -28,54 +28,54 @@ function printReport(){
 	<body>
 	<section>
 
-	${printSeparador("Tank Indentification and Physical Characteristics")}
+	${printSeparador("Identificación y Características Físicas del Tanque")}
 
-	<!-- *****Identification **** -->
-	<h3> Identification </h3>
+	<!-- *****Identificación **** -->
+	<h3> Identificación </h3>
 	<table width = "80%">
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">User Identification:</td>
+		<td width = "180">Usuario:</td>
 		<td> ${ i.userID } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">City:</td>
+		<td width = "180">Ciudad:</td>
 		<td> ${ i.city } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">State:</td>
+		<td width = "180">Provincia:</td>
 		<td> ${ i.state } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Company:</td>
+		<td width = "180">Empresa:</td>
 		<td> ${ i.company } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Type of Tank:</td>
+		<td width = "180">Tipo de tanque:</td>
 		<td> ${ i.tankType } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Description:</td>
+		<td width = "180">Descripción:</td>
 		<td> ${ i.description } </td>
 	</tr>
 	</table>
 	<p/>
-	<!-- ***** End Identification **** -->
+	<!-- ***** Fin de la identificación **** -->
 
-	<!-- *****Tank Dimensions **** -->
-	<h3> Tank dimensions </h3>
+	<!-- *****Dimensiones del tanque **** -->
+	<h3> Dimensiones del tanque </h3>
 	<table width = "35%">
 `
 
 if( t.type=='VFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Shell Height (ft):</td>
+			<td width = "180">Altura del tanque (ft):</td>
 			<td > ${ t.height } </td>
 		</tr>
 `;
@@ -83,80 +83,89 @@ report+=`	<tr>
 if( t.type =='HFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Shell Length (ft):</td>
+			<td width = "180">Largo del tanque (ft):</td>
 			<td > ${ t.height } </td>
 		</tr>
 `;
 };
 
 report+=`	
-        <!-- All tanks have diameter -->
+        <!-- Todos los tipos de tanques tienen diámetro -->
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Diameter (ft):</td>
+		<td width = "180">Diámetro (ft):</td>
 		<td > ${ t.diameter } </td>
 	</tr>
-	<!-- End diameter -->
+	<!-- Fin diámetro -->
 `;
 
 if(t.type == 'VFR'){
 report+=`	<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Maximum Liquid Height (ft) :</td>
+			<td width = "180">Altura Máxima del Líquido (ft) :</td>
 			<td > ${ t.maxLiquidHeight } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Minimum Liquid Height (ft):</td>
+			<td width = "180">Altura Mínima del Líquido (ft):</td>
 			<td > ${ t.minLiquidHeight } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Avg. Liquid Height (ft):</td>
+			<td width = "180">Altura Promedio del Líquido (ft):</td>
 			<td > ${ t.avgLiquidHeight } </td>
 		</tr>
 `
 };
 
-report+=`	<!-- All tanks have volume and turnover -->
+report+=`	<!-- Todos los tanques tienen volumen y un número de llenados anuales -->
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Volume (gallons):</td>
+		<td width = "180">Volumen (gallons):</td>
 		<td > ${ parseFloat(t.workingVolume).toFixed(1) } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Turnovers:</td>
+		<td width = "180">Llenados anuales:</td>
 		<td > ${ t.turnoversPerYear } </td>
 	</tr>
-	<!-- end volume and turnover -->
+	<!-- Fin volumen y llenados anuales -->
 `;
 
 if (t.type == 'VFR' || t.type == 'HFR'){
-report+=`	<tr>
-			<td width = "20">&#160;</td>
-			<td width = "180">Net Throughput(ft3/yr):</td>
-			<td > ${ netWorkingLossThroughput } </td>		
-		</tr>
-	
+report+=`	
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Is Tank Heated (y/n):</td>
-			<td> ${ "Heated" } </td>   <!--NOTA SABRI: Ver como hacer para que este input que lo tenemos como boolean, aca nos devuelva yes/no -->
+			<td width = "180">Volumen neto anual almacenado(ft3/yr):</td>
+			<td > ${ netWorkingLossThroughput } </td>		
 		</tr>
-`;
+		<tr>
+			<td width = "20">&#160;</td>
+			<td width = "180">Tiene calentamiento (Si/No):</td>
+`
+		if(t.heating.heating == "true"){
+			report+=`	
+			<td> Sí </td>
+			</tr>
+			`
+		} else {
+			report+=`	
+			<td> No </td>
+			</tr>
+			`
+		};
 };
 
 if ( t.type == 'IFR'){
 report+=`	
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">No. of Columns:</td>
+			<td width = "180">Número de columnas:</td>
 			<td > ${ t.columns.number } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Eff. Col. Diam. (ft):</td>
+			<td width = "180">Diámetro efectivo columnas (ft):</td>
 			<td > ${ effectiveColumnDiameter } </td>
 		</tr>
 `;
@@ -166,27 +175,36 @@ if (t.type == 'HFR'){
 	report+=`		
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Is Tank Underground (y/n):</td>
-			<td> ${ "Underground" } </td>	 <!--NOTA SABRI: Nosotros solo tenemos la opcion underground como una de las posibles en t.insulation -->
-		</tr>
-	`;	
-}
+			<td width = "180">Es un tanque subterráneo? (Sí/No):</td>
+	`		
+		if(t.insulation == "underground") {
+			report+=`	
+			<td> Sí </td>
+			</tr>
+			`
+		} else {
+			report+=`
+			<td> No </td>
+			</tr>
+			`
+		};	
+};
 
 report+=`
 	</table>
-	<!-- *****End Tank Dimensions **** -->
+	<!-- *****Fin Dimesiones del Tanque **** -->
 	<br>
 
-	<!-- *****Paint Characteristics **** -->
+	<!-- *****Características de la Pintura **** -->
 	
-	<h3>Paint Characteristics</h3>
+	<h3>Características de la pintura</h3>
 	<table width = "35%">
 `
 if ( t.type == "EFR"  || t.type== 'IFR' || t.type == "DEFR"){
 	report+=`
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Internal Shell Condition:</td>
+			<td width = "180">Condición de la pared interna:</td>
 			<td> ${ t.shellTexture } </td>
 		</tr>
 	`
@@ -194,30 +212,30 @@ if ( t.type == "EFR"  || t.type== 'IFR' || t.type == "DEFR"){
 
 report+=`	
 	
-	<!-- All tanks have Shell color and condition -->
+	<!-- Todos los tanques tienen atributo de color y condición de la pared externa -->
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Shell Color/Shade:</td>
+		<td width = "180">Color/Tonalidad de la pared:</td>
 		<td> ${ t.shell.color } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Shell Condition</td>
+		<td width = "180">Condición de la pared</td>
 		<td> ${ t.shell.condition } </td>
 	</tr>
-	<!-- end color and condition -->
+	<!-- Fin color y condición -->
 `;
 
 if (t.type == "VFR" || t.type == "IFR") {
 	report+=`
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Roof Color/Shade:</td>
+			<td width = "180">Color/Tonalidad del techo:</td>
 			<td> ${ t.roof.color } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Roof Condition:</td>
+			<td width = "180">Condición del techo:</td>
 			<td> ${ t.roof.condition } </td>
 		</tr>
 	`
@@ -226,24 +244,24 @@ if (t.type == "VFR" || t.type == "IFR") {
 report+=` 
 	</table>
 	<p/>
-	<!-- *****End of Paint Characteristics **** -->
+	<!-- *****Fin características pintura **** -->
 	
 
-<!-- *****Roof  Characteristics **** -->
+<!-- *****Características del techo **** -->
 <p/>
 `
 if(t.type =="VFR") {
 	report+=`
-		<h3>Roof Characteristics</h3>
+		<h3>Características del techo</h3>
 		<table width = "35%">	
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Type:</td>
+			<td width = "180">Tipo:</td>
 			<td> ${ t.roof.type } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Height (ft)</td>
+			<td width = "180">Altura (ft)</td>
 			<td > ${ t.roof.height } </td>
 		</tr>
 	`		
@@ -251,7 +269,7 @@ if(t.type =="VFR") {
 		report+=`
 			<tr>
 				<td width = "20">&#160;</td>
-				<td width = "180">Radius (ft) (Dome Roof)</td>
+				<td width = "180">Radio (ft) (Domo)</td>
 				<td > ${ t.roof.radius } </td>
 			</tr>	
 		`
@@ -259,7 +277,7 @@ if(t.type =="VFR") {
 		report+=`
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Slope (ft/ft) (Cone Roof)</td>
+			<td width = "180">Pendiente (ft/ft) (Techo cónico)</td>
 			<td > ${ t.roof.slope } </td>
 		</tr>	
 		`
@@ -268,63 +286,63 @@ if(t.type =="VFR") {
 report+=`
 		</table>
 <p/>
-<!-- *****End of Roof Characteristics **** -->
+<!-- *****Fin características techo **** -->
 
-<!-- *****Breather Vent Settings **** -->
+<!-- *****Ajustes válvulas de ventilación **** -->
 <p/>	
-	<h3>Breather Vent Settings</h3>
+	<h3>Ajustes válvulas de ventilación</h3>
 	<table width = "35%">
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Vacuum Settings (psig):</td>
+			<td width = "180">Ajuste de vacío (psig):</td>
 			<td > ${ t.ventVacuumSetting } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Pressure Settings (psig)</td>
+			<td width = "180">Ajuste de presión (psig)</td>
 			<td > ${ t.ventPressureSetting } </td>
 		</tr>
 	</table>
 <p/>
 	
-<!-- *****Rim Seal Vent Settings **** -->
+<!-- *****Características del sello de la plataforma flotante **** -->
 <p/>	
 `	
 if(t.type == "EFR"|| t.type == "IFR"|| t.type == "DEFR") {
 	report+=`
-	<h3>Tank Construction and Rim-Seal System</h3>
+	<h3>Sello de la plataforma flotante</h3>
 	<table width = "35%">
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Tank Construction:</td>
+			<td width = "180">Construcción del tanque:</td>
 			<td> ${ t.construction } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Rim Seal Fit:</td>
+			<td width = "180">Ajuste del sello:</td>
 			<td> ${ t.rimSeal.fit } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Primary Seal:</td>
+			<td width = "180">Sello primario:</td>
 			<td> ${ t.rimSeal.type} </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Secondary Seal</td>
+			<td width = "180">Sello secundario:</td>
 			<td> ${ t.rimSeal.secondary } </td>
 		</tr>
 	</table>
 <p/>
 	
-<!-- *****Deck Characteristics   **** -->
+<!-- *****Características de la plataforma flotante**** -->
 <p/>
-	<h3>Deck Characteristics</h3>
+	<h3>Características de la plataforma flotante</h3>
 
 	<table width = "35%">
 	<tr>
 		<td width = "20">&#160;</td>
-		<td width = "180">Deck Type:</td>
+		<td width = "180">Tipo:</td>
 	`	
 	if (t.type == "EFR") {
 		report+=`<td> ${ t.deck.support } </td>
@@ -340,13 +358,13 @@ if(t.type == "EFR"|| t.type == "IFR"|| t.type == "DEFR") {
 		report+=`
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Deck Construction:</td>
+			<td width = "180">Construcción:</td>
 			<td> ${ t.deck.construction } </td>
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
-			<td width = "180">Deck Seam Length (ft):</td>
-			<td > ${ t.deck.seamLength } </td><!--NOTA SABRI: Este dato no es imprescindible que esté (osea el usuario puede no saberlo y se calcula en base a otros inputs) -->
+			<td width = "180">Longitud costuras (ft):</td>
+			<td > ${ t.deck.seamLength } </td>    <!--NOTA SABRI: Este dato no es imprescindible que esté (osea el usuario puede no saberlo y se calcula en base a otros inputs) -->
 		</tr>
 		`
 	};
@@ -354,12 +372,14 @@ report+=`
 	</table>
 <p/>
 	
-<!-- *****Deck Fittings  **** -->
+<!-- *****Accesorios de la plataforma flotante  **** -->
 <p/>
+	<h3>Accesorios de la plataforma flotante</h3>
+
 	<table width = "80%">
 	<tr>
-		<td width = "500"><b>Deck Fitting</b></td>
-		<td ><b>Status</b></td>
+		<td width = "500"><b>Accesorio</b></td>
+		<td ><b>Características</b></td>
 	</tr>
 	<tr><td colspan = "2"><hr/></td></tr>
 	`
@@ -374,14 +394,13 @@ report+=`
 	</table>
 <p/>
 
-	<h4>Deck Fitting Loss Factors</h4>
+	<h4>Factores de pérdida de los accesorios</h4>
 		<table width = "80%">
 		<tr>
-			<td width = "350">Deck Fitting/Status</td>
+			<td width = "350">Accesorio/Características</td>
 			<td width = "98" >KFa(lb-mole/yr)</td>
 			<td width = "98" >KFb(lb-mole/(yr mph^n))</td>
 			<td width = "98" >m</td>
-			<td width = "98" >Losses(lb)</td>
 		</tr>
 		<tr><td colspan = "6"><hr/></td></tr>
 		`	
@@ -392,7 +411,6 @@ report+=`
 				<td> ${ t.deck.fittings[i].Kfa } </td>
 				<td> ${ t.deck.fittings[i].Kfb } </td>
 				<td> ${ t.deck.fittings[i].m } </td>
-				<td> ${ "@losses" } </td>  <!--NOTA SABRI: Ver cómo puedo hacer para que me muestre sólo las pérdidas de un tipo de fitting -->
 			</tr>
 			`
 		};
@@ -403,16 +421,19 @@ report+=`
 
 report+=`
 		<br>
-		<h3> Meteorological Data </h3>
+		<h3> Datos meteorológicos </h3>
 		<table width = "80%">
-			<tr><td>Meterological Data used in Emissions Calculations:  ${m.siteName} (Avg Atmospheric Pressure = ${m.atmPressure} psia) </td></tr>
+			<tr>
+				<td> Ubicación:  ${m.siteName} () </td>
+				<td> Presión atmosférica promedio = ${m.atmPressure} psia</td>
+			</tr>
 		</table>
 		
 		<p style="page-break-before: always"></p>
 
-		<!-- Liquid Contents Report  -->
+		<!-- Contenido del tanque  -->
 		
-		${printSeparador("Liquid Contents of Storage Tank")}
+		${printSeparador("Contenido del tanque")}
 		<span><b> ${ i.userID &&"-"&& i.tankType }</b></span><br> 
 		<span><b> ${ i.city &&","&& i.state }     </b></span>
 		
@@ -420,27 +441,25 @@ report+=`
 		<table width = "80%">
 		<tr>
 		  	<td colspan = "1">&#160;</td>
-		  	<td colspan = "1" >Daily Liquid Surf.<br/>Temperature</td>
-		  	<td >Liquid<br/>Bulk<br/>Temp</td>
+		  	<td colspan = "1" >Temp. Diaria Prom.<br/>Superficie Líquido</td>
+		  	<td >Temp.<br/>Seno del<br/>Líquido</td>
 		  	<td>&#160;</td>
-		  	<td colspan = "1" >Vapor Pressure (psia)</td>
-		  	<td >Vapor<br/>Mol.</td>
+		  	<td colspan = "1" >Presión de vapor (psia)</td>
+		  	<td >Peso<br/>Mol.</td>
 		  	<td>&#160;</td>
-		  	<td >Liquid<br/>Mol.</td>
+		  	<td >Peso<br/>Mol.</td>
 		  	<td>&#160;</td>
-		  	<td>Basis for Vapor Pressure</td>
 		</tr>
 		<tr>
-			<td width = "180">Mixture/Component</td>
-			<td width = "40" > (deg F)</td>
-			<td width = "30" >(deg F)</td>
+			<td width = "180">Componente</td>
+			<td width = "40" > (grad. F)</td>
+			<td width = "30" >(grad. F)</td>
 			<td width = "20">&#160;</td>
-			<td width = "40" >Avg.</td>
-			<td width = "30" >Weight.</td>
+			<td width = "40" >Promedio</td>
+			<td width = "30" >Vapor</td>
 			<td width = "20">&#160;</td>
-			<td width = "30" >Weight</td>
+			<td width = "30" >Líquido</td>
 			<td width = "20">&#160;</td>
-			<td width = "220">Calculations</td>
 		</tr>
 		<tr>	
 		   	<td colspan = "19"><hr/></td>
@@ -458,13 +477,9 @@ report+=`
 		};	
 		report+=`
 		   	<td > ${ parseFloat(avgSurfaceTemp).toFixed(2) } </td>
-		<!--	<td  } </td>	 NO DEFINIDO!! -->
-		<!--	<td  } </td>	 NO DEFINIDO!! -->
-		   	<td >  ${ parseFloat(avgBulkTemp).toFixed(2)    } </td>
+		   	<td >  ${ parseFloat(avgBulkTemp).toFixed(2) } </td>
 		   	<td>&#160;</td>
 		   	<td > ${ parseFloat(c.vaporPressure).toFixed(2)} </td>
-		<!--	<td  } </td>	 NO DEFINIDO!! -->
-		<!--	<td  } </td> 	 NO DEFINIDO!! -->
 		`
 		if (liquidCategory == "Other organic liquids") {  
 		report+=`	
@@ -475,13 +490,7 @@ report+=`
 			<td > ${ c.vapMolWeight } </td>
 		 `
 		};		   	
-		//report+=`	
-		//   	<td>&#160;</td>
-		//   	<td  } </td>  <!--NOTA SABRI: Nosotros por ahora no estamos considerando mezclas-->
-		//   	<td>&#160;</td>
-		//   	<td  } </td>  <!--NOTA SABRI: Nosotros por ahora no estamos considerando mezclas-->
-		//   	<td>&#160;</td>
-		//`
+		
 		if (liquidCategory == "Other organic liquids") {  
 		report+=`		
 			<td > ${ c.molWeight } </td>
@@ -491,43 +500,28 @@ report+=`
 			<td > ${ c.liqMolWeight } </td>
 		`
 		};		   	
+		
 		report+=`
 			<td>&#160;</td>
-		   	<td> ${ "Basis" } </td>   <!--NOTA SABRI: Esto no lo inclui por ahora-->
   		</tr>
 		</table>
 		
 		<p style="page-break-before: always"></p>
 		<!--this is the detail page-->
-		${printSeparador("Detail Calculations (AP-42)")}
+		${printSeparador("Detalle de cálculos (según indicaciones del AP-42)")}
 
-		<h3>Annual Emission Calculations</h3>
-		
-		<br>
-		<center><h4>Sabri, acá habria que ver como resumir variables intermedias de los cálculos.</h4></center>
-		<br>
+		<h3>Cálculo de emisiones anuales</h3>
 	
 		<table>
 		<tr><td colspan = "3"><hr/></td></tr>
 		`
 
-// Por ejemplo, si tuvieras un array con todas las variables intermedias, te armas una tabla tipo:
-misResultadosIntermedios=[
-	{varName:"Mi variable 1", value:"1"},
-	{varName:"Mi variable 2", value:"1"},
-	{varName:"Mi variable 3", value:"2"},
-	{varName:"Mi variable 4", value:"3"},
-	{varName:"Mi variable 5", value:"5"},
-	{varName:"Mi variable 6", value:"8"},
-	{varName:"Mi variable 7", value:"13"} //fibonacci xD
-	];
-
-	for (let i=0; i< misResultadosIntermedios.length; i++){
+	for (let i=0; i< resultadosIntermedios.length; i++){
 
 		report+=`<tr>
 			<td>&#160;  				    </td> 
-			<td width="180">${misResultadosIntermedios[i].varName}: </td>
-			<td width="30" >${misResultadosIntermedios[i].value  }  </td> 
+			<td width="180">${resultadosIntermedios[i].varName}: </td>
+			<td width="30" >${resultadosIntermedios[i].value  }  </td> 
 			</tr>`
 
 	};
@@ -540,14 +534,14 @@ misResultadosIntermedios=[
 
 		<p style="page-break-before: always"></p>	
 
-		<!-- Now we need to add in the code that does the "brief" part of the report -->
+		<!-- Reporte de resultados resumen -->
 
 
 		<p style="page-break-before: always"></p>
 
-		${printSeparador("Individual Tank Emission Totals")}
+		${printSeparador("Emisiones totales del tanque")}
 		
-		<h3>Emissions Report</h3>
+		<h3>Reporte de emisiones</h3>
 		`
  
 		if( t.type== 'VFR' ||  t.type == 'HFR'){
@@ -555,13 +549,13 @@ misResultadosIntermedios=[
 			<table width = "80%" border = "1">
 				<tr>
 					<td width = "200">&#160;</td>
-					<td colspan = "3" >Losses(lbs)</td>
+					<td colspan = "3" >Pérdidas(lbs)</td>
 				</tr>
 				<tr>
-					<td>Components</td>
-					<td width = "140" >Working Loss</td>
-					<td width = "140" >Breathing Loss</td>
-					<td width = "140" >Total Emissions</td>
+					<td>Componente</td>
+					<td width = "140" >Pérdidas por llenado/vaciado</td>
+					<td width = "140" >Pérdidas almacenamiento</td>
+					<td width = "140" >Emisiones totales</td>
 				</tr>
 				<tr>
 		`	
@@ -586,15 +580,15 @@ misResultadosIntermedios=[
 			<table width = "80%" border = "1">
 				<tr>
 					<td width = "200">&#160;</td>
-					<td colspan = "5" >Losses(lbs)</td>
+					<td colspan = "5" >Pérdidas (lbs)</td>
 				</tr>
 				<tr>
-					<td>Components</td>
-					<td width = "140" >Rim Seal Loss</td>
-					<td width = "140" >Withdrawl Loss</td>
-					<td width = "140" >Deck Fitting Loss</td>
-					<td width = "140" >Deck Seam Loss</td>
-					<td width = "140" >Total Emissions</td>
+					<td>Componente</td>
+					<td width = "140" >Pérdidas sello</td>
+					<td width = "140" >Pérdidas vaciado</td>
+					<td width = "140" >Pérdidas accesorios</td>
+					<td width = "140" >Pérdidas costuras</td>
+					<td width = "140" >Emisiones totales</td>
 				</tr>
 		`		
 				if (liquidCategory == "Other organic liquids") {  
@@ -619,32 +613,9 @@ misResultadosIntermedios=[
 		
 report+=`	
 		<p style="page-break-before: always"></p>
-		${printSeparador("Total Emissions Summaries - All Tanks in Report")}
-		
-		<span><b>Emissions Report </b></span> 
-		
-		<table width = "80%">
-			<tr><td colspan = "5"><hr/></td></tr>
-			<tr>
-				<td width = "180">Tank Identification</td>
-				<td width = "250">&#160;</td>
-				<td width = "150">&#160;</td>
-				<td width = "150">&#160;</td>
-				<td width = "170" >Losses (lbs)</td>
-			</tr>
-			<tr><td colspan = "5"><hr/></td></tr>
-		
-			<xsl:apply-templates/>
-			
-			<tr>
-				<td colspan = "4">Total Emissions:</td>
-				<td > ${ parseFloat(o.totalLosses).toFixed(5) } </td>	<!--NOTA SABRI: Por ahora, no tenemos la opción de hacer los cálculos para más de un tanque a la vez-->
-			</tr>
-		</table>
-	
 		<br>
        		 <center><button onclick='window.print()'>Imprimir reporte</button></center>
-        	<br>
+        <br>
         
 	</section>
 
@@ -665,8 +636,8 @@ function printSeparador(sectionTitle){
 
 	str=`	
 	<center>
-		<h1 style="color:#303030;">TANKS 4.0.9d</h1>
-		<h2>Emissions Report - Detailed Format </h2>
+		<h1 style="color:#303030;">HERRAMIENTA TANQUES - FAUBA</h1>
+		<h2>Reporte de Emisiones - Formato Detallado </h2>
 		<h2>${sectionTitle}</h2>
 	</center> 
 	<br>
