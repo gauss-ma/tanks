@@ -266,6 +266,3 @@ function appendMetData() {
         }
 };
 
-appendMetData();	//poner esto despues en la funcion que carga la web.
-
-

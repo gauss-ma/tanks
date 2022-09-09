@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<!-- Version Sabrina 0.0.0 -->
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>TANKS - FAUBA</title>
-	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+	<title>Emis. Tanques - FAUBA</title>
 
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<!-- jQuery library -->
+	<!-- GoogleFonts (Raleway) -->
+	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+	
+	<!-- jQuery 3.6.0 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<!-- Latest compiled JavaScript -->
+	<!-- Bootstrap 3.4.1 JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+	<!-- Bootstap 3.4.1 CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<!-- Bootsrap Icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
 	<!-- call css -->
 	<link rel="stylesheet" href="css/style.css">
@@ -30,11 +33,15 @@
 
 <section>
 
-	<h2>General</h2>
+	<h2>Identificación</h2>
 
 	<div class="form-group">
 	  	<label for="usr"> Nombre del Proyecto:</label>
 	  	<input type="text" class="form-control" id="usrID">
+	</div>
+	<div id="" class="fomr-group" name="">
+	  	<label for="usr"> Ubicación:</label>
+	  	<input type="text" class="form-control" id="location">
 	</div>
 	<div class="form-group">
 	  	<label for="usr"> Companía:</label>
@@ -46,15 +53,19 @@
 	</div>
 
 
-	<h3>Sitio de estudio		</h3>
+	<h2>Sitio de estudio		</h2>
 	<div class="form-group">
 	  	<label for="meteoSite">Ciudad más cercana a ubicación del proyecto:</label>
-		<select id="meteoSite" onChange="//showMeteoParams();" class="form-control">
+		<select id="meteoSite" onChange="loadMeteorologicalParameters(this.value); showMeteoParams();" class="form-control">
 			<!-- Aca van los nombres de los sitios donde tenemos la climatología -->
-			<!--option>1</option-->
 		</select>
 	</div>
+	
 
+	<div id="meteoParameters" class="hidden">
+
+
+	</div>
 
 	<h3>Opciones de cálculo </h3>
 
@@ -76,7 +87,7 @@
 
 	
 	<!-- ACA EMPIEZA LA SECCION DE INFO DE TANQUES -->
-	<div id="tanks">
+	<div id="tanks" class="hidden">
 
 	<!-- Acá van los tanques -->
 	<!-- Por ahora 1 solo    -->
@@ -86,33 +97,45 @@
 		<hr>
         <!--button type="button" class="btn-close disabled" onClick="removeTank(${div.id})">X</button-->
 
-	<span class="pull-right clickable close-icon" onClick="removeTank(1)">X</span>
+	<span class="pull-right clickable close-icon" onClick="removeTank(1)"><i class="bi bi-x-circle"></i></span>
 
-        <h1 id="tankName${div.id}" contenteditable="true"> Tanque 1</h1>
-
+        <h1 id="tankName" contenteditable="true"> Tanque 1</h1>
+	<h3 id="tankDescription" contenteditable="true"> Descripción de tanque 1. </h3>
 	
-	<div class="tankType">
-	<h2> Tipo de tanque </h2>
-	        <label class="" for="tankType" >Tipo de tanque:</label>&#160;
-        	<label class="radio-inline" onClick=""><input type="radio" name="tankType" value="VFR" checked>Vertical  </label>
-        	<label class="radio-inline" onClick=""><input type="radio" name="tankType" value="HFR">        Horizontal</label>
-        	<label class="radio-inline" onClick=""><input type="radio" name="tankType" value="HFR">        Flotante  </label>
+	<div>
+	        <label class="" for="tankType">Tipo de tanque:</label>&#160;
+        	<label class="radio-inline"><input type="radio" name="tankType" value="VFR" onClick="habilitarInputs(this.value);" >Vertical  </label>
+        	<label class="radio-inline"><input type="radio" name="tankType" value="HFR" onClick="habilitarInputs(this.value);" >Horizontal</label>
+        	<label class="radio-inline"><input type="radio" name="tankType" value="IFR" onClick="habilitarInputs(this.value);" >Flotante  </label>
 		
 	</div>
 	<br>
 	
-	<div id="tankDimensions">
-		<h2>Dimensiones del tanque</h2>
+	<div id="tankDimensions" class="VFR hidden">
+		<h2>Dimensiones del tanque (VFR)</h2>
 		<label for="HeightFixed">Shell Height <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-                <input type="number" id="HeightFixed" name="HeightFixed" min="0" title="" form="Form1">
+                <input type="number" id="HeightFixed" name="HeightFixed" min="0" title="" form="formulario">
 	</div>
+	<div id="tankDimensions" class="HFR hidden">
+		<h2>Dimensiones del tanque (HFR)</h2>
+		<label for="HeightFixed">Shell Height <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+	        <input type="number" id="HeightFixed" name="HeightFixed" min="0" title="" form="formulario">
+	</div>
+	<div id="tankDimensions" class="IFR hidden">
+		<h2>Dimensiones del tanque (IFR)</h2>
+		<label for="HeightFixed">Shell Height <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+	        <input type="number" id="HeightFixed" name="HeightFixed" min="0" title="" form="formulario">
+	</div>
+
+
+
 
 
 	<h2>Calentamiento / Aislamiento</h2>
         <!--insulated?-->
         <div id="divInsulation">
                 <label for="insulated">Tank Insulation:</label>
-                <select class="form-control" id="insulated" form="Form1" title="">
+                <select class="form-control" id="insulated" form="formulario" title="">
                         <option disabled selected value>Select from list</option>
                         <option value="None">None</option>
                         <option value="Shell">Shell Only</option>
@@ -122,7 +145,7 @@
         </div>
 
 	<br>
-	<label class="checkbox-inline"><input type="checkbox" value="">Considerar calentamiento</label>
+	<label class="checkbox-inline"><input type="checkbox" value="" id="heating">Considerar calentamiento</label>
 	<div name="tankHeating" class="">
 
 	</div>
@@ -130,63 +153,80 @@
 
 
 	<div class="tankShell">
+		
 		<h2>Cuerpo del tanque</h2>
+	
+		<div class="">
 		<!--Shell color-->
-		<label  for="paintShell">Shell Color/Shade:</label>
-		<select class="form-control" id="paintShell" form="Form1">
+		<label  for="paintShell">Pintura:</label>
+		<select class="form-control" id="paintShell" form="formulario">
 			<option disabled selected value>Select from list</option>
 		</select>
-		<br>
+		</div>
+
+		<div class="">
 		<!--Shell Condition-->
-		<label  for="conditionShell">Shell Condition:</label>
-		<select class="form-control" id="conditionShell" form="Form1">
+		<label  for="conditionShell">Estado:</label>
+		<select class="form-control" id="conditionShell" form="formulario">
 			<option disabled selected value>Select from list</option>
 			<option value="New">New</option>
 			<option value="Average">Average</option>
 			<option value="Aged">Aged</option>
 		</select>
-	</div>
+		</div>
 	<br>				
+	</div>
+	<br>
 	<div class="tankRoof">
 		<h2>Techo del tanque</h2>
-		<!--Roof color-->
-		<label  for="paintRoof">Roof Color/Shade:</label>
-		<select class="form-control" id="paintRoof" form="Form1">
-			<option disabled selected value>Select from list</option>
-		</select>
-		<br>
-		<!--Roof Condition-->
-		<label  for="conditionRoof">Roof Condition:</label>
-		<select class="form-control" id="conditionRoof" form="Form1">
-			<option disabled selected value>Select from list</option>
-			<option value="New">New</option>
-			<option value="Average">Average</option>
-			<option value="Aged">Aged</option>
-		</select>
-		<br>
+	
 		<!--roof type-->
-		<label  for="roofType">Roof Type:</label>
-		<select class="form-control" id="roofType" onchange="fixedRoofType()" form="Form1">
+		<label  for="roofType">Tipo de techo:</label>
+		<select class="form-control" id="roofType" onchange="fixedRoofType()" form="formulario">
 			<option disabled selected value>Select from list</option>
 			<option value="Cone">Cone Roof</option>
 			<option value="Dome">Dome Roof</option>
 		</select>
 		<br>
+
+		<h3> Dimensiones del techo </h3>
 		<!--roof height-->
-		<div id="divRoofH">
-			<label for="roofH">Roof Height (ft):</label>
-			<input type="number" id="roofH" name="roofH" min="0" onchange="fixedRoofHeight()" form="Form1" title="">
+		<div id="divRoofH" class="">
+			<label for="roofH">Altura (ft):</label>
+			<input type="number" id="roofH" name="roofH" min="0" onchange="fixedRoofHeight()" form="formulario" title="">
 		</div>
 		<!--roof slope for cone roofs-->
-		<div id="divSlope">				
-			<label  for="fixedRoofSlope">Slope (ft/ft):</label>
-			<input  type="number" id="fixedRoofSlope" name="fixedRoofSlope" min="0" title="" form="Form1" step="0.001">
+		<div id="divSlope" class="">				
+			<label  for="fixedRoofSlope">Pendiente (ft/ft):</label>
+			<input  type="number" id="fixedRoofSlope" name="fixedRoofSlope" min="0" title="" form="formulario" step="0.001">
 		</div>
-		<div id="divRadius">
+		<div id="divRadius" class="">
 		<!--roof radius for dome roofs-->
-			<label  for="fixedRoofRad">Roof Radius (ft):</label>
-			<input  type="number" id="fixedRoofRad" name="fixedRoofRad" min="0" title="" form="Form1">
+			<label  for="fixedRoofRad">Radio Radius (ft):</label>
+			<input  type="number" id="fixedRoofRad" name="fixedRoofRad" min="0" title="" form="formulario">
 		</div>
+		<br>
+	
+		<div>
+
+		<div class="">
+		<!--Roof color-->
+		<label  for="paintRoof">Roof Color/Shade:</label>
+		<select class="form-control" id="paintRoof" form="formulario">
+			<option disabled selected value>Select from list</option>
+		</select>
+		</div>
+		<div class="">
+		<!--Roof Condition-->
+		<label  for="conditionRoof">Roof Condition:</label>
+		<select class="form-control" id="conditionRoof" form="formulario">
+			<option disabled selected value>Select from list</option>
+			<option value="New">New</option>
+			<option value="Average">Average</option>
+			<option value="Aged">Aged</option>
+		</select>
+		</div>
+		<br>
 	</div>
 
 	<div class="Input6" id="Input6">	
@@ -194,17 +234,17 @@
 		<h2>Respiración y venteos</h2>
 			<!--breather vent vacuum setting-->
 			<label for="setVac">Vacuum Setting (psig):</label>
-			<input type="number" id="setVac" name="setVac" value=-0.03 title="" form="Form1" onchange="checkPres()" step="0.01">
+			<input type="number" id="setVac" name="setVac" value=-0.03 title="" form="formulario" onchange="checkPres()" step="0.01">
 			<br>
 			<!--breather vent pressure setting-->
 			<label for="setPres">Pressure Setting (psig):</label>
-			<input type="number" id="setPres" name="setPres" value=0.03 title="" form="Form1" onchange="checkPres()" step="0.01">
+			<input type="number" id="setPres" name="setPres" value=0.03 title="" form="formulario" onchange="checkPres()" step="0.01">
 			<br>
 
 			<!--vapor space gauge pressure-->
 			<div id="divGaugePres">
 				<label for="gaugePres">Vapor Space Gauge Pressure (psig):</label>
-				<input type="number" id="gaugePres" name="gaugePres" min="0" value=0 title="" form="Form1">
+				<input type="number" id="gaugePres" name="gaugePres" min="0" value=0 title="" form="formulario">
 			</div><br>
 	</div>	
 
@@ -212,77 +252,77 @@
 		<h2>Contenido del tanque</h2>
 		<!--Tank contents drop down box-->
 		<label for="LiqInput" >Data Source:</label>
-		<select id="LiqInput" onchange="SelectLiquidInput()" form="Form1">
+		<select id="LiqInput" onchange="SelectLiquidInput()" form="formulario">
 			<option disabled selected value>Select from list</option>	
 			<option value="Database">Calculator Database</option>
 			<option value="Manual">Manual Entry</option>
 		</select>
 		
 		<br>
-		<div id="divLiqType" style="display: none" >
+		<div id="divLiqType" style="" >
 			<label for="LiqType" >Liquid Category:</label>
-			<select id="LiqType" onchange="loadLiquidList()" form="Form1">
+			<select id="LiqType" onchange="loadLiquidList()" form="formulario">
 				<option disabled selected value>Select from list</option>
 				<option value="Crude">Crude Oil</option>
 				<option value="Refined">Refined Petroleum Liquids</option>
 				<option value="PetroChem">Other Organic Liquids</option>
 			</select>
 		</div>
-		<div id="divtankContents" style="display: none">
+		<div id="divtankContents" style="">
 			<label for="tankContents" >Liquid Name:</label>
-			<select id="tankContents" onchange="fillLiqChar()" form="Form1">
+			<select id="tankContents" onchange="fillLiqChar()" form="formulario">
 				<option disabled selected value>Select from list</option>
 			</select>
 		</div>
-		<div id="divCalcMethod" style="display: none">
+		<div id="divCalcMethod" style="">
 			<label for="calcMethod" >TVP Calc. Method:</label>
-			<select id="calcMethod" onchange="formatLiqInput()" form="Form1">
+			<select id="calcMethod" onchange="formatLiqInput()" form="formulario">
 				<option disabled selected value>Select from list</option>
 				<option value="RVP">RVP</option>
 				<option value="Coef">Antoine's Coeficients</option>
 			</select>
 		</div>				
-		<div class="liqChar" id="divLiqChar" style="display: none">
+		<div class="liqChar" id="divLiqChar" style="">
 			<!--liquid Characteristics-->
 			<br><u>Database Liquid Caracteristics</u><br><br>
 			<label for="VapMW">Vap. Mol. Wt. (lb/lb-mol):</label>
-			<input id="VapMW" type="text" form="Form1" readonly style="cursor: not-allowed;">
+			<input id="VapMW" type="text" form="formulario" readonly style="cursor: not-allowed;">
 			<label for="LiqMW">Liq. Mol. Wt. (lb/lb-mol):</label>
-			<input id="LiqMW" type="text" form="Form1" readonly style="cursor: not-allowed;">
+			<input id="LiqMW" type="text" form="formulario" readonly style="cursor: not-allowed;">
 			<label for="LiqWL">Liq. Density (lb/gal):</label>
-			<input id="LiqWL" type="text" form="Form1" readonly style="cursor: not-allowed;">
+			<input id="LiqWL" type="text" form="formulario" readonly style="cursor: not-allowed;">
 			<label for="Slope">Distil. Slope (&deg;F/vol%):</label>
-			<input id="Slope" type="text" form="Form1" readonly style="cursor: not-allowed;">
+			<input id="Slope" type="text" form="formulario" readonly style="cursor: not-allowed;">
 			<label for="TVP">TVP @ 60&deg;F (psia):</label>
-			<input id="TVP" type="text" form="Form1" readonly style="cursor: not-allowed;">
+			<input id="TVP" type="text" form="formulario" readonly style="cursor: not-allowed;">
 		</div>				
-		<div id="divLiqInputs" style="display: none" style="display: none">
+		<div id="divLiqInputs" style="" style="">
 			<div id="divLiqInputLabel">
 				<br><u>Liquid Caracteristics</u><br>
 			</div>
 			<div id="divInputM_V">
 				<br><label for="inputM_V">Vap. Mol. Wt. (lb/lb-mol):</label>
-				<input class="shortLabel" id="inputM_V" type="number" form="Form1">
+				<input class="shortLabel" id="inputM_V" type="number" form="formulario">
 			</div>
 			<div id="divInputS">
 				<label for="inputSlope">Distil. Slope (&deg;F/vol%):</label>
-				<input class="shortLabel" id="inputSlope" type="number" form="Form1">
+				<input class="shortLabel" id="inputSlope" type="number" form="formulario">
 			</div>
 			<div id="divInputRVP">
 				<label for="inputRVP">RVP (psia):</label>
-				<input class="shortLabel" id="inputRVP" type="number" form="Form1">
+				<input class="shortLabel" id="inputRVP" type="number" form="formulario">
 			</div>
 			<div id="divInputA">
 				<label for="inputA">Antoine's Coef. A:</label>
-				<input class="shortLabel" id="inputA" type="number" form="Form1">
+				<input class="shortLabel" id="inputA" type="number" form="formulario">
 			</div>
 			<div id="divInputB">
 				<label id="labelInputB" for="inputB"></label>
-				<input class="shortLabel" id="inputB" type="number" form="Form1">
+				<input class="shortLabel" id="inputB" type="number" form="formulario">
 			</div>
 			<div id="divInputC">
 				<label id="labelInputC" for="inputC"></label>
-				<input class="shortLabel" id="inputC" type="number" form="Form1">
+				<input class="shortLabel" id="inputC" type="number" form="formulario">
 			</div>
 		</div>
 	</div>
@@ -290,9 +330,6 @@
 
 	</div>
 	</div>
-
-
-
 
 
 
@@ -300,45 +337,28 @@
 <hr>
 </div>	<!-- end TANKS -->
 
-<h2>Opciones de cálculo y outputs</h2>
-<div>
-	<!--time basis drop down box-->
-	<b>a.</b> Select the calculation and output options below:<br><br>
-	<label for="calcBasis">Calculation Basis:</label>
-	<!--<select id="calcBasis" onchange="calcSelect()"  title="Annual: a single run based on the annual throughput.&#10;Monthly: not yet functional." form="Form1">-->
-	<select class="form-control" id="calcBasis" title="" form="Form1">
-		<option disabled selected value>Select from list</option>
-		<option value="Annual">Annual</option>
-		<!--<option value="Monthly">Monthly</option>-->
-	</select>
-</div>
-<div>
-	<!--Determine detailed or summary output type-->
-	<label for="outputType">Output Display:</label>
-	<select class="form-control" id="outputType" title="" form="Form1">
-		<option disabled selected value>Select from list</option>
-		<option value="Detailed">Detailed</option>
-		<option value="Summary">Summary</option>
-	</select>
-</div>
-<br>
-<div>
-
-
-<b>b.</b> Click the "Run Calculation" button to see output.<br><br>
-<div class="submission">	
-
- <button type="button" class="btn btn-primary btn-lg" id="calcButton" name="calcButton" onclick="main()" >Calcular</button>
- <button type="button" class="btn disabled    btn-lg" id="calcButton" name="calcButton" onclick="reset()" >Reset</button>
- <button type="button" class="btn disabled    btn-lg" id="calcButton" name="calcButton" onclick="validarTodo()" >Debug</button>
-
-</div>
+	<h2>Opciones de salida</h2>
+	<div>
+	<b>a.</b> Seleccione tipo de informe a generar.<br><br>
+		<!--Determine detailed or summary output type-->
+		<label for="outputType">Tipo de informe:</label>
+		<select class="form-control" id="outputType" title="" form="formulario">
+			<option disabled selected value>Seleccionar..</option>
+			<option value="Summary">Resumido</option>
+			<option value="Detailed">Detallado</option>
+		</select>
+	</div>
+	<br>
+	<div>
+	<b>b.</b> Hace click en "Calcular" para ver el reporte de salida.<br><br>
+	 	<button type="button" class="btn btn-primary btn-lg" id="calcButton" name="calcButton" onclick="main()" >Calcular</button>
+	 	<button type="button" class="btn disabled    btn-lg" id="calcButton" name="calcButton" onclick="reset()" >Reset</button>
+	 	<button type="button" class="btn disabled    btn-lg" id="calcButton" name="calcButton" onclick="validarTodo()" >Debug</button>
+	
+	</div>
 	<br>
 
-
 </div>
-
-
 </section>
 
 
@@ -381,40 +401,81 @@
 
 <script>//Interactividad de la pagina 
 
+	appendMetData();        //Cargar sitios meteorologia.
+
+	showMeteoParams=function(){
+		 
+		meteoList=`
+		<h3> Climatología del sitio </h3>
+
+                    <label for="MinTemp">Min. Temp. (&deg;R):</label>
+		    <input id="MinTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.minAmbientTemp}><br>
+
+                    <label for="MaxTemp">Max. Temp. (&deg;R):</label>
+		    <input id="MaxTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.maxAmbientTemp}><br>
+
+                    <label for="Wind">Viento (mph):</label>
+                    <input id="Wind" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.u}><br>
+
+                    <label for="Insolation" class="longLabel">Insol. Factor (Btu/ft<sup>2</sup>&middot;d):</label>
+		    <input id="Insolation" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.insolation}><br>
+
+                    <label for="atmPres">Atm. Pres. (psia):</label>
+                    <input id="atmPres" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.atmPressure}><br>
+				`;
+
+		$("#meteoParameters").html(meteoList);
+		$("#meteoParameters").removeClass("hidden");
+
+
+	};
+
+
+	habilitarInputs=function(tankType){
+
+		//seccion de dimensiones:
+		$("#tankDimensions*").addClass('hidden')		//esconder todos
+		$("#tankDimensions."+tankType).removeClass('hidden')	//mostrar solo el que nos interesa.
+
+
+		//accesorios
+
+
+		//if floating roofs...
 
 
 
+	};
 
-
-//Esto es para incorporar calculo de varios tanques. Lo dejamos en stand-by.
-let tanksCounter=0;
-addTank=function(){
-	tanksCounter++;
-
-	div=document.createElement("div");
-	div.id=tanksCounter;
-	div.className+="tank";
-	div.innerHTML+=`
-
-	<span class="pull-right clickable close-icon" onClick="removeTank(${div.id})">X</span>
+	//Esto es para incorporar calculo de varios tanques. Lo dejamos en stand-by.
+	let tanksCounter=0;
+	addTank=function(){
+		tanksCounter++;
 	
-	<h1 id="tankName${div.id}" contenteditable="true"> Tanque ${div.id}</h1>
-
-	`;
-
-
-	document.getElementById("tanks").appendChild(div);
-
-};
-
-removeTank=function(id){
-	document.getElementById("tanks").children.namedItem(id).remove();
-	//document.getElementById("tanks").children[id].remove();
-};
-
+		//if(tanksCounter==1){
+			$("#tanks").removeClass('hidden');		
+			
+		//	//agregar nuevo tanque:
+		//	div=document.createElement("div");
+		//	div.id=tanksCounter;
+		//	div.className+="tank";
+		//	div.innerHTML+=`
+		//	<span class="pull-right clickable close-icon badge bg-primary rounded-pill" onClick="removeTank(${div.id})"><i class="bi bi-x-circle"></i></span>
+		//	<h1 id="tankName${div.id}" contenteditable="true"> Tanque ${div.id}</h1>
+		//	`;
+	
+		//	document.getElementById("tanks").appendChild(div);
+		//}
+		//else{console.log("Solo se permite 1 tanque");}
+	};
+	
+	removeTank=function(id){
+		document.getElementById("tanks").children.namedItem(id).remove();
+		//document.getElementById("tanks").children[id].remove();
+	};
+	
 
 </script>
 
 </body>
 </html>
- 

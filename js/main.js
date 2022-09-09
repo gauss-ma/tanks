@@ -4,12 +4,10 @@ function main(){
 
 	//IDENTIFICACIÓN DEL REPORTE DE SALIDA
 	id={
-		userID:"Sabrina",
-		city:"Buenos Aires",
-		state:"",
-		company:"",
-		tankType:"",
-		description:"",
+		userID:$("#usrID").val(),
+		location:$("#location").val(),
+		company:$("#company").val(),
+		description:$("#description").val(),
 	};
 
 	//(1) INPUTS
