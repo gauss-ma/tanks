@@ -16,8 +16,8 @@ function main(){
 	unitsOut=$('input[name=unitsOutput]:checked').val();//Unidades de Output [SI/Imperial] 
 
 	//  (1a) datos meteorologicos:
-        siteName=$('select[id=meteoSite] option').filter(':selected').val() //Sitio más cercano.   
-        m=loadMeteorologicalParameters(siteName);
+        //siteName=$('select[id=meteoSite] option').filter(':selected').val() //Sitio más cercano.   
+        //m=loadMeteorologicalParameters(siteName);
 
 	//  (1b) datos de combustible:
 	liquidCategory="Refined Petroleum Liquids"	//document.getElementById("liquidCategory").value; //Crude Oils, Refined Petroleum Liquids, Other organic liquids
@@ -126,12 +126,12 @@ function loadTankParameters(){
 	console.log("   Tomando características del tanque.. ");
 
 	t={
-		type:"IFR",	    		//document.getElementById("tankType").value; //(VFR|HFR|EFR|DEFR|IFR)
-		height:10,		    	//document.getElementById("tankheight").value; //altura [ft] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
-		diameter:5,    	    		//document.getElementById("tankDiamter").value; //diametro [ft]
-		minLiquidHeight:1, 	    	//document.getElementById("").value; //altura minima de liquido [ft]
-		avgLiquidHeight:2, 	    	//document.getElementById("").value; //altura promedio de liquido [ft]
-		maxLiquidHeight:3, 	    	//document.getElementById("").value; //altura maxima de liquido [ft]
+		type:$("#tankType").val(),	   //(VFR|HFR|EFR|DEFR|IFR)
+		height:$("#shellHeight").val(),		 //altura [ft] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
+		diameter:$("#Diameter").val(),    	//diametro [ft]
+		minLiquidHeight:$("#minLiquidHeight").val(), 	   //altura minima de liquido [ft]
+		avgLiquidHeight:$("#avgLiquidHeight").val(), 	   //altura promedio de liquido [ft]
+		maxLiquidHeight:$("#maxLiquidHeight").val(), 	   //altura maxima de liquido [ft]
 		turnoversPerYear:"",      	//document.getElementById("").value; //número de veces que el tanque se llenó totalmente en el año [adimensional]
 		annualNetThroughput:6,	//document.getElementById("").value; //volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
 		flashing:false, 		//document.getElementById("").value; //ACLARACIÓN: El flashing ocurre cuando el liquido ingresa al tanque a mucha presión con moléculas de gas atrapadas en su interior y estas escapan cuando se libera esa presión al ingresar el líquido al tanque.

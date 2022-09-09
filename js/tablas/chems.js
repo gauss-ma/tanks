@@ -206,3 +206,15 @@ function getCompoundData() {
 	return arrayPetroChems;
 }
 
+function appendCompoundData() {
+	db=getCompoundData();
+	//Poner las opciones de compuestos organicos en el tankContents input selector del index.html.
+	var select = document.getElementById("tankContents");
+	for(var i = 0; i < db.length; i++)
+        {
+                var option = document.createElement("option"),
+                    txt = document.createTextNode(db[i].compoundName);
+                option.appendChild(txt);
+                select.appendChild(option);
+        };
+};
