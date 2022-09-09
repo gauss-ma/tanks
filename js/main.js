@@ -14,11 +14,11 @@ function main(){
 
 	//(1) INPUTS
 	//  (0) Opciones globales:
-	unitsInp="Imperial"		//document.getElementById("unitsInput").value;  //Unidades de Input  [SI/Imperial]  
-	unitsOut="Imperial"		//document.getElementById("unitsOutput").value; //Unidades de Output [SI/Imperial] 
+	unitsInp=$('input[name=unitsInput]:checked').val(); //Unidades de Input  [SI/Imperial]  
+	unitsOut=$('input[name=unitsOutput]:checked').val();//Unidades de Output [SI/Imperial] 
 
 	//  (1a) datos meteorologicos:
-        siteName="Rochester, MN";          //document.getElementById("siteName").value;
+        siteName=$('select[id=meteoSite] option').filter(':selected').val() //Sitio más cercano.   
         m=loadMeteorologicalParameters(siteName);
 
 	//  (1b) datos de combustible:

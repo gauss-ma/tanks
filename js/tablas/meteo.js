@@ -250,3 +250,22 @@ function getMeteorologicalData() {
 	return arrayMetData;
 }
 	
+
+function appendMetData() {
+        
+	db=getMeteorologicalData();
+        
+	//Poner las opciones de meteo en el meteoSite input selector del index.html.
+        var select = document.getElementById("meteoSite");
+        for(var i = 0; i < db.length; i++)
+        {
+                var option = document.createElement("option"),
+                    txt = document.createTextNode(db[i].siteName);
+                option.appendChild(txt);
+                select.appendChild(option);
+        }
+};
+
+appendMetData();	//poner esto despues en la funcion que carga la web.
+
+
