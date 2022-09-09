@@ -3,7 +3,7 @@ function main(){
 	console.log(">>> Iniciando ejecución..");
 
 	//IDENTIFICACIÓN DEL REPORTE DE SALIDA
-	i={
+	id={
 		userID:"Sabrina",
 		city:"Buenos Aires",
 		state:"",
@@ -44,10 +44,8 @@ function main(){
 	addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
 	addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
 	
-	// (1d) inicializar objeto con resultados de variables intermedias:
-	i={};
+	// (1d) inicializar array con resultados de variables intermedias:
 	resultadosIntermedios=[];
-	addIntermediateResults(i);
  
 	//  (1e) inicializar objeto con datos de salida:
 	o={};
@@ -62,6 +60,7 @@ function main(){
 
 	//  (2.a) calculos previos:
 	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura
+	resultadosIntermedios.push({varName:"Absorbancia pintura",value:t.a});
 	t.workingVolume=calculateWorkingVolume(t);	//calcula el volumen máximo de líquido que puede contener el tanque [gal]
 
 	//  (2.b) calculo de emision:
@@ -239,10 +238,3 @@ function findRimSealProp(t) {
 	
 	return t.rimSeal;
 };
-
-function addIntermediateResults (i) {
-
-	intermediateResults=getIntermediateResults();
-	resultadosIntermedios.push(intermediateResults.find(element=>(element.value==i)));
-
-}; 

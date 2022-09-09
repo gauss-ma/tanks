@@ -11,9 +11,9 @@ function Eq1_1() {
 
 //La Eq1_2 se omitió porque la Eq1_4 es la combinación de Eq1_2 y Eq1_3
 
-//Eq1_3 Volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
+//Eq1_3 Volumen de la fase vapor (vaporSpaceVolume) (ft3)
 function Eq1_3() {
-	return ((Math.PI*Math.pow(t.effectiveDiameter,2)/4)*t.vaporSpaceOutage);
+	return ((Math.PI*Math.pow(t.effectiveDiameter,2)/4)*vaporSpaceOutage);
 };
 
 //Eq1_4 Standing Losses: Pérdidas durante el almacenamiento desde tanques de techo fijo (o.standingLosses) (lbs/yr)
@@ -33,17 +33,22 @@ function Eq1_4() {
 	
 	t.effectiveDiameter =Eq1_14();	//Obtiene el diámetro o el diámetro efectivo (según si el tanque es vertical u horizontal) (feet)
 	t.effectiveHeight 	=Eq1_15();	//Obtiene la altura o la altura efectiva (según si el tanque es vertical u horizontal) (feet)
-	t.vaporSpaceOutage  =Eq1_16();	//Obtiene la altura de la columna de vapor (t.vaporSpaceOutage) (tanto para tanques horizontales como verticales) (feet)
+	vaporSpaceOutage  =Eq1_16();	//Obtiene la altura de la columna de vapor (vaporSpaceOutage) (tanto para tanques horizontales como verticales) (feet)
+	resultadosIntermedios.push({varName:"Altura columna vapor",value:vaporSpaceOutage});
 	vaporExpansionFactor=Eq1_5();	//Obtiene la fracción del vapor dentro del tanque que se pierde diariamente al exterior (vaporExpansionFactor) (dimensionless)
+	resultadosIntermedios.push({varName:"Factor expansión vapor",value:vaporExpansionFactor});
 	ventedVapSatFactor  =Eq1_21();	//Obtiene el factor de saturación del vapor que se pierde al exterior (ventedVapSatFactor) (dimensionless)
+	resultadosIntermedios.push({varName:"Factor saturación vapor",value:ventedVapSatFactor});
 	vaporDensity        =Eq1_22();	//Obtiene la densidad del vapor dentro del tanque (vaporDensity) (lbs/ft^3)
+	resultadosIntermedios.push({varName:"Densidad vapor",value:vaporDensity});
 	
 	if (t.insulation == "underground" && t.type == "VFR" && t.heating.heating == false) {
 		o.standingLosses = 0;
 	} else {
-		t.vaporSpaceVolume=Eq1_3(); //Obtiene el volumen de la fase vapor (t.vaporSpaceVolume) (ft3)
+		vaporSpaceVolume=Eq1_3(); //Obtiene el volumen de la fase vapor (vaporSpaceVolume) (ft3)
+		resultadosIntermedios.push({varName:"Volumen fase vapor",value:vaporSpaceVolume});
 		//Eq1_4
-		o.standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * t.vaporSpaceVolume * ventedVapSatFactor * vaporDensity;
+		o.standingLosses = t.heating.cyclesPerYear * vaporExpansionFactor * vaporSpaceVolume * ventedVapSatFactor * vaporDensity;
 	}
 
 	return o.standingLosses;
@@ -76,7 +81,9 @@ function Eq1_5() {
 	}
 	
 	avgVapTempRange    =Eq1_6();	//Obtiene la variación diaria promedio de la temperatura del vapor (avgVapTempRange) (degrees R)
+	resultadosIntermedios.push({varName:"Variación diaria temp. vapor",value:avgVapTempRange});
 	avgVapPressureRange=Eq1_9();	//Obtiene la variación diaria promedio de la presión de vapor (avgVapPressureRange) (psia)
+	resultadosIntermedios.push({varName:"Variación diaria presión vapor",value:avgVapPressureRange});
 	ventPressureRange  =Eq1_10();	//Obtiene el rango de presión que están ajustadas para soportar las válvulas de ventilación (ventPressureRange) (psig)
 	
 	//Eq1_5
@@ -183,24 +190,25 @@ function Eq1_15() {
 	return effectiveHeight;
 };
 
-//Eq1_16 Altura de la Columna de Vapor (t.vaporSpaceOutage) (feet)
+//Eq1_16 Altura de la Columna de Vapor (vaporSpaceOutage) (feet)
 function Eq1_16() {
 	
 	if (t.type == "VFR") {
 		if (t.roof.type == "cone") {
-			t.roofOutage=Eq1_17();	//altura efectiva de un techo con forma de cono (feet?)
+			roofOutage=Eq1_17();	//altura efectiva de un techo con forma de cono (feet?)
 		} else if (t.roof.type == "dome") {
-			t.roofOutage=Eq1_19();	//altura efectiva de un techo con forma de domo (feet)
+			roofOutage=Eq1_19();	//altura efectiva de un techo con forma de domo (feet)
 		}
+		resultadosIntermedios.push({varName:"Altura efectiva techo",value:roofOutage});
 		//Eq1_16
-		vaporSpaceOutage = t.effectiveHeight - t.avgLiquidHeight + t.roofOutage;
+		vaporSpaceOutage = t.effectiveHeight - t.avgLiquidHeight + roofOutage;
 	} else if (t.type == "HFR") {
 		vaporSpaceOutage = t.effectiveHeight / 2;
 	}
 	return vaporSpaceOutage;
 }
 
-//Eq1_17 Altura efectiva de un techo con forma de cono (t.roofOutage) (feet)
+//Eq1_17 Altura efectiva de un techo con forma de cono (roofOutage) (feet)
 function Eq1_17() {
 	t.roof.height=Eq1_18();	//Obtiene la altura real del techo (feet?)
 	return t.roof.height / 3;
@@ -218,18 +226,18 @@ function Eq1_18() {
 	return roofHeight;
 }
 
-//Eq1_19 Altura efectiva de un techo con forma de domo (t.roofOutage) (feet)
+//Eq1_19 Altura efectiva de un techo con forma de domo (roofOutage) (feet)
 function Eq1_19() {
 	t.roof.radius = parseFloat(t.roof.radius);
 	t.shellRadius = t.effectiveDiameter/2;
 	//Eq1_20();	//Obtiene la altura real del techo
 	t.roof.height=Eq1_20();	//Obtiene la altura real del techo
 	if (t.roof.radius == t.effectiveDiameter) {
-		t.roofOutage = 0.137 * t.shellRadius;
+		roofOutage = 0.137 * t.shellRadius;
 	} else {
-		t.roofOutage = t.roof.height * ((1 / 2) + ((1 / 6) * Math.pow((t.roof.height / t.shellRadius),2)));
+		roofOutage = t.roof.height * ((1 / 2) + ((1 / 6) * Math.pow((t.roof.height / t.shellRadius),2)));
 	}
-	return t.roofOutage;
+	return roofOutage;
 };
 
 //Eq1_20 Altura real de un techo con forma de domo (feet)
@@ -249,8 +257,7 @@ function Eq1_20() {
 
 //Eq1_21 Factor de saturación del vapor que se pierde al exterior (dimensionless) (ventedVapSatFactor)
 function Eq1_21() {
-	//ventedVapSatFactor= 1 / (1 + (0.053 * c.vaporPressure  * t.vaporSpaceOutage));
-	return( 1 / (1 + (0.053 * c.vaporPressure  * t.vaporSpaceOutage)) );
+	return( 1 / (1 + (0.053 * c.vaporPressure  * vaporSpaceOutage)) );
 }
 
 //Eq1_22 Densidad del vapor dentro del tanque (vaporDensity) (lbs/ft^3)
@@ -378,16 +385,18 @@ function Eq1_35() {
 		} else {
 			workingLossTurnover = 1;
 		}
-	//Obtiene el factor de producto de las pérdidas por llenado y vaciado del tanque (i.productFactor) (dimensionless)
+		resultadosIntermedios.push({varName:"Factor saturación llenado/vaciado",value:workingLossTurnover});
+	//Obtiene el factor de producto de las pérdidas por llenado y vaciado del tanque (productFactor) (dimensionless)
 		if (liquidCategory == "Crude Oils") {
-			i.productFactor = 0.75;
+			productFactor = 0.75;
 		} else {
-			i.productFactor = 1;
+			productFactor = 1;
 		}
+		resultadosIntermedios.push({varName:"Factor de producto",value:productFactor});
 	//Obtiene el factor de corrección del ajuste de presión de las válvulas de ventilación (ventCorrectionFactor) (dimensionless)
 	ventCorrectionFactor=Eq1_41();
 	//Eq1_35
-	o.workingLosses = netWorkingLossThroughput * workingLossTurnover * i.productFactor * vaporDensity * ventCorrectionFactor;
+	o.workingLosses = netWorkingLossThroughput * workingLossTurnover * productFactor * vaporDensity * ventCorrectionFactor;
 	
 	return o.workingLosses;
 }
@@ -477,15 +486,16 @@ function Eq2_2() {
 
 //Eq2_3 Pérdidas a través del sello de la plataforma flotante (o.rimSealLosses) (lbs/yr)
 function Eq2_3() {
+	vaporPressureFunction=Eq2_4();	//Calcula un factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
+	resultadosIntermedios.push({varName:"Factor presión vapor",value:vaporPressureFunction}); 
 
-	i.vaporPressureFunction=Eq2_4();	//Calcula un factor relacionado con la presión de vapor (i.vaporPressureFunction) (adimensional)
-
-	//Determina el factor de producto correspondiente (i.productFactor) (adimensional)
+	//Determina el factor de producto correspondiente (productFactor) (adimensional)
 	if (liquidCategory == "Crude Oils"){
-		i.productFactor = 0.4
+		productFactor = 0.4
 	} else {
-		i.productFactor = 1
+		productFactor = 1
 	};
+	resultadosIntermedios.push({varName:"Factor de producto",value:productFactor});
 
 	if (t.type=="EFR"){
 		windSpeed=m.u
@@ -495,15 +505,17 @@ function Eq2_3() {
 	
 	//Eq2_3
 	if (liquidCategory == "Other organic liquids") {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*i.vaporPressureFunction*c.molWeight*i.productFactor
+		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.molWeight*productFactor
 	} else {
-		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*i.vaporPressureFunction*c.vapMolWeight*i.productFactor
+		rimSealLosses = (t.rimSeal.Kra + t.rimSeal.Krb*Math.pow(windSpeed,t.rimSeal.n))*t.diameter*vaporPressureFunction*c.vapMolWeight*productFactor
 	};
+	resultadosIntermedios.push({varName:"Factor A del sello",value:t.rimSeal.Kra});
+	resultadosIntermedios.push({varName:"Factor B del sello",value:t.rimSeal.Krb});
 
 	return rimSealLosses;
 };
 
-//Eq2_4	Factor relacionado con la presión de vapor (i.vaporPressureFunction) (adimensional)
+//Eq2_4	Factor relacionado con la presión de vapor (vaporPressureFunction) (adimensional)
 function Eq2_4() {
 
 	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
@@ -583,20 +595,21 @@ function Eq2_11() {
 //Eq2_13 Pérdidas totales a través de los accesorios de la plataforma flotante (o.deckFittingLosses) (lbs/yr)
 function Eq2_13() {
 	if (t.type=="EFR") {
-		o.deckFittingLossFactor=Eq2_14();//Calcula el factor de pérdidas totales a través de los accesorios en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
+		deckFittingLossFactor=Eq2_14();//Calcula el factor de pérdidas totales a través de los accesorios en tanques EFR (deckFittingLossFactor) (lb-mole/yr)
 	} else {
-		o.deckFittingLossFactor=Eq2_16();//Calcula el factor de pérdidas totales a través de los accesorios en tanques IFR y DEFR (o.deckFittingLossFactor) (lb-mole/yr)
+		deckFittingLossFactor=Eq2_16();//Calcula el factor de pérdidas totales a través de los accesorios en tanques IFR y DEFR (deckFittingLossFactor) (lb-mole/yr)
 	};
+	resultadosIntermedios.push({varName:"Factor pérdidas tot. accesorios",value:deckFittingLossFactor});
 
 	if (liquidCategory == "Other organic liquids") {
-		deckFittingLosses =o.deckFittingLossFactor*i.vaporPressureFunction*c.molWeight*i.productFactor;
+		deckFittingLosses =deckFittingLossFactor*vaporPressureFunction*c.molWeight*productFactor;
 	} else {
-		deckFittingLosses =o.deckFittingLossFactor*i.vaporPressureFunction*c.vapMolWeight*i.productFactor;
+		deckFittingLosses =deckFittingLossFactor*vaporPressureFunction*c.vapMolWeight*productFactor;
 	};
 	return deckFittingLosses;
 };
 
-//Eq2_14 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques EFR (o.deckFittingLossFactor) (lb-mole/yr)
+//Eq2_14 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques EFR (deckFittingLossFactor) (lb-mole/yr)
 function Eq2_14(){    
 
         Ff=0; //Inicializo las perdidas en 0 y luego las voy sumando:
@@ -609,7 +622,7 @@ function Eq2_14(){
 	return Ff;
 };
 
-//Eq2_16 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques IFR o DEFR (o.deckFittingLossFactor) (lb-mole/yr)
+//Eq2_16 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques IFR o DEFR (deckFittingLossFactor) (lb-mole/yr)
 function Eq2_16() {
 
 	Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
@@ -646,9 +659,9 @@ function Eq2_18() {
 	};
 	//Eq2_18
 	if(liquidCategory=="Other organic liquids") {
-		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*i.vaporPressureFunction*c.molWeight*i.productFactor  
+		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.molWeight*productFactor  
 	} else {
-		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*i.vaporPressureFunction*c.vapMolWeight*i.productFactor  
+		deckSeamLosses = Kd*seamLengthFactor*Math.pow(t.diameter,2)*vaporPressureFunction*c.vapMolWeight*productFactor  
 	};
 	return deckSeamLosses;
 };
@@ -656,7 +669,7 @@ function Eq2_18() {
 //Eq2_19 Pérdidas por vaciado del tanque (o.workingLosses) (lbs/yr)
 function Eq2_19() {
 	annualNetThroughput=Eq2_20();	//Obtiene el volumen neto total introducido en el tanque a lo largo del año (annualNetThroughput) (bbl/yr) 
-	//Determina el factor de adhesión del líquido a las paredes (t.shellClingageFactor) [bbl/1000 ft2]
+	//Determina el factor de adhesión del líquido a las paredes (shellClingageFactor) [bbl/1000 ft2]
 	if (t.shellClingageFactor=="" || t.shellClingageFactor==null || t.shellClingageFactor==0) {
 		if(liquidCategory=="Crude Oils") {
 			if(t.shellTexture=="Light Rust") {
@@ -671,7 +684,11 @@ function Eq2_19() {
 				shellClingageFactor = 0.0075
 			} else {shellClingageFactor = 0.15}
 		};
+	} else {
+		shellClingageFactor = parseFloat(t.shellClingageFactor)
 	};
+	resultadosIntermedios.push({varName:"Factor adhesión a pared",value:shellClingageFactor});
+
 	//Obtiene el diámetro efectivo de las columnas internas de soporte que tiene el tanque (effectiveColumnDiameter) (ft)
 	if(t.columns.type=="Built-up Columns"){
 		effectiveColumnDiameter = 1.1

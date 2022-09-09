@@ -3,6 +3,16 @@ function validacion(validacionID){
 	//Corridas de validación:
 	console.log(">>> Corrida de validación: "+validacionID+"...");
 	
+	//IDENTIFICACIÓN DEL REPORTE DE SALIDA
+	id={
+		userID:"Sabrina",
+		city:"Buenos Aires",
+		state:"",
+		company:"",
+		tankType:"",
+		description:"",
+	};
+
 	//"CASO BASE": Valores default para ubicación, tanque y líquido
 	siteName="Rochester, MN";
 	liquidCategory="";
@@ -205,9 +215,13 @@ function validacion(validacionID){
 		c=loadLiquidParameters(liquidName);
 	};
 	
-	//  (1d) inicializar objeto con datos de salida:
+	// (1d) inicializar array con resultados de variables intermedias:
+	resultadosIntermedios=[];
+	
+	//  (1e) inicializar objeto con datos de salida:
 	o={};
 
+	//
 	//(2) CALCULOS
 
 	//  (2.a) calculos previos:

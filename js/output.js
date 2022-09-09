@@ -36,32 +36,32 @@ function printReport(){
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Usuario:</td>
-		<td> ${ i.userID } </td>
+		<td> ${ id.userID } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Ciudad:</td>
-		<td> ${ i.city } </td>
+		<td> ${ id.city } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Provincia:</td>
-		<td> ${ i.state } </td>
+		<td> ${ id.state } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Empresa:</td>
-		<td> ${ i.company } </td>
+		<td> ${ id.company } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Tipo de tanque:</td>
-		<td> ${ i.tankType } </td>
+		<td> ${ id.tankType } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Descripción:</td>
-		<td> ${ i.description } </td>
+		<td> ${ id.description } </td>
 	</tr>
 	</table>
 	<p/>
@@ -122,7 +122,7 @@ report+=`	<!-- Todos los tanques tienen volumen y un número de llenados anuales
 	<tr>
 		<td width = "20">&#160;</td>
 		<td width = "180">Volumen (gallons):</td>
-		<td > ${ parseFloat(t.workingVolume).toFixed(1) } </td>
+		<td > ${ parseFloat(t.workingVolume).toFixed(2) } </td>
 	</tr>
 	<tr>
 		<td width = "20">&#160;</td>
@@ -137,7 +137,7 @@ report+=`
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Volumen neto anual almacenado(ft3/yr):</td>
-			<td > ${ netWorkingLossThroughput } </td>		
+			<td > ${ parseFloat(netWorkingLossThroughput).toFixed(2) } </td>		
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
@@ -434,8 +434,8 @@ report+=`
 		<!-- Contenido del tanque  -->
 		
 		${printSeparador("Contenido del tanque")}
-		<span><b> ${ i.userID &&"-"&& i.tankType }</b></span><br> 
-		<span><b> ${ i.city &&","&& i.state }     </b></span>
+		<span><b> ${ id.userID &&"-"&& id.tankType }</b></span><br> 
+		<span><b> ${ id.city &&","&& id.state }     </b></span>
 		
 	<p/>		
 		<table width = "80%">
@@ -521,7 +521,7 @@ report+=`
 		report+=`<tr>
 			<td>&#160;  				    </td> 
 			<td width="180">${resultadosIntermedios[i].varName}: </td>
-			<td width="30" >${resultadosIntermedios[i].value  }  </td> 
+			<td width="30" >${parseFloat(resultadosIntermedios[i].value).toFixed(2)}  </td> 
 			</tr>`
 
 	};
@@ -569,9 +569,9 @@ report+=`
 				`
 				};	
 		report+=`		
-					<td width = "140" > ${ o.workingLosses } </td>		
-					<td width = "140" > ${ o.standingLosses } </td>	
-					<td width = "140" > ${ o.totalLosses } </td>
+					<td width = "140" > ${ parseFloat(o.workingLosses).toFixed(2) } </td>		
+					<td width = "140" > ${ parseFloat(o.standingLosses).toFixed(2) } </td>	
+					<td width = "140" > ${ parseFloat(o.totalLosses).toFixed(2) } </td>
 				</tr>
 			</table>
 		`;
@@ -604,7 +604,7 @@ report+=`
 					<td width = "140" > ${ parseFloat(o.rimSealLosses).toFixed(4) } </td>		
 					<td width = "140" > ${ parseFloat(o.workingLosses).toFixed(4) } </td>	
 					<td width = "140" > ${ parseFloat(o.deckFittingLosses).toFixed(5) } </td>
-					<td width = "140" > ${ parseFloat(o.deckSeamLoss).toFixed(5) } </td>	
+					<td width = "140" > ${ parseFloat(o.deckSeamLosses).toFixed(5) } </td>	
 					<td width = "140" > ${ parseFloat(o.totalLosses).toFixed(5) } </td>	
 				</tr>
 			</table>
