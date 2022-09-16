@@ -20,18 +20,18 @@ function main(){
         //m=loadMeteorologicalParameters(siteName);
 
 	//  (1b) datos de combustible:
-	liquidCategory="Refined Petroleum Liquids"	//document.getElementById("liquidCategory").value; //Crude Oils, Refined Petroleum Liquids, Other organic liquids
+	//liquidCategory="Refined Petroleum Liquids"	//document.getElementById("liquidCategory").value; //Crude Oils, Refined Petroleum Liquids, Other organic liquids
 	
  	console.log("      Tipo de liquido: "+liquidCategory);
 
-	if (liquidCategory == "Other organic liquids"){
-		compoundName="";    	//document.getElementById("compoundName").value;
-		c=loadCompoundParameters(compoundName);
-	}
-	else{
-		liquidName="Motor Gasoline RVP 7"; //document.getElementById("liquidName").value;
-		c=loadLiquidParameters(liquidName);
-	};
+	//if (liquidCategory == "Other organic liquids"){
+	//	compoundName="";    	//document.getElementById("compoundName").value;
+	//	c=loadCompoundParameters(compoundName);
+	//}
+	//else{
+	//	liquidName="Motor Gasoline RVP 7"; //document.getElementById("liquidName").value;
+	//	c=loadLiquidParameters(liquidName);
+	//};
 	
 	//  (1c) datos del tanque:
 	t=loadTankParameters();	//estos valores los provee el usuario.
@@ -103,10 +103,15 @@ function loadLiquidParameters(liquidName){
 	console.log("   Cargando parámetros físico-quimicos.. ");
 	console.log("      Liquido: "+liquidName);
 
-        baseDeDatosLiquidos=getLiquidData(); //levanto de base de datos de líquidos de petróleo (tablas/petroleum.js)
+	if (liquidCategory=="Refined Petroleum Liquids") {
+        baseDeDatosLiquidos=getRefinedOilsData(); //levanto de base de datos de petróleos refinados (tablas/petroleum.js)
         l=baseDeDatosLiquidos.find(element => element.liquidName==liquidName); //me quedo con el que me interesa
-
-	return l;
+		return l;
+	} else {
+		baseDeDatosLiquidos=getCrudeOilsData(); //levanto de base de datos de petróleos crudos (tablas/petroleum.js)
+		l=baseDeDatosLiquidos.find(element => element.liquidName==liquidName); //me quedo con el que me interesa
+		return l;
+	};
 };
 
 function loadCompoundParameters(compoundName){

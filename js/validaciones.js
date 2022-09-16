@@ -191,8 +191,8 @@ function validacion(validacionID){
 			t.rimSeal.fit="Average-Fitting Seal";
 			t.rimSeal.type="Mechanical-shoe seal";
 			t.rimSeal.secondary="Primary only";
-			t.deck.type="bolted";
-			t.deck.construction="Unknown";
+			t.deck.type="welded";
+			t.deck.support="pontoon"
 			t.rimSeal=findRimSealProp(t);	//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
 			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
 			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);

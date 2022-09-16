@@ -21,3 +21,22 @@ function getPaintProperties() {
 	return arrayPaintProp;
 }
 
+function appendPaintData() {
+	db=getPaintProperties();
+	//Poner las opciones de pinturas en el paintShell input selector del index.html.
+        var select = document.getElementById("paintShell");
+        for(var i = 0; i < db.length; i++) {
+            var option = document.createElement("option"),
+                txt = document.createTextNode(db[i].paintName);
+            option.appendChild(txt);
+            select.appendChild(option);
+        };
+	//Poner las opciones de pinturas en el paintRoof input selector del index.html.
+		var select = document.getElementById("paintRoof");
+		for(var i = 0; i < db.length; i++) {
+			var option = document.createElement("option"),
+				txt = document.createTextNode(db[i].paintName);
+			option.appendChild(txt);
+			select.appendChild(option);
+		};
+};

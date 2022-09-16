@@ -519,13 +519,13 @@ function Eq2_3() {
 function Eq2_4() {
 
 	//Calcula la temperatura diaria promedio en la superficie del líquido (avgSurfaceTemp) (degrees R)
-	if (t.type == "IFR" || t.type == "DEFR") {
+	if (t.type == "IFR") {
 		avgSurfaceTemp=Eq2_5();
-	} else if (t.type == "EFR") { 
+	} else if (t.type == "EFR"|| t.type == "DEFR") { 
 		if (t.deck.support == "double") {
-			avgSurfaceTemp=Eq2_10();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con double deck (avgSurfaceTemp) (degrees R)
+			avgSurfaceTemp=Eq2_10();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR o DEFR con double deck (avgSurfaceTemp) (degrees R)
 		} else {
-			avgSurfaceTemp=Eq2_7();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
+			avgSurfaceTemp=Eq2_7();	//Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR o DEFR con pontoon deck (avgSurfaceTemp) (degrees R)
 		};
 	};
 
@@ -552,7 +552,7 @@ function Eq2_4() {
 	return (c.vaporPressure/m.atmPressure)/Math.pow((1+Math.pow((1-(c.vaporPressure/m.atmPressure)),0.5)),2);
 }
 
-//Eq2_5 Temperatura diaria promedio en la superficie del líquido en tanques tipo IFR o DEFR (avgSurfaceTemp) (degrees R)
+//Eq2_5 Temperatura diaria promedio en la superficie del líquido en tanques tipo IFR (avgSurfaceTemp) (degrees R)
 function Eq2_5() {
 	avgAmbientTemp=Eq1_30();	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
 	avgBulkTemp   =Eq1_31();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
@@ -562,7 +562,7 @@ function Eq2_5() {
 
 //La Eq2_6 se omitió porque es una simplificación de la Eq2_5 en base a un supuesto.
 
-//Eq2_7 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con pontoon deck (avgSurfaceTemp) (degrees R)
+//Eq2_7 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR o DEFR con pontoon deck (avgSurfaceTemp) (degrees R)
 function Eq2_7() {
 	avgAmbientTemp=Eq1_30(); //Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
 	avgBulkTemp   =Eq2_8();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
@@ -570,14 +570,14 @@ function Eq2_7() {
 	return (0.7*avgAmbientTemp) + (0.3*avgBulkTemp) + (0.008*aRoof*m.insolation);
 }
 
-//Eq2_8 Temperatura promedio en el seno del líquido en tanques tipo EFR con pontoon deck (avgBulkTemp) (degrees R)
+//Eq2_8 Temperatura promedio en el seno del líquido en tanques tipo EFR o DEFR con pontoon deck (avgBulkTemp) (degrees R)
 function Eq2_8() {
 	return avgAmbientTemp + (((0.71*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+57));
 }
 
 //La Eq2_9 se omitió porque es una simplificación de la Eq2_8 en base a un supuesto.
 
-//Eq2_10 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR con double deck (avgSurfaceTemp) (degrees R)
+//Eq2_10 Temperatura diaria promedio en la superficie del líquido en tanques tipo EFR o DEFR con double deck (avgSurfaceTemp) (degrees R)
 function Eq2_10() {
 	avgAmbientTemp=Eq1_30(); 	//Obtiene la temperatura ambiente diaria promedio (avgAmbientTemp) (degrees R) 
 	avgBulkTemp   =Eq2_11();	//Obtiene la temperatura promedio en el seno del líquido (avgBulkTemp) (degrees R)
@@ -585,7 +585,7 @@ function Eq2_10() {
 	return (0.3*avgAmbientTemp) + (0.7*avgBulkTemp) + (0.009*aRoof*m.insolation);
 }
 
-//Eq2_11 Temperatura promedio en el seno del líquido en tanques tipo EFR con double deck (avgBulkTemp) (degrees R)
+//Eq2_11 Temperatura promedio en el seno del líquido en tanques tipo EFR o DEFR con double deck (avgBulkTemp) (degrees R)
 function Eq2_11() {
 	return avgAmbientTemp + (((0.39*aRoof*m.insolation)+(0.485*(t.height/t.diameter)*aShell*m.insolation))/((170*(t.height/t.diameter))+45));
 }

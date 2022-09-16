@@ -344,7 +344,7 @@ if(t.type == "EFR"|| t.type == "IFR"|| t.type == "DEFR") {
 		<td width = "20">&#160;</td>
 		<td width = "180">Tipo:</td>
 	`	
-	if (t.type == "EFR") {
+	if (t.type == "EFR"||t.type=="DEFR") {
 		report+=`<td> ${ t.deck.support } </td>
 		`
 	} else {
