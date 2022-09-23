@@ -22,7 +22,7 @@ function main(){
 	//  (1b) datos de combustible:
 	//liquidCategory="Refined Petroleum Liquids"	//document.getElementById("liquidCategory").value; //Crude Oils, Refined Petroleum Liquids, Other organic liquids
 	
- 	console.log("      Tipo de liquido: "+liquidCategory);
+ 	//console.log("      Tipo de liquido: "+liquidCategory);
 
 	//if (liquidCategory == "Other organic liquids"){
 	//	compoundName="";    	//document.getElementById("compoundName").value;
@@ -64,10 +64,10 @@ function main(){
 	//  (2.b) calculo de emision:
 
 	if (t.type == "VFR" || t.type == "HFR") {
-                o.totalLosses = Eq1_1();
+        o.totalLosses = Eq1_1();
 	} else if (t.type == "EFR" || t.type == "DEFR" || t.type == "IFR") {
 		o.totalLosses = Eq2_1();
-    	}
+    };
 	
 	//(3) OUTPUT
 	//   (0)  Convertir unidades si el usuario elige sistema internacional.
@@ -100,7 +100,6 @@ function loadMeteorologicalParameters(siteName){
 
 function loadLiquidParameters(liquidName){
 
-	console.log("   Cargando parámetros físico-quimicos.. ");
 	console.log("      Liquido: "+liquidName);
 
 	if (liquidCategory=="Refined Petroleum Liquids") {
@@ -115,8 +114,7 @@ function loadLiquidParameters(liquidName){
 };
 
 function loadCompoundParameters(compoundName){
-	
-	console.log("   Cargando parámetros físico-quimicos.. ");
+
 	console.log("      Compuesto: "+compoundName);
 	
 	baseDeDatosCompuestos=getCompoundData(); //levanto de base de datos de compuestos puros (tablas/chems.js)
@@ -133,7 +131,7 @@ function loadTankParameters(){
 	t={
 		type:$("#tankType").val(),	   //(VFR|HFR|EFR|DEFR|IFR)
 		height:$("#shellHeight").val(),		 //altura [ft] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
-		diameter:$("#Diameter").val(),    	//diametro [ft]
+		diameter:$("#diameter").val(),    	//diametro [ft]
 		minLiquidHeight:$("#minLiquidHeight").val(), 	   //altura minima de liquido [ft]
 		avgLiquidHeight:$("#avgLiquidHeight").val(), 	   //altura promedio de liquido [ft]
 		maxLiquidHeight:$("#maxLiquidHeight").val(), 	   //altura maxima de liquido [ft]
@@ -141,26 +139,26 @@ function loadTankParameters(){
 		annualNetThroughput:6,	//document.getElementById("").value; //volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
 		flashing:false, 		//document.getElementById("").value; //ACLARACIÓN: El flashing ocurre cuando el liquido ingresa al tanque a mucha presión con moléculas de gas atrapadas en su interior y estas escapan cuando se libera esa presión al ingresar el líquido al tanque.
 		shell:{
-			color:"black",		//document.getElementById("").value; //color
-			condition:"aged",	//document.getElementById("").value; //(new|aged|average)
+			color:$("#paintShell").val(),		
+			condition:$("#conditionShell").val(),
 		},
 		roof:{
-			type:"dome", 	 	//document.getElementById("").value; //(cone|dome)
-			color:"white",		//document.getElementById("").value; //color
-			condition:"new",	//document.getElementById("").value; //(new|aged|average)
-			height:0,		//document.getElementById("").value; //altura del techo [ft] // ACLARACIÓN: Si el usuario no tiene el valor de la altura del techo, en esta variable se debe ingresar cero.
-			slope:"",		//document.getElementById("").value; //pendiente del techo (si es cónico) [ft/ft]
-			radius:5,		//document.getElementById("").value; //radio del techo (si es en forma de domo) [ft] // ACLARACIÓN: Si el usuario no tiene el valor del radio del techo, en esta variable se debe ingresar el mismo valor que se haya ingresado para el diámetro del tanque (así lo recomienda el AP-42).
+			type:$("#roofType").val(), 	 				//(cone|dome)
+			color:$("#paintRoof").val(),				//color
+			condition:$("#conditionRoof").val(),		//(new|aged|average)
+			height:$("#roofH").val(),					//altura del techo [ft] // ACLARACIÓN: Si el usuario no tiene el valor de la altura del techo, en esta variable se debe ingresar cero.
+			slope:$("#roofSlope").val(),				//pendiente del techo (si es cónico) [ft/ft]
+			radius:$("#roofRad").val(),					//radio del techo (si es en forma de domo) [ft] // ACLARACIÓN: Si el usuario no tiene el valor del radio del techo, en esta variable se debe ingresar el mismo valor que se haya ingresado para el diámetro del tanque (así lo recomienda el AP-42).
 		},
-		ventPressureSetting:0.03,	//document.getElementById("").value; //presión a la cual están seteadas las válvulas de ventilación [psig]
-		ventVacuumSetting:-0.03,	//document.getElementById("").value; //presión de vacío de las válvulas de ventilación [psig]
-		gaugePressure:"",		//document.getElementById("").value; //presión manométrica en la fase vapor en condiciones de operación normales [psig] // ACLARACIÓN: sólo se debe ingresar si la ventPressureRange ingresada es mayor que 0,06. Si el tanque está a temperatura atmosférica, debe ingresarse cero.
-		insulation:"none",		//document.getElementById("").value; //none, shell, shellAndRoof, underground //ACLARACIÓN: El AP-42 sólo permite incorporar el aislamiento térmico en los cálculos para tanques de techo fijo //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
+		ventPressureSetting:$("#pressure").val(), 		//presión a la cual están seteadas las válvulas de ventilación [psig]
+		ventVacuumSetting:$("#vacuum").val(), 		//presión de vacío de las válvulas de ventilación [psig]
+		gaugePressure:$("#gaugePress").val(), 		//presión manométrica en la fase vapor en condiciones de operación normales [psig] // ACLARACIÓN: sólo se debe ingresar si la ventPressureRange ingresada es mayor que 0,06. Si el tanque está a temperatura atmosférica, debe ingresarse cero.
+		insulation:$("#insulated").val(),		//none, shell, full, underground //ACLARACIÓN: El AP-42 sólo permite incorporar el aislamiento térmico en los cálculos para tanques de techo fijo //ACLARACIÓN 2: Si el tanque es totalmente aislado (full o underground), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
 		heating:{
-			heating: false,		//document.getElementById("").value; //considerar calentamiento? //ACLARACIÓN: El AP-42 sólo permite incorporar el calentamiento en los cálculos para tanques de techo fijo
-			cyclesPerYear:"",	//document.getElementById("").value; //numero de ciclos de calentamiento
-			minBulkTemp:"",		//document.getElementById("").value; //temperatura minima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
-			maxBulkTemp:"",		//document.getElementById("").value; //temperatura maxima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
+			heating: $("#heated").is(":checked"),	//considerar calentamiento? //ACLARACIÓN: El AP-42 sólo permite incorporar el calentamiento en los cálculos para tanques de techo fijo
+			cyclesPerYear:$("#cyclesPerYear").val(),	//numero de ciclos de calentamiento
+			minBulkTemp:$("#minBulkTemp").val(),	//temperatura minima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
+			maxBulkTemp:$("#maxBulkTemp").val(),	//temperatura maxima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
 		},
 		construction:"riveted", 		//document.getElementById("").value; //(welded|riveted) //ACLARACIÓN: Si no se sabe, el AP-42 recomienda asumir que es "welded".
 		rimSeal:{
@@ -195,7 +193,7 @@ function calculateSolarAbsorbance(t){
 
 	paint=getPaintProperties();	//levanto db de archivo: ./tablas/paint.js
 
-	if (t.type == "HFR"){
+	if (t.type == "HFR"||t.type=="EFR"){
 		
 		aShell=eval("paint.find( element => element.paintName==\""+t.shell.color+"\")."+t.shell.condition);
 		aRoof=aShell;
