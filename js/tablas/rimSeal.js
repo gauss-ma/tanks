@@ -28,3 +28,50 @@ function getRimSealProperties() {
 	
 	return rimSealProp;
 }
+
+
+function appendSealFitOptions(tankConst) {
+        
+	databaseRimSeals=getRimSealProperties();
+	db=databaseRimSeals.filter(element=>(element.tankConstruction==tankConst));
+        
+	//Poner las opciones de rimSealFit en el rimSeal input selector del index.html.
+        var select = document.getElementById("sealFit");
+        select.innerHTML="<option disabled selected value>Seleccionar una opción...</option>";
+        for(var i = 0; i < db.length; i++) {
+            var option = document.createElement("option"),
+                txt = document.createTextNode(db[i].fit);
+            option.appendChild(txt);
+            select.appendChild(option);
+        };
+};
+
+function appendPrimarySealOptions(sealFit,tankConst) {
+    databaseRimSeals=getRimSealProperties();
+    db=databaseRimSeals.filter(element=>(element.fit==sealFit && element.tankConstruction==tankConst));
+
+    //Poner las opciones de primarySeal en el rimSeal input selector del index.html.
+    var select = document.getElementById("primarySeal");
+    select.innerHTML="<option disabled selected value>Seleccionar una opción...</option>";
+    for(var i = 0; i < db.length; i++) {
+        var option = document.createElement("option"),
+            txt = document.createTextNode(db[i].type);
+        option.appendChild(txt);
+        select.appendChild(option);
+    };
+}; 
+
+function appendSecondSealOptions(primarySeal,sealFit,tankConst) {
+    databaseRimSeals=getRimSealProperties();
+    db=databaseRimSeals.filter(element=>(element.type==primarySeal && element.fit==sealFit && element.tankConstruction==tankConst));
+
+    //Poner las opciones de secondarySeal en el rimSeal input selector del index.html.
+    var select = document.getElementById("secondSeal");
+    select.innerHTML="<option disabled selected value>Seleccionar una opción...</option>";
+    for(var i = 0; i < db.length; i++) {
+        var option = document.createElement("option"),
+            txt = document.createTextNode(db[i].secondary);
+        option.appendChild(txt);
+        select.appendChild(option);
+    };
+};

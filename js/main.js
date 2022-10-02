@@ -11,41 +11,26 @@ function main(){
 	};
 
 	//(1) INPUTS
-	//  (0) Opciones globales:
+	// Opciones globales:
 	unitsInp=$('input[name=unitsInput]:checked').val(); //Unidades de Input  [SI/Imperial]  
 	unitsOut=$('input[name=unitsOutput]:checked').val();//Unidades de Output [SI/Imperial] 
-
-	//  (1a) datos meteorologicos:
-        //siteName=$('select[id=meteoSite] option').filter(':selected').val() //Sitio más cercano.   
-        //m=loadMeteorologicalParameters(siteName);
-
-	//  (1b) datos de combustible:
-	//liquidCategory="Refined Petroleum Liquids"	//document.getElementById("liquidCategory").value; //Crude Oils, Refined Petroleum Liquids, Other organic liquids
 	
- 	//console.log("      Tipo de liquido: "+liquidCategory);
-
-	//if (liquidCategory == "Other organic liquids"){
-	//	compoundName="";    	//document.getElementById("compoundName").value;
-	//	c=loadCompoundParameters(compoundName);
-	//}
-	//else{
-	//	liquidName="Motor Gasoline RVP 7"; //document.getElementById("liquidName").value;
-	//	c=loadLiquidParameters(liquidName);
-	//};
-	
-	//  (1c) datos del tanque:
+	// Datos del tanque:
 	t=loadTankParameters();	//estos valores los provee el usuario.
 
 	t.rimSeal=findRimSealProp(t);	//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
 	
-	//Ejemplo: Así el usuario iria agregando accesorios:
-	addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",3);
-	addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
+	// Accesorios de la plataforma flotante:
+	if (fittingsCounter>0) {
+		for (var i = 1; i<=fittingsCounter; i++) {
+			addDeckFitting(t,document.getElementById("fittingName"+i).value,document.getElementById("fittingType"+i).value,document.getElementById("fittingAmount"+i).value);
+		};
+	};
 	
-	// (1d) inicializar array con resultados de variables intermedias:
+	// Inicializar array con resultados de variables intermedias:
 	resultadosIntermedios=[];
  
-	//  (1e) inicializar objeto con datos de salida:
+	// Inicializar objeto con datos de salida:
 	o={};
 
 	//
@@ -129,15 +114,15 @@ function loadTankParameters(){
 	console.log("   Tomando características del tanque.. ");
 
 	t={
-		type:$("#tankType").val(),	   //(VFR|HFR|EFR|DEFR|IFR)
-		height:$("#shellHeight").val(),		 //altura [ft] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
-		diameter:$("#diameter").val(),    	//diametro [ft]
-		minLiquidHeight:$("#minLiquidHeight").val(), 	   //altura minima de liquido [ft]
-		avgLiquidHeight:$("#avgLiquidHeight").val(), 	   //altura promedio de liquido [ft]
-		maxLiquidHeight:$("#maxLiquidHeight").val(), 	   //altura maxima de liquido [ft]
-		turnoversPerYear:"",      	//document.getElementById("").value; //número de veces que el tanque se llenó totalmente en el año [adimensional]
-		annualNetThroughput:6,	//document.getElementById("").value; //volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
-		flashing:false, 		//document.getElementById("").value; //ACLARACIÓN: El flashing ocurre cuando el liquido ingresa al tanque a mucha presión con moléculas de gas atrapadas en su interior y estas escapan cuando se libera esa presión al ingresar el líquido al tanque.
+		type:$('input[id=tankType]:checked').val(),	  			//(VFR|HFR|EFR|DEFR|IFR)
+		height:$("#shellHeight").val(),		 					//altura [ft] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
+		diameter:$("#diameter").val(),    						//diametro [ft]
+		minLiquidHeight:$("#minLiquidHeight").val(), 	  		//altura minima de liquido [ft]
+		avgLiquidHeight:$("#avgLiquidHeight").val(), 	  		//altura promedio de liquido [ft]
+		maxLiquidHeight:$("#maxLiquidHeight").val(), 	  		//altura maxima de liquido [ft]
+		turnoversPerYear:$("#turnoversPerYear").val(),     		//número de veces que el tanque se llenó totalmente en el año [adimensional]
+		annualNetThroughput:$("#annualNetThroughput").val(), 	//volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
+		flashing:$("#flashing").is(":checked"), 				//ACLARACIÓN: El flashing ocurre cuando el liquido ingresa al tanque a mucha presión con moléculas de gas atrapadas en su interior y estas escapan cuando se libera esa presión al ingresar el líquido al tanque.
 		shell:{
 			color:$("#paintShell").val(),		
 			condition:$("#conditionShell").val(),
@@ -151,36 +136,36 @@ function loadTankParameters(){
 			radius:$("#roofRad").val(),					//radio del techo (si es en forma de domo) [ft] // ACLARACIÓN: Si el usuario no tiene el valor del radio del techo, en esta variable se debe ingresar el mismo valor que se haya ingresado para el diámetro del tanque (así lo recomienda el AP-42).
 		},
 		ventPressureSetting:$("#pressure").val(), 		//presión a la cual están seteadas las válvulas de ventilación [psig]
-		ventVacuumSetting:$("#vacuum").val(), 		//presión de vacío de las válvulas de ventilación [psig]
-		gaugePressure:$("#gaugePress").val(), 		//presión manométrica en la fase vapor en condiciones de operación normales [psig] // ACLARACIÓN: sólo se debe ingresar si la ventPressureRange ingresada es mayor que 0,06. Si el tanque está a temperatura atmosférica, debe ingresarse cero.
-		insulation:$("#insulated").val(),		//none, shell, full, underground //ACLARACIÓN: El AP-42 sólo permite incorporar el aislamiento térmico en los cálculos para tanques de techo fijo //ACLARACIÓN 2: Si el tanque es totalmente aislado (full o underground), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
+		ventVacuumSetting:$("#vacuum").val(), 			//presión de vacío de las válvulas de ventilación [psig]
+		gaugePressure:$("#gaugePress").val(), 			//presión manométrica en la fase vapor en condiciones de operación normales [psig] // ACLARACIÓN: sólo se debe ingresar si la ventPressureRange ingresada es mayor que 0,06. Si el tanque está a temperatura atmosférica, debe ingresarse cero.
+		insulation:$("#insulated").val(),				//none, shell, full, underground //ACLARACIÓN: El AP-42 sólo permite incorporar el aislamiento térmico en los cálculos para tanques de techo fijo //ACLARACIÓN 2: Si el tanque es totalmente aislado (full o underground), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
 		heating:{
-			heating: $("#heated").is(":checked"),	//considerar calentamiento? //ACLARACIÓN: El AP-42 sólo permite incorporar el calentamiento en los cálculos para tanques de techo fijo
+			heating: $("#heated").is(":checked"),		//considerar calentamiento? //ACLARACIÓN: El AP-42 sólo permite incorporar el calentamiento en los cálculos para tanques de techo fijo
 			cyclesPerYear:$("#cyclesPerYear").val(),	//numero de ciclos de calentamiento
-			minBulkTemp:$("#minBulkTemp").val(),	//temperatura minima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
-			maxBulkTemp:$("#maxBulkTemp").val(),	//temperatura maxima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
+			minBulkTemp:$("#minBulkTemp").val(),		//temperatura minima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
+			maxBulkTemp:$("#maxBulkTemp").val(),		//temperatura maxima del liquido [grados Rankine] //ACLARACIÓN: Si el tanque se calienta, es obligatorio ingresar este dato y tiene que ser mayor a 460°R //ACLARACIÓN 2: Si el tanque es totalmente aislado (underground o shellAndRoof), se tiene que ingresar si o si un valor en t.heating.minBulkTemp y el mismo valor en t.heating.maxBulkTemp (aunque el tanque NO tenga calentamiento)
 		},
-		construction:"riveted", 		//document.getElementById("").value; //(welded|riveted) //ACLARACIÓN: Si no se sabe, el AP-42 recomienda asumir que es "welded".
+		construction:$("#tankConst").val(),		//(welded|riveted) //ACLARACIÓN: Si no se sabe, el AP-42 recomienda asumir que es "welded".
 		rimSeal:{
-			fit:"Average-Fitting Seal",	//document.getElementById("").value; //(Average-Fitting Seal|Tight-Fitting Seal)
-			type:"Mechanical-shoe seal",	//document.getElementById("").value; //(Mechanical-shoe Seal|Liquid-mounted seal|Vapor-mounted Seal)
-			secondary:"Primary only",	//document.getElementById("").value; //(Primary only|Shoe-mounted secondary|Rim-mounted secondary|Weather shield)
+			fit:$("#sealFit").val(),			//(Average-Fitting Seal|Tight-Fitting Seal)
+			type:$("#primarySeal").val(),		//(Mechanical-shoe Seal|Liquid-mounted seal|Vapor-mounted Seal)
+			secondary:$("#secondSeal").val(),	//(Primary only|Shoe-mounted secondary|Rim-mounted secondary|Weather shield)
 		},	
 		deck: {
-			type:"",		//document.getElementById("").value; //(welded|bolted)
-			support:"",		//document.getElementById("").value; //(pontoon|double|unknown) //ACLARACIÓN: Si se ingresa "unknown", el programa hace los cálculos como si fuera pontoon (así lo recomienda el AP-42).
-			fittings:[],		//acá agrego array con "accesorios"
-			seamLength:"",		//document.getElementById("").value; //medida total de las "costuras" de la plataforma flotante [ft] //si no se conoce, se debe dejar en blanco o ingresar cero
-			construction:"Panel",	//document.getElementById("").value; //(Continuous sheet|Panel|Unknown)//si no se conocen las MEDIDAS de las hojas o paneles con los que está construida la plataforma, se debe elegir la opción "Unknown" 
-			sheetWidth:"",		//document.getElementById("").value; //ancho de las hojas de metal con las que está construida la plataforma flotante [ft]
-			panelWidth:5,		//document.getElementById("").value; //ancho de los paneles rectangulares de metal con los que está construida la plataforma flotante [ft]
-			panelLength:12,		//document.getElementById("").value; //largo de los paneles rectangulares de metal con los que está construida la plataforma flotante [ft]
+			type:$("#deckType").val(),					//(welded|bolted)
+			support:$("#deckSupport").val(),			//(pontoon|double|unknown) //ACLARACIÓN: Si se ingresa "unknown", el programa hace los cálculos como si fuera pontoon (así lo recomienda el AP-42).
+			fittings:[],								//acá agrego array con "accesorios"
+			seamLength:$("#seamLength").val(),	 		//medida total de las "costuras" de la plataforma flotante [ft] //si no se conoce, se debe dejar en blanco o ingresar cero
+			construction:$("#deckConst").val(),	 		//(Continuous sheet|Panel|Unknown)//si no se conocen las MEDIDAS de las hojas o paneles con los que está construida la plataforma, se debe elegir la opción "Unknown" 
+			sheetWidth:$("#sheetWidth").val(),			//ancho de las hojas de metal con las que está construida la plataforma flotante [ft]
+			panelWidth:$("#panelWidth").val(),			//ancho de los paneles rectangulares de metal con los que está construida la plataforma flotante [ft]
+			panelLength:$("#panelLength").val(),		//largo de los paneles rectangulares de metal con los que está construida la plataforma flotante [ft]
 		},
-		shellClingageFactor:"",		//document.getElementById("").value; //factor de adhesión del líquido a las paredes [bbl/1000 ft2]//si no se conoce, se debe dejar en blanco o ingresar cero
-		shellTexture:"Light Rust",	//document.getElementById("").value; //(Light Rust|Dense Rust|Gunite Lining)//estado del interior de las paredes del tanque 	
+		shellClingageFactor:$("#shellClingageFactor").val(),		//factor de adhesión del líquido a las paredes [bbl/1000 ft2]//si no se conoce, se debe dejar en blanco o ingresar cero
+		shellTexture:$("#shellTexture").val(),						//(Light Rust|Dense Rust|Gunite Lining)//estado del interior de las paredes del tanque 	
 		columns:{
-			number:1,	//document.getElementById("").value; //número de columnas internas de soporte que tiene el tanque (sólo cuando es un tanque IFR, porque los DEFR tienen techos autoportantes)
-			type:"Pipe Columns",	//document.getElementById("").value; //(Built-up Columns|Pipe Columns|Unknown)
+			number:$("#numColumns").val(),				//número de columnas internas de soporte que tiene el tanque (sólo cuando es un tanque IFR, porque los DEFR tienen techos autoportantes)
+			type:$("#typeColumns").val(),				//(Built-up Columns|Pipe Columns|Unknown)
 		},
 	};
 

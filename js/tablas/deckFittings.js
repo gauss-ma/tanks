@@ -31,3 +31,33 @@ function getDeckFittingsProperties() {
 	return deckFittingProp;
 }
 
+let buttonCounter=0;
+function appendFittingNames() {
+	buttonCounter++;
+	db=getDeckFittingsProperties();
+        
+	//Poner las opciones de fittingNames en el deckFitting input selector del index.html.
+        var select = document.getElementById("fittingName"+buttonCounter);
+        for(var i = 0; i < db.length; i++) {
+            var option = document.createElement("option"),
+                txt = document.createTextNode(db[i].fittingName);
+            option.appendChild(txt);
+            select.appendChild(option);
+        };
+};
+
+function appendFittingTypes(fittingName,fittingID) {
+
+	databaseDeckFittings=getDeckFittingsProperties();
+	db=databaseDeckFittings.filter(element=>(element.fittingName==fittingName));
+        
+	//Poner las opciones de fittingTypes en el deckFitting input selector del index.html.
+        var select = document.getElementById("fittingType"+fittingID);
+		select.innerHTML="<option disabled selected value>Seleccionar una opción...</option>";
+        for(var i = 0; i < db.length; i++) {
+            var option = document.createElement("option"),
+                txt = document.createTextNode(db[i].fittingType);
+            option.appendChild(txt);
+            select.appendChild(option);
+        };
+};

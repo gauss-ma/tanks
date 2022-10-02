@@ -137,7 +137,7 @@ report+=`
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Volumen neto anual almacenado(ft3/yr):</td>
-			<td > ${ parseFloat(netWorkingLossThroughput).toFixed(2) } </td>		
+			<td > ${ parseFloat(t.annualNetThroughput).toFixed(2) } </td>		
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
@@ -310,7 +310,7 @@ report+=`
 `	
 if(t.type == "EFR"|| t.type == "IFR"|| t.type == "DEFR") {
 	report+=`
-	<h3>Sello de la plataforma flotante</h3>
+	<h3>Sello perimetral plataforma flotante</h3>
 	<table width = "35%">
 		<tr>
 			<td width = "20">&#160;</td>
@@ -344,7 +344,7 @@ if(t.type == "EFR"|| t.type == "IFR"|| t.type == "DEFR") {
 		<td width = "20">&#160;</td>
 		<td width = "180">Tipo:</td>
 	`	
-	if (t.type == "EFR"||t.type=="DEFR") {
+	if (t.type == "EFR") {
 		report+=`<td> ${ t.deck.support } </td>
 		`
 	} else {
@@ -378,18 +378,22 @@ report+=`
 
 	<table width = "80%">
 	<tr>
-		<td width = "500"><b>Accesorio</b></td>
-		<td ><b>Características</b></td>
+		<td width = "350"><b>Accesorio</b></td>
+		<td width = "350"><b>Características</b></td>
+		<td width = "98"><b>Cantidad</b></td>
 	</tr>
-	<tr><td colspan = "2"><hr/></td></tr>
+	<tr><td colspan = "3"><hr/></td></tr>
 	`
-	for (i=0; i<t.deck.fittings.length; i++){
-	report+=`<tr>
-		<td> ${ t.deck.fittings[i].fittingName }</td>
-		<td> ${ t.deck.fittings[i].fittingType}</td>
-	</tr>
-	`
+	for (var i = 1; i<=fittingsCounter; i++) {
+		report+=`
+		<tr>
+			<td> ${document.getElementById("fittingName"+i).value}</td>
+			<td> ${document.getElementById("fittingType"+i).value}</td>
+			<td> ${document.getElementById("fittingAmount"+i).value}</td>
+		</tr>
+		`
 	};
+
 report+=`
 	</table>
 <p/>
@@ -403,7 +407,8 @@ report+=`
 			<td width = "98" >m</td>
 		</tr>
 		<tr><td colspan = "6"><hr/></td></tr>
-		`	
+		`
+		
 		for (i=0; i<t.deck.fittings.length; i++){
 			report+=`
 			<tr>
