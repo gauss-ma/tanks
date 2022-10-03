@@ -200,6 +200,11 @@ function Eq1_16() {
 			roofOutage=Eq1_19();	//altura efectiva de un techo con forma de domo (feet)
 		}
 		resultadosIntermedios.push({varName:"Altura efectiva techo",value:roofOutage});
+		if (t.avgLiquidHeight!= "" && isNaN(t.avgLiquidHeight)==false && t.avgLiquidHeight!=0 && t.avgLiquidHeight!=null) {
+			avgLiquidHeight = parseFloat(t.avgLiquidHeight);
+		} else {
+			avgLiquidHeight = effectiveHeight/2;	//Si no se ingresa un valor particular, se asume que, en promedio, el tanque se mantiene a medio llenar
+		};
 		//Eq1_16
 		vaporSpaceOutage = t.effectiveHeight - t.avgLiquidHeight + roofOutage;
 	} else if (t.type == "HFR") {
@@ -403,8 +408,17 @@ function Eq1_35() {
 
 //Eq1_36 Número de veces al año que el tanque es llenado totalmente (turnoversPerYear) (dimensionless) 
 function Eq1_36() {
-	maxLiquidHeight = parseFloat(t.maxLiquidHeight);
-	minLiquidHeight = parseFloat(t.minLiquidHeight);
+	if (t.type="VFR") {
+		minLiquidHeight = parseFloat(t.minLiquidHeight);
+		if (t.maxLiquidHeight!= "" && isNaN(t.maxLiquidHeight)==false && t.maxLiquidHeight!=0 && t.maxLiquidHeight!=null) {
+			maxLiquidHeight = parseFloat(t.maxLiquidHeight);
+		} else {
+			maxLiquidHeight = effectiveHeight - 1;
+		};
+	} else if (t.type="HFR") {
+		maxLiquidHeight = effectiveHeight;
+		minLiquidHeight = 0;
+	};
 	//Eq1_36
 	return sumLiquidIncreases / (maxLiquidHeight - minLiquidHeight);
 }
@@ -416,8 +430,17 @@ function Eq1_37() {
 
 //Eq1_38 Volumen neto total introducido en el tanque a lo largo del año (netWorkingLossThroughput) (ft3/yr) 
 function Eq1_38() {
-	maxLiquidHeight = parseFloat(t.maxLiquidHeight);
-	minLiquidHeight = parseFloat(t.minLiquidHeight);
+	if (t.type="VFR") {
+		minLiquidHeight = parseFloat(t.minLiquidHeight);
+		if (t.maxLiquidHeight!= "" && isNaN(t.maxLiquidHeight)==false && t.maxLiquidHeight!=0 && t.maxLiquidHeight!=null) {
+			maxLiquidHeight = parseFloat(t.maxLiquidHeight);
+		} else {
+			maxLiquidHeight = effectiveHeight - 1;
+		};
+	} else if (t.type="HFR") {
+		maxLiquidHeight = effectiveHeight;
+		minLiquidHeight = 0;
+	};
 	turnoversPerYear = parseFloat(t.turnoversPerYear);
 	return turnoversPerYear * (maxLiquidHeight - minLiquidHeight) * (Math.PI/4) * Math.pow(t.effectiveDiameter,2);
 }
@@ -703,6 +726,7 @@ function Eq2_19() {
 
 //Eq2_20 Volumen neto total introducido en el tanque a lo largo del año (annualNetThroughput) (bbl/yr) 
 function Eq2_20() {
+
 	if( t.annualNetThroughput=="" || t.annualNetThroughput==null || t.annualNetThroughput==0 ) {
 		annualNetThroughput = (t.turnoversPerYear*(t.maxLiquidHeight-t.minLiquidHeight)*(Math.PI/4)*Math.pow(t.diameter,2))/5.614;
 	} else {

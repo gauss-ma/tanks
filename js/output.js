@@ -137,7 +137,7 @@ report+=`
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Volumen neto anual almacenado(ft3/yr):</td>
-			<td > ${ parseFloat(t.annualNetThroughput).toFixed(2) } </td>		
+			<td > ${ t.annualNetThroughput } </td>		
 		</tr>
 		<tr>
 			<td width = "20">&#160;</td>
@@ -376,13 +376,27 @@ report+=`
 <p/>
 	<h3>Accesorios de la plataforma flotante</h3>
 
-	<table width = "80%">
+	<table width = "100%">
 	<tr>
 		<td width = "350"><b>Accesorio</b></td>
 		<td width = "350"><b>Características</b></td>
 		<td width = "98"><b>Cantidad</b></td>
+		<td colspan = "3"><b>Factores de pérdida del accesorio</b></td>
 	</tr>
-	<tr><td colspan = "3"><hr/></td></tr>
+	<tr>
+		<td colspan = "6"><hr/></td>
+	</tr>
+	<tr>
+		<td width = "350">&#160;</td>
+		<td width = "350">&#160;</td>
+		<td width = "98">&#160;</td>
+		<td width = "98">KFa(lb-mole/yr)</td>
+		<td width = "98">KFb(lb-mole/(yr mph^n))</td>
+		<td width = "98">m</td>
+	</tr>
+	<tr>
+		<td colspan = "6"><hr/></td>
+	</tr>
 	`
 	for (var i = 1; i<=fittingsCounter; i++) {
 		report+=`
@@ -390,6 +404,12 @@ report+=`
 			<td> ${document.getElementById("fittingName"+i).value}</td>
 			<td> ${document.getElementById("fittingType"+i).value}</td>
 			<td> ${document.getElementById("fittingAmount"+i).value}</td>
+		`	
+		f=appendFittingLossFactors(document.getElementById("fittingName"+i).value,document.getElementById("fittingType"+i).value)
+		report+=`
+			<td> ${f.Kfa}</td>
+			<td> ${f.Kfb}</td>
+			<td> ${f.m}</td>			
 		</tr>
 		`
 	};
@@ -397,31 +417,7 @@ report+=`
 report+=`
 	</table>
 <p/>
-
-	<h4>Factores de pérdida de los accesorios</h4>
-		<table width = "80%">
-		<tr>
-			<td width = "350">Accesorio/Características</td>
-			<td width = "98" >KFa(lb-mole/yr)</td>
-			<td width = "98" >KFb(lb-mole/(yr mph^n))</td>
-			<td width = "98" >m</td>
-		</tr>
-		<tr><td colspan = "6"><hr/></td></tr>
-		`
-		
-		for (i=0; i<t.deck.fittings.length; i++){
-			report+=`
-			<tr>
-				<td> ${ t.deck.fittings[i].fittingName +". "+ t.deck.fittings[i].fittingType }</td>
-				<td> ${ t.deck.fittings[i].Kfa } </td>
-				<td> ${ t.deck.fittings[i].Kfb } </td>
-				<td> ${ t.deck.fittings[i].m } </td>
-			</tr>
-			`
-		};
-		report+=`	
-		</table>		
-		`
+`
 };	
 
 report+=`

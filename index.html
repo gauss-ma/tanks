@@ -238,14 +238,15 @@
 
 				<div id="tankOperation">
 					<h2>Operación</h2>
-					<label for="turnoversPerYear">Llenados anuales:</label>
-					<input type="number" min="0" id="turnoversPerYear" form="formulario">
-					<br>
-					<label for="annualNetThroughput">Volumen neto anual almacenado:</label>
-					<input type="number" id="annualNetThroughput" min="0" form="formulario">
-					<br>
 					<label for="flashing">Considerar pérdidas por flashing</label>
 					<input type="checkbox" value="" id="flashing">
+					<br>
+					<div id="divTurnoversPerYear">
+						<label for="turnoversPerYear">Llenados anuales:</label>
+						<input type="number" min="0" id="turnoversPerYear" onchange="calculateAnnualNetThroughput(this.value)" form="formulario">
+					</div>
+					<div id="divAnnualNetThroughput" class="hidden">
+					</div>
 				</div>
 
 				
@@ -603,6 +604,71 @@
 		if (($("#pressure").val()-$("#vacuum").val())>0.06) {
 			$("#divGaugePress").removeClass('hidden');
 		};
+	};
+
+	calculateAnnualNetThroughput=function(turnoversPerYear) {
+		if(turnoversPerYear!=0 && turnoversPerYear!="" && isNaN(turnoversPerYear)==false) {
+			if ($('input[id=tankType]:checked').val()=="VFR"){
+				effectiveDiameter=$("#diameter").val();
+				minLiquidHeight=$("#minLiquidHeight").val();
+				if ($("#maxLiquidHeight").val()!= "" && $("#maxLiquidHeight").val()!=0 && $("#maxLiquidHeight").val()!=null) {
+					maxLiquidHeight = $("#maxLiquidHeight").val();
+				} else {
+					maxLiquidHeight = $("#shellHeight").val() - 1;
+				};				
+			} else if ($('input[id=tankType]:checked').val()=="HFR") {
+				effectiveDiameter = Math.sqrt(($("#shellHeight").val() * $("#diameter").val()) / (Math.PI / 4));
+				effectiveHeight = Math.PI * $("#diameter").val() / 4;
+				maxLiquidHeight = effectiveHeight;
+				minLiquidHeight = 0;
+			} else {
+				minLiquidHeight=$("#minLiquidHeight").val();
+				maxLiquidHeight=$("#maxLiquidHeight").val();
+				effectiveDiameter=$("#diameter").val();
+			};		
+			annualNetThroughput = (turnoversPerYear*(maxLiquidHeight-minLiquidHeight)*(Math.PI/4)*Math.pow(effectiveDiameter,2))*(42/5.614);
+			divAnnualNetThroughput=`
+			<label for="annualNetThroughput">Volumen neto anual almacenado:</label>
+			<input type="number" id="annualNetThroughput" form="formulario" readonly style="cursor: not-allowed;" value=${parseFloat(annualNetThroughput).toFixed(2)}>
+			`;
+			$("#divAnnualNetThroughput").html(divAnnualNetThroughput);
+			$("#divAnnualNetThroughput").removeClass("hidden");
+		} else {
+			divAnnualNetThroughput=`
+			<label for="annualNetThroughput">Volumen neto anual almacenado:</label>
+			<input type="number" id="annualNetThroughput" min="0" onchange="calculateTurnoversPerYear(this.value)" form="formulario">
+			`;
+			$("#divAnnualNetThroughput").html(divAnnualNetThroughput);
+			$("#divAnnualNetThroughput").removeClass("hidden");
+		};
+	};
+
+	calculateTurnoversPerYear=function(annualNetThroughput) {
+		$("#divTurnoversPerYear").empty();
+		if ($('input[id=tankType]:checked').val()=="VFR"){
+			effectiveDiameter=$("#diameter").val();
+			minLiquidHeight=$("#minLiquidHeight").val();
+			if ($("#maxLiquidHeight").val()!= "" && $("#maxLiquidHeight").val()!=0 && $("#maxLiquidHeight").val()!=null) {
+				maxLiquidHeight = $("#maxLiquidHeight").val();
+			} else {
+				maxLiquidHeight = $("#shellHeight").val() - 1;
+			};				
+		} else if ($('input[id=tankType]:checked').val()=="HFR") {
+			effectiveDiameter = Math.sqrt(($("#shellHeight").val() * $("#diameter").val()) / (Math.PI / 4));
+			effectiveHeight = Math.PI * $("#diameter").val() / 4;
+			maxLiquidHeight = effectiveHeight;
+			minLiquidHeight = 0;
+		} else {
+			minLiquidHeight=$("#minLiquidHeight").val();
+			maxLiquidHeight=$("#maxLiquidHeight").val();
+			effectiveDiameter=$("#diameter").val();
+		};		
+		turnoversPerYear=(((5.614/42) * annualNetThroughput/((Math.PI/4)*Math.pow(effectiveDiameter,2)))/(maxLiquidHeight-minLiquidHeight));
+		divTurnoversPerYear=`
+			<label for="turnoversPerYear">Llenados anuales:</label>
+			<input type="number" id="turnoversPerYear" form="formulario" readonly style="cursor: not-allowed;" value=${parseFloat(turnoversPerYear).toFixed(0)}>
+			`;
+			$("#divTurnoversPerYear").html(divTurnoversPerYear);
 	};
 
 	enterSeamLength=function(deckType) {

@@ -34,13 +34,17 @@ function getDeckFittingsProperties() {
 let buttonCounter=0;
 function appendFittingNames() {
 	buttonCounter++;
-	db=getDeckFittingsProperties();
+	databaseDeckFittings=getDeckFittingsProperties();
+	databaseFittingNames=[];
+	databaseDeckFittings.forEach(element => {databaseFittingNames.push(element.fittingName)});
+	db=[];
+	databaseFittingNames.forEach(element => { if(!db.includes(element)) {db.push(element)}});
         
 	//Poner las opciones de fittingNames en el deckFitting input selector del index.html.
         var select = document.getElementById("fittingName"+buttonCounter);
         for(var i = 0; i < db.length; i++) {
             var option = document.createElement("option"),
-                txt = document.createTextNode(db[i].fittingName);
+                txt = document.createTextNode(db[i]);
             option.appendChild(txt);
             select.appendChild(option);
         };
@@ -60,4 +64,12 @@ function appendFittingTypes(fittingName,fittingID) {
             option.appendChild(txt);
             select.appendChild(option);
         };
+};
+
+function appendFittingLossFactors(fittingName,fittingType) {
+	
+	databaseDeckFittings=getDeckFittingsProperties();
+	f=databaseDeckFittings.find(element=>(element.fittingName==fittingName && element.fittingType==fittingType));
+
+	return f;
 };

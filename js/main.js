@@ -117,11 +117,11 @@ function loadTankParameters(){
 		type:$('input[id=tankType]:checked').val(),	  			//(VFR|HFR|EFR|DEFR|IFR)
 		height:$("#shellHeight").val(),		 					//altura [ft] // ACLARACIÓN: Si el tanque es horizontal, aquí debe ingresarse su largo.
 		diameter:$("#diameter").val(),    						//diametro [ft]
-		minLiquidHeight:$("#minLiquidHeight").val(), 	  		//altura minima de liquido [ft]
-		avgLiquidHeight:$("#avgLiquidHeight").val(), 	  		//altura promedio de liquido [ft]
-		maxLiquidHeight:$("#maxLiquidHeight").val(), 	  		//altura maxima de liquido [ft]
-		turnoversPerYear:$("#turnoversPerYear").val(),     		//número de veces que el tanque se llenó totalmente en el año [adimensional]
-		annualNetThroughput:$("#annualNetThroughput").val(), 	//volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones)
+		minLiquidHeight:$("#minLiquidHeight").val(), 	  		//altura minima de liquido [ft] // ACLARACIÓN: Para tanques VFR, si no se conoce, ingresar 1. Para tanques HFR, NO se ingresa. Para tanques de techo flotante se tiene que ingresar SÍ O SÍ.
+		avgLiquidHeight:$("#avgLiquidHeight").val(), 	  		//altura promedio de liquido [ft] // ACLARACIÓN: Para tanques HFR y tanques de techo flotante, NO se ingresa. Para tanques VFR, si no se conoce, dejar en blanco o ingresar cero.
+		maxLiquidHeight:$("#maxLiquidHeight").val(), 	  		//altura maxima de liquido [ft] // ACLARACIÓN: Para tanques VFR, si no se conoce, dejar en blanco o ingresar cero. Para tanques HFR, NO se ingresa. Para tanques de techo flotante se tiene que ingresar SÍ O SÍ. 
+		turnoversPerYear:$("#turnoversPerYear").val(),     		//número de veces que el tanque se llenó totalmente en el año [adimensional] // ACLARACIÓN: Si se desconoce, ingresar cero o dejar vacío e ingresar a continuacion el valor de AnnualNetThroughput
+		annualNetThroughput:$("#annualNetThroughput").val(), 	//volumen neto que se incorporó al tanque a lo largo de todo el año [gal] (alternativamente se puede usar el volumen bruto pero eso generaría una sobreestimación de las emisiones) // ACLARACIÓN: Si se desconoce, se debe ingresar el valor de turnoversPerYear en la entrada anterior, para que lo calcule automaticamente
 		flashing:$("#flashing").is(":checked"), 				//ACLARACIÓN: El flashing ocurre cuando el liquido ingresa al tanque a mucha presión con moléculas de gas atrapadas en su interior y estas escapan cuando se libera esa presión al ingresar el líquido al tanque.
 		shell:{
 			color:$("#paintShell").val(),		

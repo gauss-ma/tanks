@@ -33,14 +33,18 @@ function getRimSealProperties() {
 function appendSealFitOptions(tankConst) {
         
 	databaseRimSeals=getRimSealProperties();
-	db=databaseRimSeals.filter(element=>(element.tankConstruction==tankConst));
+    databaseSpecRimSeals=databaseRimSeals.filter(element=>(element.tankConstruction==tankConst));
+    databaseSealFits=[];
+    databaseSpecRimSeals.forEach(element => {databaseSealFits.push(element.fit)});
+    db=[];
+    databaseSealFits.forEach(element => { if(!db.includes(element)) {db.push(element)}});
         
 	//Poner las opciones de rimSealFit en el rimSeal input selector del index.html.
         var select = document.getElementById("sealFit");
         select.innerHTML="<option disabled selected value>Seleccionar una opción...</option>";
         for(var i = 0; i < db.length; i++) {
             var option = document.createElement("option"),
-                txt = document.createTextNode(db[i].fit);
+                txt = document.createTextNode(db[i]);
             option.appendChild(txt);
             select.appendChild(option);
         };
@@ -48,14 +52,18 @@ function appendSealFitOptions(tankConst) {
 
 function appendPrimarySealOptions(sealFit,tankConst) {
     databaseRimSeals=getRimSealProperties();
-    db=databaseRimSeals.filter(element=>(element.fit==sealFit && element.tankConstruction==tankConst));
+    databaseSpecRimSeals=databaseRimSeals.filter(element=>(element.fit==sealFit && element.tankConstruction==tankConst));
+    databasePrimarySeals=[];
+    databaseSpecRimSeals.forEach(element => {databasePrimarySeals.push(element.type)});
+    db=[];
+    databasePrimarySeals.forEach(element => { if(!db.includes(element)) {db.push(element)}});
 
     //Poner las opciones de primarySeal en el rimSeal input selector del index.html.
     var select = document.getElementById("primarySeal");
     select.innerHTML="<option disabled selected value>Seleccionar una opción...</option>";
     for(var i = 0; i < db.length; i++) {
         var option = document.createElement("option"),
-            txt = document.createTextNode(db[i].type);
+            txt = document.createTextNode(db[i]);
         option.appendChild(txt);
         select.appendChild(option);
     };
@@ -63,14 +71,18 @@ function appendPrimarySealOptions(sealFit,tankConst) {
 
 function appendSecondSealOptions(primarySeal,sealFit,tankConst) {
     databaseRimSeals=getRimSealProperties();
-    db=databaseRimSeals.filter(element=>(element.type==primarySeal && element.fit==sealFit && element.tankConstruction==tankConst));
+    databaseSpecRimSeals=databaseRimSeals.filter(element=>(element.type==primarySeal && element.fit==sealFit && element.tankConstruction==tankConst));
+    databaseSecondarySeals=[];
+    databaseSpecRimSeals.forEach(element => {databaseSecondarySeals.push(element.secondary)});
+    db=[];
+    databaseSecondarySeals.forEach(element => { if(!db.includes(element)) {db.push(element)}});
 
     //Poner las opciones de secondarySeal en el rimSeal input selector del index.html.
     var select = document.getElementById("secondSeal");
     select.innerHTML="<option disabled selected value>Seleccionar una opción...</option>";
     for(var i = 0; i < db.length; i++) {
         var option = document.createElement("option"),
-            txt = document.createTextNode(db[i].secondary);
+            txt = document.createTextNode(db[i]);
         option.appendChild(txt);
         select.appendChild(option);
     };
