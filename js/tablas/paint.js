@@ -21,7 +21,7 @@ function getPaintProperties() {
 	return arrayPaintProp;
 }
 
-function appendPaintData() {
+function appendShellPaintData() {
 	db=getPaintProperties();
 	//Poner las opciones de pinturas en el paintShell input selector del index.html.
         var select = document.getElementById("paintShell");
@@ -31,6 +31,10 @@ function appendPaintData() {
             option.appendChild(txt);
             select.appendChild(option);
         };
+};		
+
+function appendRoofPaintData() { 	
+	db=getPaintProperties();	
 	//Poner las opciones de pinturas en el paintRoof input selector del index.html.
 		var select = document.getElementById("paintRoof");
 		for(var i = 0; i < db.length; i++) {
@@ -39,4 +43,4 @@ function appendPaintData() {
 			option.appendChild(txt);
 			select.appendChild(option);
 		};
-};
+};		

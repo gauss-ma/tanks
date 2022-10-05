@@ -106,64 +106,17 @@
 						<label class="radio-inline"><input type="radio" id="tankType" name="tankType" value="DEFR" onClick="habilitarInputs(this.value);">Externo Plataforma Flotante y Domo Fijo</label>
 				</div>
 
-				<div id="verticalTanksDimensions" class="hidden">
-					<h2>Dimensiones del tanque</h2>
-					<label for="shellHeight">Altura pared <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-			                <input type="number" id="shellHeight" name="shellHeight" min="0" title="" form="formulario"><br>
-					<label for="diameter">Diámetro <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-			        		<input type="number" id="diameter" name="diameter" min="0" title="" form="formulario"><br>
-					<label for="minLiquidHeight">Altura Mín. Líquido <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-							<input type="number" id="minLiquidHeight" name="minLiquidHeight" min="0" title="" form="formulario"><br>
-					<label for="avgLiquidHeight">Altura Prom. Líquido <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-							<input type="number" id="avgLiquidHeight" name="avgLiquidHeight" min="0" title="" form="formulario"><br>
-					<label for="maxLiquidHeight">Altura Máx. Líquido <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-							<input type="number" id="maxLiquidHeight" name="maxLiquidHeight" min="0" title="" form="formulario"><br>
+				<div id="verticalTanksDimensions">
 				</div>
 
-				<div id="horizontalTanksDimensions" class="hidden">
-					<h2>Dimensiones del tanque</h2>
-					<label for="shellHeight">Largo <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-				        <input type="number" id="shellHeight" name="shellHeight" min="0" title="" form="formulario"><br>
-					<label for="diameter">Diámetro <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
-				        <input type="number" id="diameter" name="diameter" min="0" title="" form="formulario"><br>			
+				<div id="horizontalTanksDimensions">
 				</div>
 
-			    <div id="insulation" class="VFR hidden">
-					<h2>Aislamiento térmico (VFR)</h2>
-			            <label for="insulated">Tipo de aislamiento:</label>
-			            <select class="form-control" id="insulated" form="formulario" title="">
-			                    <option disabled selected value>Seleccionar una opción...</option>
-			                    <option value="none">Ninguno</option>
-			                    <option value="shell">Sólo paredes</option>
-			                    <option value="full">Paredes y techo</option>
-			                    <option value="underground">Subterráneo</option>
-			            </select>
-			    </div>
-				<div id="insulation" class="HFR hidden">
-					<h2>Aislamiento térmico (HFR)</h2>
-					<label for="insulated">Tipo de aislamiento:</label>
-					<select class="form-control" id="insulated" form="formulario" title="">
-							<option disabled selected value>Seleccionar una opción...</option>
-							<option value="none">Ninguno</option>
-							<option value="full">Totalmente aislado</option>
-							<option value="underground">Subterráneo</option>
-					</select>
+				<div id="insulation">
 				</div>
 
-
-				<div id="heating" class="hidden">
-					<h2>Calentamiento</h2>
-					<label class="checkbox-inline"><input type="checkbox" value="" id="heated" onClick="addHeating()">Considerar calentamiento</label>
+				<div id="heating">		
 				</div>
-				<div id="tankHeating" class="hidden">
-					<label for="cyclesPerYear">Ciclos de calentamiento anuales:</label>
-				    <input type="number" id="cyclesPerYear" name="cyclesPerYear" min="0" title="" form="formulario"><br>
-					<label for="minBulkTemp">Temp. Mín. Líquido<span class="unitImp">(ºR)</span> <span class="unitSI">(ºC)</span>:</label>
-				    <input type="number" id="minBulkTemp" name="minBulkTemp" min="0" title="" form="formulario"><br>			
-					<label for="maxBulkTemp">Temp. Máx. Líquido<span class="unitImp">(ºR)</span> <span class="unitSI">(ºC)</span>:</label>
-				    <input type="number" id="maxBulkTemp" name="maxBulkTemp" min="0" title="" form="formulario"><br>			
-				</div>
-
 
 				<div class="tankShell">
 					<h2>Cuerpo del tanque</h2>
@@ -181,45 +134,19 @@
 					</select>
 				</div>
 
-				<div id="tankRoof" class=hidden>
-					<h2>Techo del tanque</h2>
-					<label  for="paintRoof">Pintura:</label>
-					<select id="paintRoof" form="formulario">
-						<option disabled selected value>Seleccionar una opción...</option>
-					</select>
-					<br>
-					<label  for="conditionRoof">Estado:</label>
-					<select id="conditionRoof" form="formulario">
-						<option disabled selected value>Seleccionar una opción...</option>
-						<option value="new">Nuevo</option>
-						<option value="average">Intermedio</option>
-						<option value="aged">Antigüo</option>
-					</select>
+				<div id="tankRoof">
 				</div>
 				
-				<div id="divVFRoof" class="hidden">
-					<div id="divRoofType" class="">
-						<br>
-						<label  for="roofType">Tipo de techo:</label>
-						<select class="form-control" id="roofType" form="formulario">
-							<option disabled selected value>Seleccionar una opción...</option>
-							<option value="cone">Cono</option>
-							<option value="dome">Domo</option>
-						</select>
-					</div>
-					<h3> Dimensiones del techo </h3>
-					<div id="divRoofH" class="">
-						<label for="roofH">Altura (ft):</label>
-						<input type="number" id="roofH" name="roofH" min="0" onchange="fixedRoofDimensions()" form="formulario" title="">
-					</div>
+				<div id="divVFRoof">
 				</div>
-				<div id="divSlope" class="hidden">				
-					<label  for="roofSlope">Pendiente (ft/ft):</label>
-					<input  type="number" id="roofSlope" name="roofSlope" min="0" title="" form="formulario" step="0.001">
+
+				<div id="divRoofH">
 				</div>
-				<div id="divRadius" class="hidden">
-					<label  for="roofRad">Radio (ft):</label>
-					<input  type="number" id="roofRad" name="roofRad" min="0" title="" form="formulario">
+
+				<div id="divSlope">
+				</div>
+
+				<div id="divRadius">
 				</div>
 
 				<div id="ventSetting">	
@@ -245,7 +172,7 @@
 						<label for="turnoversPerYear">Llenados anuales:</label>
 						<input type="number" min="0" id="turnoversPerYear" onchange="calculateAnnualNetThroughput(this.value)" form="formulario">
 					</div>
-					<div id="divAnnualNetThroughput" class="hidden">
+					<div id="divAnnualNetThroughput">
 					</div>
 				</div>
 
@@ -395,7 +322,7 @@
 							<option value="antoine">Coeficientes de Antoine</option>
 						</select>
 					</div>
-					<div id="liqProp" class="hidden">
+					<div id="liqProp">
 					</div>	
 				</div>
 
@@ -467,30 +394,24 @@
 
 	appendMetData();        //Cargar sitios meteorologia.
 
-	showMeteoParams=function(){
+	showMeteoParams=function() {
 		 
 		meteoList=`
 		<h3><u>Climatología del sitio</u></h3>
-
-                    <label for="MinTemp">Temp. Mín. (°R):</label>
-		    <input id="MinTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.minAmbientTemp}><br>
-
-                    <label for="MaxTemp">Temp. Máx (°R):</label>
-		    <input id="MaxTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.maxAmbientTemp}><br>
-
-                    <label for="Wind">Viento (mph):</label>
-                    <input id="Wind" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.u}><br>
-
-                    <label for="Insolation" class="longLabel">Insolación (Btu/ft<sup>2</sup>&middot;d):</label>
+        <label for="MinTemp">Temp. Mín. (°R):</label>
+			<input id="MinTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.minAmbientTemp}><br>
+        <label for="MaxTemp">Temp. Máx (°R):</label>
+			<input id="MaxTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.maxAmbientTemp}><br>
+ 		<label for="Wind">Viento (mph):</label>
+ 			<input id="Wind" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.u}><br>
+ 		<label for="Insolation" class="longLabel">Insolación (Btu/ft<sup>2</sup>&middot;d):</label>
 		    <input id="Insolation" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.insolation}><br>
-
-                    <label for="atmPres">Presión Atm. (psia):</label>
-                    <input id="atmPres" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.atmPressure}><br>
-				`;
+        <label for="atmPres">Presión Atm. (psia):</label>
+        	<input id="atmPres" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.atmPressure}><br>
+		`;
 
 		$("#meteoParameters").html(meteoList);
 		$("#meteoParameters").removeClass("hidden");
-
 
 	};
 
@@ -524,35 +445,105 @@
 	habilitarInputs=function(tankType){
 
 		//seccion de dimensiones:
+		$("#verticalTanksDimensions").empty();
+		$("#horizontalTanksDimensions").empty();	
 		if (tankType == "HFR" ) {
-			$("#verticalTanksDimensions").addClass('hidden');		
-			$("#horizontalTanksDimensions").removeClass('hidden');	
-		} else {
-			$("#horizontalTanksDimensions").addClass('hidden');		
-			$("#verticalTanksDimensions").removeClass('hidden');	
+			$("#horizontalTanksDimensions").html(`
+				<h2>Dimensiones del tanque</h2>
+				<label for="shellHeight">Largo <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+				    <input type="number" id="shellHeight" name="shellHeight" min="0" title="" form="formulario"><br>
+				<label for="diameter">Diámetro <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+				    <input type="number" id="diameter" name="diameter" min="0" title="" form="formulario"><br>		
+			`);	
+		} else {	
+			$("#verticalTanksDimensions").html(`
+				<h2>Dimensiones del tanque</h2>
+				<label for="shellHeight">Altura pared <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+				        <input type="number" id="shellHeight" name="shellHeight" min="0" title="" form="formulario"><br>
+				<label for="diameter">Diámetro <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+						<input type="number" id="diameter" name="diameter" min="0" title="" form="formulario"><br>
+				<label for="minLiquidHeight">Altura Mín. Líquido <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+						<input type="number" id="minLiquidHeight" name="minLiquidHeight" min="0" title="" form="formulario"><br>
+				<label for="avgLiquidHeight">Altura Prom. Líquido <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+						<input type="number" id="avgLiquidHeight" name="avgLiquidHeight" min="0" title="" form="formulario"><br>
+				<label for="maxLiquidHeight">Altura Máx. Líquido <span class="unitImp">(ft)</span> <span class="unitSI">(m)</span>:</label>
+						<input type="number" id="maxLiquidHeight" name="maxLiquidHeight" min="0" title="" form="formulario"><br>			
+			`);	
 		};
 
 		//sección de aislamiento
-		$("#insulation*").addClass('hidden');		
-		$("#insulation."+tankType).removeClass('hidden');	
+		$("#insulation*").empty();
+		if (tankType == "HFR") {
+			$("#insulation").html(`
+				<h2>Aislamiento térmico</h2>
+				<label for="insulated">Tipo de aislamiento:</label>
+				<select class="form-control" id="insulated" form="formulario" title="">
+						<option disabled selected value>Seleccionar una opción...</option>
+						<option value="none">Ninguno</option>
+						<option value="full">Totalmente aislado</option>
+						<option value="underground">Subterráneo</option>
+				</select>
+			`);
+		} else if (tankType == "VFR") {
+			$("#insulation").html(`
+				<h2>Aislamiento térmico</h2>
+				<label for="insulated">Tipo de aislamiento:</label>
+				<select class="form-control" id="insulated" form="formulario" title="">
+				        <option disabled selected value>Seleccionar una opción...</option>
+				        <option value="none">Ninguno</option>
+				        <option value="shell">Sólo paredes</option>
+				        <option value="full">Paredes y techo</option>
+				        <option value="underground">Subterráneo</option>
+				</select>
+			`);			
+		};				
 
 		//sección de calentamiento
+		$("#heating").empty();
 		if (tankType == "VFR" || tankType =="HFR" ) {
-			$("#heating").removeClass('hidden');	
-		} else {
-			$("#heating").addClass('hidden');		
-		};
+			$("#heating").html(`	
+				<h2>Calentamiento</h2>
+				<label class="checkbox-inline"><input type="checkbox" value="" id="heated" onClick="addHeating()">Considerar calentamiento</label>
+				<div id="tankHeating">
+				</div>		
+			`);
+		};	
 	
 		//sección de techo
-		$("#tankRoof").addClass('hidden');
-		$("#divVFRoof").addClass('hidden');
-		$("#divSlope").addClass('hidden');
-		$("#divRadius").addClass('hidden');
+		$("#tankRoof").empty();
+		$("#divVFRoof").empty();
+		$("#divRoofH").empty();
+		$("#divSlope").empty();
+		$("#divRadius").empty();
+		
 		if (tankType=="VFR"||tankType=="IFR"||tankType=="DEFR") {
-			$("#tankRoof").removeClass('hidden');
+			$("#tankRoof").html(`
+				<h2>Techo del tanque</h2>
+				<label  for="paintRoof">Pintura:</label>
+				<select id="paintRoof" form="formulario">
+					<option disabled selected value>Seleccionar una opción...</option>
+				</select>
+				<br>
+				<label  for="conditionRoof">Estado:</label>
+				<select id="conditionRoof" form="formulario">
+					<option disabled selected value>Seleccionar una opción...</option>
+					<option value="new">Nuevo</option>
+					<option value="average">Intermedio</option>
+					<option value="aged">Antigüo</option>
+				</select>
+			`);
+			appendRoofPaintData();
 		};
+		
 		if (tankType=="VFR") {
-			$("#divVFRoof").removeClass('hidden');
+			$("#divVFRoof").html(`
+				<label  for="roofType">Tipo de techo:</label>
+				<select class="form" id="roofType" onchange="enterRoofHeight()" form="formulario">
+					<option disabled selected value>Seleccionar una opción...</option>
+					<option value="cone">Cono</option>
+					<option value="dome">Domo</option>
+				</select>
+			`);
 		};
 
 		//sección características plataforma flotante
@@ -580,22 +571,47 @@
 	};
 
 	addHeating=function() {
+		$("#tankHeating").empty();
 		if ($("#heated").is(":checked")==true) {
-			$("#tankHeating").removeClass("hidden");
-		} else {
-			$("#tankHeating").addClass("hidden");
+			$("#tankHeating").html(`
+			<label for="cyclesPerYear">Ciclos de calentamiento anuales:</label>
+				<input type="number" id="cyclesPerYear" name="cyclesPerYear" min="0" title="" form="formulario"><br>
+			<label for="minBulkTemp">Temp. Mín. Líquido<span class="unitImp">(ºR)</span> <span class="unitSI">(ºC)</span>:</label>
+				<input type="number" id="minBulkTemp" name="minBulkTemp" min="0" title="" form="formulario"><br>			
+			<label for="maxBulkTemp">Temp. Máx. Líquido<span class="unitImp">(ºR)</span> <span class="unitSI">(ºC)</span>:</label>
+				<input type="number" id="maxBulkTemp" name="maxBulkTemp" min="0" title="" form="formulario"><br>			
+			`);
 		};
+	};	
+
+	appendShellPaintData();	
+
+	enterRoofHeight=function() {
+		$("#divRoofH").empty();
+		$("#divSlope").empty();
+		$("#divRadius").empty();
+		$("#divRoofH").html(`
+		<h3> Dimensiones del techo </h3>
+		<label for="roofH">Altura (ft):</label>
+		<input type="number" id="roofH" name="roofH" min="0" onchange="fixedRoofDimensions(this.value);" form="formulario" title="">
+		`);
 	};
 
-	appendPaintData();		//cargar los datos de la pintura
-
-	fixedRoofDimensions=function() {
-		$("#divSlope").addClass('hidden');
-		$("#divRadius").addClass('hidden');
-		if ($("#roofH").val()==0 && $("#roofType").val()=="cone") {
-			$("#divSlope").removeClass('hidden');
-		} else if ($("#roofH").val()==0 && $("#roofType").val()=="dome") {
-			$("#divRadius").removeClass('hidden');
+	fixedRoofDimensions=function(roofH) {
+		$("#divSlope").empty();
+		$("#divRadius").empty();	
+		if (roofH==0) { 
+			if ($("#roofType").val()=="cone") {
+				$("#divSlope").html(`
+				<label  for="roofSlope">Pendiente (ft/ft):</label>
+				<input  type="number" id="roofSlope" name="roofSlope" min="0" title="" form="formulario" step="0.001">			
+				`);
+			} else if ($("#roofType").val()=="dome") {
+				$("#divRadius").html(`
+				<label for="roofRad">Radio (ft):</label>
+				<input type="number" id="roofRad" name="roofRad" min="0" title="" form="formulario">			
+				`);
+			};	
 		};
 	};
 
@@ -607,6 +623,7 @@
 	};
 
 	calculateAnnualNetThroughput=function(turnoversPerYear) {
+		$("#divAnnualNetThroughput").empty();
 		if(turnoversPerYear!=0 && turnoversPerYear!="" && isNaN(turnoversPerYear)==false) {
 			if ($('input[id=tankType]:checked').val()=="VFR"){
 				effectiveDiameter=$("#diameter").val();
@@ -632,44 +649,50 @@
 			<input type="number" id="annualNetThroughput" form="formulario" readonly style="cursor: not-allowed;" value=${parseFloat(annualNetThroughput).toFixed(2)}>
 			`;
 			$("#divAnnualNetThroughput").html(divAnnualNetThroughput);
-			$("#divAnnualNetThroughput").removeClass("hidden");
 		} else {
 			divAnnualNetThroughput=`
 			<label for="annualNetThroughput">Volumen neto anual almacenado:</label>
 			<input type="number" id="annualNetThroughput" min="0" onchange="calculateTurnoversPerYear(this.value)" form="formulario">
 			`;
 			$("#divAnnualNetThroughput").html(divAnnualNetThroughput);
-			$("#divAnnualNetThroughput").removeClass("hidden");
 		};
 	};
 
 	calculateTurnoversPerYear=function(annualNetThroughput) {
 		$("#divTurnoversPerYear").empty();
-		if ($('input[id=tankType]:checked').val()=="VFR"){
-			effectiveDiameter=$("#diameter").val();
-			minLiquidHeight=$("#minLiquidHeight").val();
-			if ($("#maxLiquidHeight").val()!= "" && $("#maxLiquidHeight").val()!=0 && $("#maxLiquidHeight").val()!=null) {
-				maxLiquidHeight = $("#maxLiquidHeight").val();
+		if (annualNetThroughput!=0 && annualNetThroughput!="" && annualNetThroughput!=null) {
+			if ($('input[id=tankType]:checked').val()=="VFR"){
+				effectiveDiameter=$("#diameter").val();
+				minLiquidHeight=$("#minLiquidHeight").val();
+				if ($("#maxLiquidHeight").val()!= "" && $("#maxLiquidHeight").val()!=0 && $("#maxLiquidHeight").val()!=null) {
+					maxLiquidHeight = $("#maxLiquidHeight").val();
+				} else {
+					maxLiquidHeight = $("#shellHeight").val() - 1;
+				};				
+			} else if ($('input[id=tankType]:checked').val()=="HFR") {
+				effectiveDiameter = Math.sqrt(($("#shellHeight").val() * $("#diameter").val()) / (Math.PI / 4));
+				effectiveHeight = Math.PI * $("#diameter").val() / 4;
+				maxLiquidHeight = effectiveHeight;
+				minLiquidHeight = 0;
 			} else {
-				maxLiquidHeight = $("#shellHeight").val() - 1;
-			};				
-		} else if ($('input[id=tankType]:checked').val()=="HFR") {
-			effectiveDiameter = Math.sqrt(($("#shellHeight").val() * $("#diameter").val()) / (Math.PI / 4));
-			effectiveHeight = Math.PI * $("#diameter").val() / 4;
-			maxLiquidHeight = effectiveHeight;
-			minLiquidHeight = 0;
-		} else {
-			minLiquidHeight=$("#minLiquidHeight").val();
-			maxLiquidHeight=$("#maxLiquidHeight").val();
-			effectiveDiameter=$("#diameter").val();
-		};		
-		turnoversPerYear=(((5.614/42) * annualNetThroughput/((Math.PI/4)*Math.pow(effectiveDiameter,2)))/(maxLiquidHeight-minLiquidHeight));
-		divTurnoversPerYear=`
-			<label for="turnoversPerYear">Llenados anuales:</label>
-			<input type="number" id="turnoversPerYear" form="formulario" readonly style="cursor: not-allowed;" value=${parseFloat(turnoversPerYear).toFixed(0)}>
+				minLiquidHeight=$("#minLiquidHeight").val();
+				maxLiquidHeight=$("#maxLiquidHeight").val();
+				effectiveDiameter=$("#diameter").val();
+			};		
+			turnoversPerYear=(((5.614/42) * annualNetThroughput/((Math.PI/4)*Math.pow(effectiveDiameter,2)))/(maxLiquidHeight-minLiquidHeight));
+			divTurnoversPerYear=`
+				<label for="turnoversPerYear">Llenados anuales:</label>
+				<input type="number" id="turnoversPerYear" form="formulario" readonly style="cursor: not-allowed;" value=${parseFloat(turnoversPerYear).toFixed(2)}>
 			`;
 			$("#divTurnoversPerYear").html(divTurnoversPerYear);
-	};
+		} else {
+			divTurnoversPerYear=`
+				<label for="turnoversPerYear">Llenados anuales:</label>
+				<input type="number" min="0" id="turnoversPerYear" onchange="calculateAnnualNetThroughput(this.value)" form="formulario">
+			`;
+			$("#divTurnoversPerYear").html(divTurnoversPerYear);
+		};
+	};	
 
 	enterSeamLength=function(deckType) {
 		$("#divDeckSeam").addClass('hidden');
@@ -783,8 +806,7 @@
 					<input id="TVP" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.vaporPressure}><br>
 				`
 			};																	
-			$("#liqProp").html(liqList);
-			$("#liqProp").removeClass("hidden");	
+			$("#liqProp").html(liqList);	
 		};
 
 	enterLiqProp=function() {
