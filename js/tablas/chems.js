@@ -5,8 +5,8 @@ function getCompoundData() {
 		compoundName:"Acetaldehyde", 			//Nombre
 		cas:"00075-07-0", 						//CAS
 		molWeight:44.05, 						//M_L:"Peso molecular del compuesto, lb/lb-mole",
-		liqDensity:6.54, 							//W_L:"Average organic liquid density, lb/gal"
-		vaporPressure:12.19, 					//P_VA:" True vapor pressure at 60°F, psia"
+		liqDensity:6.54, 						//W_L:"Average organic liquid density, lb/gal"
+		vaporPressure:12.19, 					//P_VA:" True vapor pressure at 60°F, psia" // ACLARACIÓN: Es un valor de referencia, NO se usa en los cálculos
 		A:8.063, 								//A:"Constant in vapor pressure equation, dimensionless" // ACLARACIÓN: Las unidades de temperatura y presión asociadas a los valores de estas constantes (A, B y C) tienen que ser °C y mmHg respectivamente.
 		B:1637.1, 								//B:"Constant in vapor pressure equation, °C" // ACLARACIÓN: Las unidades de temperatura y presión asociadas a los valores de estas constantes (A, B y C) tienen que ser °C y mmHg respectivamente.
 		C:295.47, 								//C:"Constant in vapor pressure equation, °C" // ACLARACIÓN: Las unidades de temperatura y presión asociadas a los valores de estas constantes (A, B y C) tienen que ser °C y mmHg respectivamente.

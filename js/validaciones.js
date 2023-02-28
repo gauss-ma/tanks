@@ -6,7 +6,7 @@ function validacion(validacionID){
 	//IDENTIFICACIÓN DEL REPORTE DE SALIDA
 	id={
 		userID:"Sabrina",
-		city:"Buenos Aires",
+		city:"Rochester, MN",
 		state:"",
 		company:"",
 		tankType:"",
@@ -26,8 +26,7 @@ function validacion(validacionID){
         	avgLiquidHeight:2, 	    	
         	maxLiquidHeight:3, 	    	
         	turnoversPerYear:"",      	
-        	annualNetThroughput:10,
-        	flashing:false, 		
+        	annualNetThroughput:10,		
         	shell:{
         		color:"gray: medium",		
         		condition:"aged",	
@@ -150,13 +149,12 @@ function validacion(validacionID){
 			t.heating.maxBulkTemp=470;
 		break;
 		case "Prueba7":
-			///Acá se agrega flashing y calentamiento
+			///Acá se agrega calentamiento
 			liquidCategory="Other organic liquids";
 			compoundName="Acetaldehyde";
 			t.roof.type="cone";
 			t.roof.height=0;
 			t.roof.slope=0.0625;
-			t.flashing=true;
 			t.heating.heating=true;
 			t.heating.minBulkTemp=460;
 			t.heating.maxBulkTemp=480;
@@ -226,6 +224,7 @@ function validacion(validacionID){
 
 	//  (2.a) calculos previos:
 	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura
+	resultadosIntermedios.push({varName:"Absorbancia pintura",value:t.a});
 	t.workingVolume=calculateWorkingVolume(t);	//calcula el volumen máximo de líquido que puede contener el tanque [gal]
 
 	//  (2.b) calculo de emision:
@@ -250,13 +249,15 @@ function validacion(validacionID){
 
 	console.log(">>> Fin corrida de validación: "+validacionID+"...");
 
+	printOutput();
+
 };
 
 
 
 function validarTodo(){
 
-	corridasDeValidacion=["Prueba1","Prueba2","Prueba3","Prueba4","Prueba5","Prueba6"];
+	corridasDeValidacion=["Prueba1","Prueba2","Prueba3","Prueba4","Prueba5","Prueba6","Prueba7","Prueba8","Prueba9","Prueba10"];
 
 	for (let i=0; i<corridasDeValidacion.length; i++){
 		

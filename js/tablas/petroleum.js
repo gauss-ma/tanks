@@ -26,7 +26,7 @@ function getCrudeOilsData() {
         liqMolWeight:207,                         	//M_L:"Molecular weight of liquid, lb/lb-mole"
         vapMolWeight:50,                         	//M_V:"Molecular weight of the vapor, lb/lb-mole"
 		liqDensity:7.1,								//W_L:"Average liquid density, lb/gal"
-		vaporPressure:"",							//P_VA: "True Vapor Pressure at 60°F, psia"
+		vaporPressure:"",							//P_VA: "True Vapor Pressure at 60°F, psia" // ACLARACIÓN: Es un valor de referencia, NO se usa en los cálculos
 		A:"Figure 7.1-16",							//A:"Constant in vapor pressure equation, dimensionless" // ACLARACIÓN: Las unidades de temperatura y presión asociadas a los valores de estas constantes (A y B) tienen que ser °R y psia respectivamente.
 		B:"Figure 7.1-16",							//B:"Constant in vapor pressure equation, °R" // ACLARACIÓN: Las unidades de temperatura y presión asociadas a los valores de estas constantes (A y B) tienen que ser °R y psia respectivamente.
 		slope:"",									//S:"Pendiente de la curva de destilación ASTM-D86 del combustible a un nivel de evaporación del 10%, °F/%evaporado"

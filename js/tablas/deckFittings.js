@@ -23,10 +23,16 @@ function getDeckFittingsProperties() {
 	var fit19 = {fittingName:"Slotted guidepole/sample well", fittingType:"Gasketed sliding cover with float and pole wiper", Kfa:21, Kfb:7.9, m:1.8};
 	var fit20 = {fittingName:"Slotted guidepole/sample well", fittingType:"Gasketed sliding cover with float, pole sleeve and pole wiper", Kfa:11, Kfb:9.9, m:0.89};
 	var fit21 = {fittingName:"Slotted guidepole/sample well", fittingType:"Flexible enclosure", Kfa:21, Kfb:7.9, m:1.8};
-
-
+	var fit22 = {fittingName:"Gauge-float well (automatic gauge)", fittingType:"Unbolted cover, ungasketed", Kfa:14, Kfb:5.4, m:1.1};
+	var fit23 = {fittingName:"Deck leg, IFR-type", fittingType:"Adjustable", Kfa:7.9, Kfb:0, m:0};
+	var fit24 = {fittingName:"Gauge-hatch/sample port", fittingType:"Slit fabric seal, 10% open area", Kfa:12, Kfb:0, m:0};
+	var fit25 = {fittingName:"Gauge-hatch/sample port", fittingType:"Weighted mechanical actuation, gasketed", Kfa:0.47, Kfb:0.02, m:0.97};
+	var fit26 = {fittingName:"Deck leg, EFR-type, pontoon area", fittingType:"Adjustable - ungasketed", Kfa:2, Kfb:0.37, m:0.91};	
+	var fit27 = {fittingName:"Deck leg, EFR-type, double-deck roof", fittingType:"Adjustable - gasketed", Kfa:0.53, Kfb:0.11, m:0.13};		
+	var fit28 = {fittingName:"Vacuum breaker", fittingType:"Weighted mechanical actuation, gasketed", Kfa:6.2, Kfb:1.2, m:0.94};			
+	
 	//put objects into array
-	var deckFittingProp = [fit1, fit2, fit3, fit4, fit5, fit6, fit7, fit8, fit9, fit10, fit11, fit12, fit13, fit14, fit15, fit16, fit17, fit18, fit19, fit20, fit21];	
+	var deckFittingProp = [fit1, fit2, fit3, fit4, fit5, fit6, fit7, fit8, fit9, fit10, fit11, fit12, fit13, fit14, fit15, fit16, fit17, fit18, fit19, fit20, fit21, fit22, fit23, fit24, fit25, fit26, fit27, fit28];	
 	
 	return deckFittingProp;
 }
