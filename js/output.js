@@ -5,6 +5,7 @@ function printOutput(){
 	HTMLreport=printReport();
 
 	outputWindow.document.write(HTMLreport);
+
 };
 
 function printReport(){
@@ -696,6 +697,7 @@ function printReport(){
 			};
 		</style>
 		
+		<script>unitsOut="${unitsOut}" </script>
 		<script src="js/output.js"></script>
 
 		<script>
