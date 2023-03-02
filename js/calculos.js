@@ -637,13 +637,13 @@ function Eq2_13() {
 //Eq2_14 Factor de pérdidas totales a través de los accesorios de la plataforma flotante en tanques EFR (deckFittingLossFactor) (lb-mole/yr)
 function Eq2_14(){    
 
-        Ff=0; //Inicializo las perdidas en 0 y luego las voy sumando:
-        for (i=0;i<t.deck.fittings.length;i++){
+    Ff=0; //Inicializo las perdidas en 0 y luego las voy sumando:
+    for (i=0;i<t.deck.fittings.length;i++){
+        f=t.deck.fittings[i]     //Cada tipo particular de fitting presente en la plataforma flotante 
+		//Eq2_15: Calcula el factor de pérdida de cada tipo de accesorio
+        Ff+=f.amount*(f.Kfa + f.Kfb * Math.pow((0.7*m.u),f.m));  
+    };
 
-                f=t.deck.fittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
-		//Eq2_15: Calcula el factor de pérdida individual de cada accesorio
-                Ff+=( f.Kfa + f.Kfb * Math.pow((0.7*m.u),f.m) );  
-        };
 	return Ff;
 };
 
@@ -651,12 +651,12 @@ function Eq2_14(){
 function Eq2_16() {
 
 	Ff=0; //inicializo las perdidas en 0 y luego las voy sumando:
-        for (i=0;i<t.deck.fittings.length;i++){
+    for (i=0;i<t.deck.fittings.length;i++){
+	 	f=t.deck.fittings[i]     //Cada tipo particular de fitting presente en la plataforma flotante
+		//Eq2_16: Calcula el factor de pérdida de cada tipo de accesorio
+        Ff+=f.amount*f.Kfa;  
+    };
 
-                f=t.deck.fittings[i]     //Fitting a calcular perdida (variable temporal para que quede prolija la cuenta).
-		//Eq2_16: Calcula el factor de pérdida individual de cada accesorio
-                Ff+=f.Kfa;  
-        };
 	return Ff;
 };
 

@@ -71,11 +71,3 @@ function appendFittingTypes(fittingName,fittingID) {
             select.appendChild(option);
         };
 };
-
-function appendFittingLossFactors(fittingName,fittingType) {
-	
-	databaseDeckFittings=getDeckFittingsProperties();
-	f=databaseDeckFittings.find(element=>(element.fittingName==fittingName && element.fittingType==fittingType));
-
-	return f;
-};

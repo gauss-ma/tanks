@@ -96,8 +96,26 @@ function printReport(){
 		<!-- Fin diámetro -->
 	`;
 
-	if(t.type != "HFR"){
-	report+=`	
+	if(t.type == "VFR"){
+		report+=`	
+			<tr>
+				<td width = "20">&#160;</td>
+				<td width = "180">Altura Máxima del Líquido <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
+				<td > ${ o.maxLiquidHeight } </td>
+			</tr>
+			<tr>
+				<td width = "20">&#160;</td>
+				<td width = "180">Altura Mínima del Líquido <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
+				<td > ${ o.minLiquidHeight } </td>
+			</tr>
+			<tr>
+				<td width = "20">&#160;</td>
+				<td width = "180">Altura Promedio del Líquido <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
+				<td > ${ o.avgLiquidHeight } </td>
+			</tr>
+		`
+	} else if(t.type != "HFR"){
+		report+=`	
 		<tr>
 			<td width = "20">&#160;</td>
 			<td width = "180">Altura Máxima del Líquido <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
@@ -108,12 +126,7 @@ function printReport(){
 			<td width = "180">Altura Mínima del Líquido <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
 			<td > ${ o.minLiquidHeight } </td>
 		</tr>
-		<tr>
-			<td width = "20">&#160;</td>
-			<td width = "180">Altura Promedio del Líquido <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
-			<td > ${ o.avgLiquidHeight } </td>
-		</tr>
-	`
+		`
 	};
 
 	report+=`	
@@ -333,15 +346,12 @@ function printReport(){
 			`
 		};	
 	};
-
-	report+=`
-
-		<!-- *****Características del sello de la plataforma flotante **** -->
 	
-	`	
 	
 	if(t.type == "EFR"|| t.type == "IFR"|| t.type == "DEFR") {
 		report+=`
+		<!-- *****Características del sello de la plataforma flotante **** -->
+
 		<h3>Sello perimetral plataforma flotante</h3>
 		<table width = "35%">
 			<tr>
@@ -374,100 +384,98 @@ function printReport(){
 				<h3>Características de la plataforma flotante</h3>
 				<table width = "35%">
 			`
-		};
-
-		if (t.type == "EFR") {
-			report+=`
-				<tr>
-					<td width = "20">&#160;</td>
-					<td width = "180">Tipo:</td>
-					<td> ${ t.deck.type } </td>
-				</tr>
-			`	
-		};
-
-		if (t.type == "IFR") {
-			report+=`
-				<tr>
-					<td width = "20">&#160;</td>
-					<td width = "180">Construcción:</td>
-					<td> ${ t.deck.construction } </td>
-				</tr>
-			`	
-			if (t.deck.construction == "bolted") {
+			if (t.type == "EFR") {
 				report+=`
 					<tr>
 						<td width = "20">&#160;</td>
-						<td width = "180">Conformación:</td>
-						<td> ${ t.deck.conformation } </td>
+						<td width = "180">Tipo:</td>
+						<td> ${ t.deck.type } </td>
 					</tr>
+				`	
+			} else {
+				report+=`
 					<tr>
 						<td width = "20">&#160;</td>
-						<td width = "180">Longitud costuras <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
-						<td > ${ o.deckSeamLength } </td>   
+						<td width = "180">Construcción:</td>
+						<td> ${ t.deck.construction } </td>
 					</tr>
-				`
-			};
-		};	
-	
-		report+=`
-			</table>
+				`	
+				if (t.deck.construction == "bolted") {
+					report+=`
+						<tr>
+							<td width = "20">&#160;</td>
+							<td width = "180">Conformación:</td>
+							<td> ${ t.deck.conformation } </td>
+						</tr>
+						<tr>
+							<td width = "20">&#160;</td>
+							<td width = "180">Longitud costuras <span class="unitsImp">(ft)</span> <span class="unitsSI">(m)</span>:</td>
+							<td > ${ o.deckSeamLength } </td>   
+						</tr>
+					`
+				};
+			};	
+			report+=`
+				</table>
+			`
+		};
 
+		
+		report+=`
 			<!-- *****Accesorios de la plataforma flotante  **** -->
 
 			<h3>Accesorios de la plataforma flotante</h3>
 
 			<table width = "100%">
 			<tr>
-				<td width = "350"><b>Accesorio</b></td>
-				<td width = "350"><b>Características</b></td>
-				<td width = "98"><b>Cantidad</b></td>
+				<td colspan = "1"><b>Accesorio</b></td>
+				<td colspan = "1"><b>Características</b></td>
+				<td colspan = "1"><b>Cantidad</b></td>
 				<td colspan = "3"><b>Factores de pérdida del accesorio</b></td>
 			</tr>
 			<tr>
 				<td colspan = "6"><hr/></td>
 			</tr>
 			<tr>
-				<td width = "350">&#160;</td>
-				<td width = "350">&#160;</td>
-				<td width = "98">&#160;</td>
-				<td width = "98">KFa<span class="unitsImp">(lb-mol/año)</span> <span class="unitsSI">(kmol/año)</span></td>
-				<td width = "98">KFb<span class="unitsImp">(lb-mol/(mph)ᵐ*año)</span> <span class="unitsSI">(kmol/(1.6km/h)ᵐ*año)</span></td>
-				<td width = "98">m (adimensional)</td>
+				<td colspan = "1">&#160;</td>
+				<td colspan = "1">&#160;</td>
+				<td colspan = "1">&#160;</td>
+				<td colspan = "1">KFa<span class="unitsImp">(lb-mol/año)</span> <span class="unitsSI">(kmol/año)</span></td>
+				<td colspan = "1">KFb<span class="unitsImp">(lb-mol/(mph)ᵐ*año)</span> <span class="unitsSI">(kmol/(1.6km/h)ᵐ*año)</span></td>
+				<td colspan = "1">m (adimensional)</td>
 			</tr>
 			<tr>
 				<td colspan = "6"><hr/></td>
 			</tr>
 		`
-		for (var i = 1; i<=fittingsCounter; i++) {
+		for (i=0;i<t.deck.fittings.length;i++){
 			
 			report+=`
 				<tr>
-					<td> ${document.getElementById("fittingName"+i).value}</td>
-					<td> ${document.getElementById("fittingType"+i).value}</td>
-					<td> ${document.getElementById("fittingAmount"+i).value}</td>
+					<td colspan = "1"> ${t.deck.fittings[i].fittingName}</td>
+					<td colspan = "1"> ${t.deck.fittings[i].fittingType}</td>
+					<td colspan = "1"> ${t.deck.fittings[i].amount}</td>
 			`	
-			
-			f=appendFittingLossFactors(document.getElementById("fittingName"+i).value,document.getElementById("fittingType"+i).value)
-			
 			if (unitsOut=="Imperial"){
 				report+=`
-						<td> ${f.Kfa}</td>
-						<td> ${f.Kfb}</td>
-						<td> ${f.m}</td>			
+						<td colspan = "1"> ${t.deck.fittings[i].Kfa}</td>
+						<td colspan = "1"> ${t.deck.fittings[i].Kfb}</td>
+						<td colspan = "1"> ${t.deck.fittings[i].m}</td>			
 					</tr>
-					</table>
 				`
 			} else {
 				report+=`
-						<td> ${f.Kfa*0.45359}</td>
-						<td> ${f.Kfb*0.45359}</td>
-						<td> ${f.m}</td>			
+						<td colspan = "1"> ${t.deck.fittings[i].Kfa*0.45359}</td>
+						<td colspan = "1"> ${t.deck.fittings[i].Kfb*0.45359}</td>
+						<td colspan = "1"> ${t.deck.fittings[i].m}</td>			
 					</tr>
-					</table>
 				`
 			};
+
 		};
+		report+=`
+		</table>
+		`
 	};	
 
 	report+=`
@@ -496,8 +504,8 @@ function printReport(){
 		
 		<!-- Contenido del tanque  -->
 		${printSeparador("Contenido del tanque")}
-		<span><b> ${ id.userID &&"-"&& id.tankType }</b></span><br> 
-		<span><b> ${ id.city &&","&& id.state }     </b></span>
+		<span><b> ${ id.userID &&"-"&& id.company }</b></span><br> 
+		<span><b> ${ id.location }     </b></span>
 		<br>	
 		
 		<table width = "80%">
@@ -697,7 +705,7 @@ function printReport(){
 			};
 		</style>
 		
-		<script>unitsOut="${unitsOut}" </script>
+		<script>unitsOut="${unitsOut}"</script>
 		<script src="js/output.js"></script>
 
 		<script>

@@ -12,39 +12,48 @@ function main(){
 
 	// (1) INPUTS
 
-	// Opciones globales:
+	// (1a) Opciones globales:
 	unitsInp=$('input[id=unitsInput]:checked').val(); 	//Unidades de Input  [SI/Imperial]  
 	unitsOut=$('input[id=unitsOutput]:checked').val(); 	//Unidades de Output [SI/Imperial] 
 	
-	// Datos del tanque:
+	// (1b) Datos del tanque:
+	
 	t=loadTankParameters();	//estos valores los provee el usuario.
+	
 	t.rimSeal=findRimSealProp(t);	//busca los factores de pérdidas a través del sello de la plataforma flotante (en tanques IFR, EFR o DEFR)
-
-	// Accesorios de la plataforma flotante:
-	if (fittingsCounter>0) {
+	
+	if (fittingsCounter>0) { // Accesorios de la plataforma flotante:
 		for (var i = 1; i<=fittingsCounter; i++) {
 			addDeckFitting(t,document.getElementById("fittingName"+i).value,document.getElementById("fittingType"+i).value,document.getElementById("fittingAmount"+i).value);
 		};
 	};
 	
-	// Datos del líquido almacenado (sólo si el usuario decide ingresarlos MANUALMENTE):
+	// (1c) Datos del líquido almacenado (sólo si el usuario decide ingresarlos MANUALMENTE):
 	liqInput=$("#liqInput").val();
 	if (liqInput=="Manual") {
 		c=manualLiquidParameters();	//toma los valores provistos por el usuario
 	};
 
 	
-	// (2) CALCULOS
+	// (2) 
 
-	// (2.a) calculos previos:
-	resultadosIntermedios=[];	// inicializar array con resultados de variables intermedias
-	outputs=[];		//inicializar array con resultados de variables que van al reporte de salida
+	// (2a) Inicializar array con resultados de variables intermedias:
+	resultadosIntermedios=[];
+
+	// (2b) Inicializar objeto y array con variables que van al reporte de salida:
+	o={};
+	outputs=[];
+
+
+	// (3) CALCULOS
+
+	// (3.a) calculos previos:
 	t.a=calculateSolarAbsorbance(t);	//calcular absorbancia solar en base a pintura
 	resultadosIntermedios.push({varName:"Factor de absorbancia pintura (adimensional)",value:t.a});
 	t.workingVolume=calculateWorkingVolume(t);	//calcula el volumen útil o de operación del tanque [ft3]
 	outputs.push({varName:"workingVolume",value:t.workingVolume,units:"ft3"});
 
-	// (2.b) calculo de emision:
+	// (3.b) calculo de emision:
 	if (t.type == "VFR" || t.type == "HFR") {
         totalLosses = Eq1_1();
 	} else if (t.type == "EFR" || t.type == "DEFR" || t.type == "IFR") {
@@ -53,10 +62,7 @@ function main(){
 	outputs.push({varName:"totalLosses",value:totalLosses,units:"lbs"});	
 
 	
-	// (3) OUTPUT
-
-	//Inicializar objeto con variables que van al reporte de salida:
-	o={};
+	// (4) OUTPUT
 
 	outputs.push({varName:"height",value:t.height,units:"ft"});
 	outputs.push({varName:"diameter",value:t.diameter,units:"ft"});
@@ -339,11 +345,18 @@ function calculateWorkingVolume(t) {
 function addDeckFitting(t,fittingName,fittingType,n) {
 	
 	databaseDeckFittings=getDeckFittingsProperties(); //levanto de base de datos de deckFittings (tablaa/deckFittings.js)
-	for (i=0;i<n;i++){	//lo agrego n veces!
-		t.deck.fittings.push( databaseDeckFittings.find( element => (element.fittingName==fittingName & element.fittingType==fittingType) ) ); 
-	};
-};
+	f=databaseDeckFittings.find(element=>(element.fittingName==fittingName && element.fittingType==fittingType));
+	t.deck.fittings.push({
+		fittingName:fittingName,
+		fittingType:fittingType,
+		amount:n,
+		Kfa:f.Kfa,
+		Kfb:f.Kfb,
+		m:f.m,
+	});
 
+};
+	
 
 function findRimSealProp(t) {
 	
