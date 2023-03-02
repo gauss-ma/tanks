@@ -16,7 +16,8 @@ Cosas a resolver:
 
 Opcional:
 [x] Preparar funciones para conversion de unidades a S.I ó Imperial en input (antes del main) y output (antes de escribir la salida).
-[x] Hacer codigo para validación de datos de entrada (./js/validacion.js) y test case automatizado (./js/testcase.js).
+[x] Hacer codigo para validación de datos de entrada (./js/validacion.js)
+[ ] Hacer test case automatizado (./js/testcase.js).
 [ ] Validar con caso de estudio local, y comparar con datos de softs preexistentes (tanks, etc.)
 [ ]	Mejorar estetica de pagina web (./css/style.css)
 
