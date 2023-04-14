@@ -25,11 +25,12 @@
 </head>
 
 <body>
+
 <header>
-	<h1>Herramienta de calculo de emisiones desde tanques</h1>
-	El proposito de esta herramienta es calcular emisiones desde tanques de almacenamiento de hidrocarburos
+	<h1>Herramienta de Estimación de Emisiones desde Tanques</h1><img src="fauba-logo.jpg" class="pull-right" width="200" height="200">
+	El proposito de esta herramienta es estimar las emisiones desde tanques de almacenamiento de hidrocarburos
 	<br>
-	Los calculos están basados en el documento <a href="https://www3.epa.gov/ttn/chief/ap42/ch07/final/ch07s01.pdf" target="_blank" title="https://www3.epa.gov/ttn/chief/ap42/ch07/final/ch07s01.pdf"> AP-42 (06/2020), Sección 7.1</a>
+	Las estimaciones están basadas en el documento <a href="https://www3.epa.gov/ttn/chief/ap42/ch07/final/ch07s01.pdf" target="_blank" title="https://www3.epa.gov/ttn/chief/ap42/ch07/final/ch07s01.pdf"> AP-42 (06/2020), Sección 7.1</a>
 	<br>
 </header>
 
@@ -54,17 +55,6 @@
 		<textarea class="form-control" rows="3" id="description"></textarea>
 	</div>
 
-
-	<h2>Sitio de estudio</h2>
-	<div class="form-group">
-	  	<label for="meteoSite">Ciudad más cercana a ubicación del proyecto:</label>
-		<select id="meteoSite" onChange="loadMeteorologicalParameters(this.value); showMeteoParams();" class="form-control">
-		</select>
-	</div>
-
-	<div id="meteoParameters">
-	</div>
-
 	<h2>Opciones de cálculo </h2>
 	<label for="unitsInput" >Sistema de unidades de entrada:</label>&#160;
 	<label class="radio-inline"><input type="radio" name="unitsInput" id="unitsInput" onClick="formatInputs();" value="Imperial" checked>Imperial</label>
@@ -73,12 +63,32 @@
 	<label for="unitsOutput" >Sistema de unidades de salida:</label>&#160;
     <label class="radio-inline"><input type="radio" name="unitsOutput" id="unitsOutput" onClick="formatInputs();" value="Imperial" checked>Imperial</label>
     <label class="radio-inline"><input type="radio" name="unitsOutput" id="unitsOutput" onClick="formatInputs();" value="SI">Internacional (mks)</label>
-	
-	<br><br>
 
-	<button type="button" class="btn disabled" id="addTankButton" onclick="addTank();"> + Agregar tanque</button>
+	<h2>Sitio de estudio</h2>
+
+	<div class="form-group">
+		<label for="meteoCountry">País:</label>
+	  	<select id="meteoCountry" onChange="loadCitiesList(this.value); country=this.value" class="form-control">
+			<option disabled selected value>Seleccionar una opción...</option>
+			<option value="Argentina">Argentina</option>
+			<option value="USA">Estados Unidos</option>
+	  	</select>
+  	</div>
+	
+	<div class="form-group">
+	  	<label for="meteoSite">Ciudad más cercana a ubicación del proyecto:</label>
+		<select id="meteoSite" onChange="loadMeteorologicalParameters(this.value); showMeteoParams();" class="form-control">
+		</select>
+	</div>
+
+	<div id="meteoParameters">
+	</div>
 	
 	<br>
+
+	<button type="button" id="addTankButton" onclick="addTank();"> + Agregar tanque</button>
+	
+	<br><br>
 
 	
 	<!-- ACA EMPIEZA LA SECCION DE INFO DE TANQUES -->
@@ -337,8 +347,8 @@
 		<div>
 		<b>b.</b> Haga click en "Calcular" para obtener el reporte de salida<br><br>
 		 	<button type="button" class="btn btn-primary btn-lg" id="calcButton" name="calcButton" onclick="main()" >Calcular</button>
-		 	<button type="button" class="btn disabled    btn-lg" id="calcButton" name="calcButton" onclick="reset()" >Reset</button>
-		 	<button type="button" class="btn    		 btn-lg" id="calcButton" name="calcButton" onclick="validarTodo()" >Debug</button>
+		 	<button type="button" class="btn disabled    btn-lg" id="calcButton" name="calcButton" onclick="reset()" >Resetear</button>
+		 	<button type="button" class="btn    		 btn-lg" id="calcButton" name="calcButton" onclick="validarTodo()" >Validar</button>
 		
 		</div>
 	</div>
@@ -366,7 +376,8 @@
 
 <!-- llamada a js -->
 
-<script src="js/tablas/meteo.js"> 	//DB meteorología.	         </script>
+<script src="js/tablas/meteoARG.js"> 	//DB meteorología de ciudades de ARG  </script>
+<script src="js/tablas/meteoUSA.js"> 	//DB meteorología de ciudades de USA       </script>
 <script src="js/tablas/chems.js"> 	//DB compuestos puros.	         </script>
 <script src="js/tablas/petroleum.js">	//DB líquidos de petroleo.       </script>
 <script src="js/tablas/paint.js"> 	//DB pinturas.		         </script>
@@ -382,23 +393,48 @@
 
 <script>//Interactividad de la pagina 
 
-	appendMetData();        //Cargar sitios meteorologia.
+	loadCitiesList=function(country) {
+		$("#meteoSite").empty();
+		$("#meteoSite").append('<option disabled selected value>Seleccionar una opción...</option>');
+		if (country=="Argentina") {
+			appendARGMetData();
+		} else if (country=="USA") {
+			appendUSAMetData();
+		};
+	};		
 
 	showMeteoParams=function() {
-		 
-		meteoList=`
-		<h3><u>Climatología del sitio</u></h3>
-        <label for="MinTemp">Temp. Mín. (°R):</label>
-			<input id="MinTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.minAmbientTemp}><br>
-        <label for="MaxTemp">Temp. Máx (°R):</label>
-			<input id="MaxTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.maxAmbientTemp}><br>
- 		<label for="Wind">Viento (mph):</label>
- 			<input id="Wind" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.u}><br>
- 		<label for="Insolation" class="longLabel">Insolación (Btu/ft<sup>2</sup>&middot;d):</label>
-		    <input id="Insolation" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.insolation}><br>
-        <label for="atmPres">Presión Atm. (psia):</label>
-        	<input id="atmPres" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.atmPressure}><br>
-		`;
+		$("#meteoParameters").empty;
+
+		if ($('input[id=unitsInput]:checked').val() == "Imperial") {
+			meteoList=`
+			<h3><u>Climatología del sitio</u></h3>
+    	    <label for="MinTemp">Temp. Mín. (°R):</label>
+				<input id="MinTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.minAmbientTemp}><br>
+    	    <label for="MaxTemp">Temp. Máx (°R):</label>
+				<input id="MaxTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.maxAmbientTemp}><br>
+ 			<label for="Wind">Viento (millas/h):</label>
+ 				<input id="Wind" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.u}><br>
+ 			<label for="Insolation" class="longLabel">Insolación (Btu/ft<sup>2</sup>&middot;día):</label>
+			    <input id="Insolation" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.insolation}><br>
+    	    <label for="atmPres">Presión Atm. (psia):</label>
+    	    	<input id="atmPres" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.atmPressure}><br>
+			`;
+		} else {
+			meteoList=`
+			<h3><u>Climatología del sitio</u></h3>
+    	    <label for="MinTemp">Temp. Mín. (°C):</label>
+				<input id="MinTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${(m.minAmbientTemp-491.67)/1.8}><br>
+    	    <label for="MaxTemp">Temp. Máx (°C):</label>
+				<input id="MaxTemp" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${(m.maxAmbientTemp-491.67)/1.8}><br>
+ 			<label for="Wind">Viento (m/s):</label>
+ 				<input id="Wind" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.u/2.237}><br>
+ 			<label for="Insolation" class="longLabel">Insolación (MJ/m<sup>2</sup>&middot;día):</label>
+			    <input id="Insolation" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.insolation/88.055}><br>
+    	    <label for="atmPres">Presión Atm. (kPa):</label>
+    	    	<input id="atmPres" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${m.atmPressure*6.895}><br>
+			`;
+		};
 
 		$("#meteoParameters").html(meteoList);
 	};
@@ -423,6 +459,10 @@
     			unitsImp[i].style.display = "none";
 			};
 		};
+		
+		showMeteoParams();
+		
+		showLiqProp();
 	};
 
 	//Esto es para incorporar calculo de varios tanques. Lo dejamos en stand-by.
@@ -561,10 +601,10 @@
 			$("#ventSetting").html(`
 				<h2>Válvulas de ventilación</h2>
 				<label for="vacuum">Ajuste de vacío <span class="unitsImp">(psig)</span> <span class="unitsSI">(bar)</span>:</label>
-				<input type="number" id="vacuum" name="vacuum" value=-0.03 title="" form="formulario" onchange="checkPressure()" step="0.01">
+				<input type="number" id="vacuum" name="vacuum" title="" form="formulario" onchange="checkPressure()" step="0.01">
 				<br>
 				<label for="pressure">Ajuste de presión <span class="unitsImp">(psig)</span> <span class="unitsSI">(bar)</span>:</label>
-				<input type="number" id="pressure" name="pressure" value=0.03 title="" form="formulario" onchange="checkPressure()" step="0.01">
+				<input type="number" id="pressure" name="pressure" title="" form="formulario" onchange="checkPressure()" step="0.01">
 				<br>
 				<div id="divGaugePress" class="hidden">
 					<label for="gaugePress">Presión Manométrica Vapor <span class="unitsImp">(psig)</span> <span class="unitsSI">(bar)</span>:</label>
@@ -832,7 +872,9 @@
 	};
 
 	showLiqProp=function() {
-			$("#liqProp").empty();
+		$("#liqProp").empty();
+
+		if ($('input[id=unitsInput]:checked').val() == "Imperial") {
 			if (liquidCategory=="Other organic liquids") {
 				liqList=`
 				<h3><u>Características del líquido</u></h3>
@@ -855,9 +897,35 @@
 					<label for="TVP">Presión de vapor a 60°F (psia):</label>
 					<input id="TVP" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.vaporPressure}><br>
 				`
-			};																	
-			$("#liqProp").html(liqList);	
-		};
+			};	
+		} else {
+			if (liquidCategory=="Other organic liquids") {
+				liqList=`
+				<h3><u>Características del líquido</u></h3>
+					<label for="molW">Peso Molecular (g/mol):</label>
+					<input id="molW" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.molWeight}><br>
+					<label for="liqD">Densidad líquido (g/ml):</label>
+					<input id="liqD" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.liqDensity/8.3454}><br>
+					<label for="TVP">Presión de vapor a 15°C (kPa):</label>
+					<input id="TVP" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.vaporPressure*6.895}><br>
+				`
+			} else {
+				liqList=`
+				<h3><u>Características del líquido</u></h3>
+					<label for="vapMW">Peso Mol. Vapor (g/mol):</label>
+					<input id="vapMW" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.vapMolWeight}><br>
+					<label for="liqMW">Peso Mol. Líquido (g/mol):</label>
+					<input id="liqMW" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.liqMolWeight}><br>
+					<label for="liqD">Densidad líquido (g/ml):</label>
+					<input id="liqD" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.liqDensity/8.3454}><br>
+					<label for="TVP">Presión de vapor a 15°C (kPa):</label>
+					<input id="TVP" type="text" form="formulario" readonly style="cursor: not-allowed;" value=${c.vaporPressure*6.895}><br>
+				`
+			};	
+		};		
+
+		$("#liqProp").html(liqList);	
+	};
 
 	enterLiqProp=function() {
 		$("#liqProp").empty();

@@ -9,8 +9,8 @@ Cosas a resolver:
 [x]	Hacer interfaz de usuario (index.html).
 [x]	Construir reporte de salida (js/output.js)
 
-[ ]	Armar base de datos climaticos para Argentina (./js/tablas/meteo.js).
-[ ]	Armar base de datos de compuestos organicos, solventes curdos y destilados (./js/tablas/petroleum.js y ./js/tablas/chems.js). 
+[x]	Armar base de datos climaticos para Argentina (./js/tablas/meteo.js).
+[x]	Armar base de datos de compuestos organicos, petróleos crudos y destilados (./js/tablas/petroleum.js y ./js/tablas/chems.js). 
 
 [ ] Escribir documentacion de uso del programa, explicitar validaciones.
 
@@ -18,7 +18,7 @@ Opcional:
 [x] Preparar funciones para conversion de unidades a S.I ó Imperial en input (antes del main) y output (antes de escribir la salida).
 [x] Hacer codigo para validación de datos de entrada (./js/validacion.js)
 [ ] Hacer test case automatizado (./js/testcase.js).
-[ ] Validar con caso de estudio local, y comparar con datos de softs preexistentes (tanks, etc.)
+[x] Validar con caso de estudio local, y comparar con datos de softs preexistentes (tanks, etc.)
 [ ]	Mejorar estetica de pagina web (./css/style.css)
 
 Convenciones:

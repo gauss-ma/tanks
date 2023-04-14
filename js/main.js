@@ -110,13 +110,26 @@ function loadMeteorologicalParameters(siteName){
 	console.log("   Cargando datos meteorológicos.. ");
 	console.log("      Sitio: "+siteName);
 
-	baseDeDatosMeteorologica=getMeteorologicalData();	//levanto db de archivo: ./tablas/meteo.js
-	m=baseDeDatosMeteorologica.find(element => element.siteName==siteName)
-	
-	m.minAmbientTemp+=459.67;	//pasar temperaturas de "grados Fahrenheit" a "grados Rankine"
-	m.maxAmbientTemp+=459.67;	//pasar temperaturas de "grados Fahrenheit" a "grados Rankine"
+	if (country=="Argentina") {
 
-	return m;
+        baseDeDatosMeteorologica=getARGMeteorologicalData();	//levanto db de archivo: ./tablas/meteoARG.js
+		m=baseDeDatosMeteorologica.find(element => element.siteName==siteName)
+		
+		m.minAmbientTemp+=459.67;	//pasar temperaturas de "grados Fahrenheit" a "grados Rankine"
+		m.maxAmbientTemp+=459.67;	//pasar temperaturas de "grados Fahrenheit" a "grados Rankine"
+
+		return m;
+
+	} else if (country=="USA"){
+		
+		baseDeDatosMeteorologica=getUSAMeteorologicalData();	//levanto db de archivo: ./tablas/meteoUSA.js
+		m=baseDeDatosMeteorologica.find(element => element.siteName==siteName)
+		
+		m.minAmbientTemp+=459.67;	//pasar temperaturas de "grados Fahrenheit" a "grados Rankine"
+		m.maxAmbientTemp+=459.67;	//pasar temperaturas de "grados Fahrenheit" a "grados Rankine"
+
+		return m;
+	};
 };
 
 

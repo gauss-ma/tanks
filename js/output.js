@@ -483,29 +483,53 @@ function printReport(){
 		<h3> Datos meteorológicos </h3>
 		<table width = "80%">
 			<tr>
-				<td> Ubicación:  ${m.siteName} </td>
+				<td width = "180">Ubicación</td>
+				<td colspan = "1">&#160;</td>
+				<td colspan = "1">Temperatura Mínima</td>
+				<td colspan = "1">Temperatura Máxima</td>
+				<td colspan = "1">Velocidad viento</td>
+				<td colspan = "1">Insolación</td>
+				<td colspan = "1">Presión atmosférica</td>
+  			</tr>
+			<tr>	
+			  <td colspan = "19"><hr/></td>
+	   		</tr>
 	`
 
 	if (unitsOut=="Imperial"){
 		report+=`
-			<td> Presión atmosférica promedio = ${m.atmPressure} (psia)</td>	
+			<tr>
+				<td colspan = "1">${m.siteName}</td>
+				<td colspan = "1">&#160;</td>
+				<td colspan = "1">${m.minAmbientTemp.toFixed(2)} °R</td>
+				<td colspan = "1">${m.maxAmbientTemp.toFixed(2)} °R</td>
+				<td colspan = "1">${m.u.toFixed(2)} millas/h</td>
+				<td colspan = "1">${m.insolation.toFixed(2)} Btu/ft<sup>2</sup>&middot;día</td>
+				<td colspan = "1">${m.atmPressure.toFixed(2)} psia</td>
+	 		 </tr>
 		`
 	} else {
 		report+=`
-			<td> Presión atmosférica promedio = ${m.atmPressure*0.068} (atm)</td>	
+			<tr>
+				<td colspan = "1">${m.siteName}</td>
+				<td colspan = "1">&#160;</td>
+				<td colspan = "1">${((m.minAmbientTemp-491.67)/1.8).toFixed(2)} °C</td>
+				<td colspan = "1">${((m.maxAmbientTemp-491.67)/1.8).toFixed(2)} °C</td>
+				<td colspan = "1">${(m.u/2.237).toFixed(2)} m/s</td>
+				<td colspan = "1">${(m.insolation/88.055).toFixed(2)} MJ/m<sup>2</sup>&middot;día</td>
+				<td colspan = "1">${(m.atmPressure*0.068).toFixed(2)} atm</td>
+	  		</tr>
 		`
 	};
 
 	report+=`
-			</tr>
 		</table>
 		
 		<p style="page-break-before: always"></p>
 		
 		<!-- Contenido del tanque  -->
 		${printSeparador("Contenido del tanque")}
-		<span><b> ${ id.userID &&"-"&& id.company }</b></span><br> 
-		<span><b> ${ id.location }     </b></span>
+		
 		<br>	
 		
 		<table width = "80%">

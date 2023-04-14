@@ -9,7 +9,7 @@ function validacion(validacionID){
 	//Identificación del reporte de salida:
 	id={
 		userID:"Corrida de Prueba 0",
-		location:"Rochester, MN",
+		location:"",
 		company:"",
 		description:"",
 	};
@@ -17,29 +17,30 @@ function validacion(validacionID){
 	unitsInp="Imperial";
 	unitsOut="Imperial";
 
-	siteName="Rochester, MN";
+	country="";
+	siteName="";
 
 	liquidCategory="";
 	liquidName="";
 	compoundName=""; 
 
 	t={
-        	type:"VFR",	    		
-        	height:10,		    	
-        	diameter:5,    	    		
-        	minLiquidHeight:1, 	    	
-        	avgLiquidHeight:2, 	    	
-        	maxLiquidHeight:3, 	    	
+        	type:"",	    		
+        	height:"",		    	
+        	diameter:"",    	    		
+        	minLiquidHeight:"", 	    	
+        	avgLiquidHeight:"", 	    	
+        	maxLiquidHeight:"", 	    	
         	turnoversPerYear:"",      	
-        	annualNetThroughput:10,		
+        	annualNetThroughput:"",		
         	shell:{
-        		color:"gray: medium",		
-        		condition:"aged",	
+        		color:"",		
+        		condition:"",	
         	},
         	roof:{
         		type:"", 	 	
-        		color:"white",		
-        		condition:"new",	
+        		color:"",		
+        		condition:"",	
         		height:"",		
         		slope:"",		
         		radius:"",		
@@ -47,7 +48,8 @@ function validacion(validacionID){
         	ventPressureSetting:0.03,	
         	ventVacuumSetting:-0.03,	
         	gaugePressure:"",		
-        	insulation:"none",		
+        	insulation:"none",
+			avgBulkTemp:"",		
         	heating:{
         		heating: false,		
         		cyclesPerYear:"",	
@@ -61,11 +63,11 @@ function validacion(validacionID){
         		secondary:"",	
         	},	
         	deck: {
-        		type:"",
-				support:"",		
+        		construction:"",
+				type:"",		
         		fittings:[],		
         		seamLength:"",		
-        		construction:"",	
+        		conformation:"",	
         		sheetWidth:"",		
         		panelWidth:"",		
         		panelLength:"",		
@@ -82,132 +84,249 @@ function validacion(validacionID){
 	switch (validacionID) {
 		case "Prueba1":
 			id.userID="Corrida de Prueba 1";
-			//Acá cambia sólo el tipo de techo y el compuesto orgánico	
-			liquidCategory="Other organic liquids";
-			compoundName="Acetaldehyde";
-			t.roof.type="dome";
-			t.roof.height=0;
-			t.roof.radius=5;
-		break;
-	  	case "Prueba2":
-			id.userID="Corrida de Prueba 2";
-			//Acá cambia sólo el compuesto orgánico y las unidades de salida
-			unitsOut="SI";                                                                                
+			id.location="Rochester, MN";
+			country="USA";
+			siteName="Rochester, MN";
 			liquidCategory="Other organic liquids";
 			compoundName="Hexane (n)";
+			t.type="VFR";
+			t.height="27.23";
+			t.diameter="24.93";
+			t.minLiquidHeight="1";
+			t.avgLiquidHeight="14.63";
+			t.maxLiquidHeight="23.91";
+			t.turnoversPerYear="13";
+			t.shell.color="white";
+			t.shell.condition="new";
 			t.roof.type="dome";
-			t.roof.height=0;
-			t.roof.radius=5;
+			t.roof.color="white";
+			t.roof.condition="new";
+			t.roof.height="0";
+			t.roof.radius="20";
+			t.construction="welded";	
+		break;
+	  	case "Prueba2":
+			unitsOut="SI"; 
+			id.userID="Corrida de Prueba 2";
+			id.location="Duluth, MN";
+			country="USA";
+			siteName="Duluth, MN";
+			liquidCategory="Refined Petroleum Liquids";
+			liquidName="Nafta TVR 10";
+			t.type="IFR";
+			t.height="32.8";
+			t.diameter="65.6";
+			t.minLiquidHeight="2.37";
+			t.avgLiquidHeight="15";
+			t.maxLiquidHeight="26";
+			t.turnoversPerYear="19.52";
+            t.shell.color="gray: medium";
+            t.shell.condition="new";
+            t.roof.color="gray: medium";
+            t.roof.condition="new";
+            t.construction="riveted";
+			t.rimSeal.fit="Average-Fitting Seal";
+			t.rimSeal.type="Mechanical-shoe seal";
+			t.rimSeal.secondary="Rim-mounted secondary";
+			t.deck.construction="bolted";
+			t.deck.conformation="Continuous sheet";
+			t.deck.sheetWidth=5;
+			addDeckFitting(t,"Access hatch","Unbolted cover, ungasketed",1);
+			addDeckFitting(t,"Gauge-float well (automatic gauge)","Unbolted cover, ungasketed",1);
+			addDeckFitting(t,"Deck leg, IFR-type","Adjustable",15);
+			addDeckFitting(t,"Gauge-hatch/sample port","Weighted mechanical actuation, gasketed",1);
+			t.shellTexture="Light Rust";
+			t.columns.number=1;
+			t.columns.type="Pipe Columns";                                                   
 		break;
 	  	case "Prueba3":
 			id.userID="Corrida de Prueba 3";
-			//Acá cambia el tipo de líquido (petróleo refinado) y el tipo de tanque (IFR) junto con sus ajustes del sello, los accesorios y la plataforma flotante
+			id.location="Rochester, MN";
+			country="USA";
+			siteName="Rochester, MN";
 			liquidCategory="Refined Petroleum Liquids";
-			liquidName="Motor Gasoline RVP 7";   	
-			t.type="IFR";
-			t.construction="riveted";
-			t.rimSeal.fit="Average-Fitting Seal";
-			t.rimSeal.type="Mechanical-shoe seal";
-			t.rimSeal.secondary="Primary only";
-			t.deck.type="bolted";
-			t.deck.construction="Panel";
-			t.deck.panelWidth=5;
-			t.deck.panelLength=12;
-			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
-			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
-			t.shellTexture="Light Rust";
-			t.columns.number=1;
-			t.columns.type="Pipe Columns";
+			liquidName="Fuel Oil No. 2";
+			t.type="HFR";
+			t.height="65.6";
+			t.diameter="12.3";
+			t.turnoversPerYear="13.15";
+            t.shell.color="white";
+            t.shell.condition="new";
+            t.roof.color="white";
+            t.roof.condition="new";
 		break;
 	  	case "Prueba4":
 			id.userID="Corrida de Prueba 4";
-			//Acá cambia el tipo de tanque (HFR)
-			liquidCategory="Refined Petroleum Liquids";
-			liquidName="Motor Gasoline RVP 7";   	
-			t.type="HFR";
-			t.minLiquidHeight="";
-			t.avgLiquidHeight="";
-			t.maxLiquidHeight="";
-		break;
-		case "Prueba5":
-			id.userID="Corrida de Prueba 5";
-			//Acá cambia el tipo de líquido (petróleo crudo), el tipo de tanque (EFR), el tipo de construcción del tanque y el tipo de sello. 
+			id.location="Duluth, MN";
+			country="USA";
+			siteName="Duluth, MN";
 			liquidCategory="Crude Oils";
 			liquidName="Midcontinent Crude Oil";    	
 			t.type="EFR";
+			t.height="43.5";
+			t.diameter="87";
+			t.minLiquidHeight="2.37";
+			t.avgLiquidHeight="18";
+			t.maxLiquidHeight="35";
+			t.turnoversPerYear="139.99";
+            t.shell.color="white";
+            t.shell.condition="new";
 			t.construction="welded";
+			t.rimSeal.fit="Tight-Fitting Seal";
+			t.rimSeal.type="Mechanical-shoe seal";
+			t.rimSeal.secondary="Rim-mounted secondary";
+			t.deck.type="pontoon";
+			t.deck.construction="welded";
+			addDeckFitting(t,"Access hatch","Bolted cover, gasketed",2);
+			addDeckFitting(t,"Slotted guidepole/sample well","Gasketed sliding cover w/pole sleeve and pole wiper",1);
+			addDeckFitting(t,"Deck leg, EFR-type, pontoon area","Adjustable - ungasketed",14);
+			t.shellTexture="Light Rust";
+		break;
+		case "Prueba5":
+			id.userID="Corrida de Prueba 5";
+			id.location="Rochester, MN";
+			country="USA";
+			siteName="Rochester, MN";
+			liquidCategory="Refined Petroleum Liquids";
+			liquidName="Jet A-1/JP1 (Combustible de aviación)";
+			t.type="DEFR";
+			t.height="39.37";
+			t.diameter="78.74";
+			t.minLiquidHeight="2.37";
+			t.avgLiquidHeight="16";
+			t.maxLiquidHeight="29.82";
+			t.turnoversPerYear="13";
+            t.shell.color="white";
+            t.shell.condition="aged";
+            t.roof.color="white";
+            t.roof.condition="aged";
+            t.construction="welded";
 			t.rimSeal.fit="Average-Fitting Seal";
 			t.rimSeal.type="Liquid-mounted seal";
 			t.rimSeal.secondary="Weather shield";
-			t.deck.type="welded";
-			t.deck.support="double";
-			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
-			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
-			t.shellTexture="Light Rust";
-			t.columns.number=0;
+			t.deck.construction="welded";
+			t.deck.type="double";
+			addDeckFitting(t,"Access hatch","Bolted cover, gasketed",1);
+			addDeckFitting(t,"Gauge-float well (automatic gauge)","Unbolted cover, ungasketed",1);
+			addDeckFitting(t,"Vacuum breaker","Weighted mechanical actuation, gasketed",1);
+			addDeckFitting(t,"Deck leg, EFR-type, double-deck roof","Adjustable - gasketed",16);
+			t.shellTexture="Dense Rust";                                  
 		break;
 		case "Prueba6":
 			id.userID="Corrida de Prueba 6";
-			//Acá cambia el tipo de techo y el aislamiento térmico (sin calentamiento)      	
-			liquidCategory="Other organic liquids";
-			compoundName="Acetaldehyde";
-			t.roof.type="cone";
-			t.roof.height=0;
-			t.roof.slope=0.0625;
-			t.insulation="shellAndRoof";
-			t.heating.minBulkTemp=470;
-			t.heating.maxBulkTemp=470;
+			id.location="Rochester, MN";
+			country="USA";
+			siteName="Rochester, MN";
+			liquidCategory="Crude Oils";
+			liquidName="Midcontinent Crude Oil";  
+			t.type="HFR";
+			t.height="65.6";
+			t.diameter="12.3";
+			t.turnoversPerYear="13.15";
+            t.shell.color="white";
+            t.shell.condition="new";
+            t.roof.color="white";
+            t.roof.condition="new";
+			t.insulation="underground";
+			t.avgBulkTemp="502.2";	
 		break;
 		case "Prueba7":
 			id.userID="Corrida de Prueba 7";
-			///Acá se agrega calentamiento
+			id.location="Duluth, MN";
+			country="USA";
+			siteName="Duluth, MN";
 			liquidCategory="Other organic liquids";
-			compoundName="Acetaldehyde";
-			t.roof.type="cone";
-			t.roof.height=0;
-			t.roof.slope=0.0625;
-			t.heating.heating=true;
-			t.heating.minBulkTemp=460;
-			t.heating.maxBulkTemp=480;
+			compoundName="Benzene";
+			t.type="VFR";
+			t.height="27.23";
+			t.diameter="24.93";
+			t.minLiquidHeight="1";
+			t.avgLiquidHeight="14.63";
+			t.maxLiquidHeight="23.91";
+			t.turnoversPerYear="13";
+			t.shell.color="white";
+			t.shell.condition="new";
+			t.roof.type="dome";
+			t.roof.color="white";
+			t.roof.condition="new";
+			t.roof.height="0";
+			t.roof.radius="24.93";
+			t.construction="welded";	
+			t.insulation="full";
+			t.avgBulkTemp="498.13"
 		break;
 		case "Prueba8":
 			id.userID="Corrida de Prueba 8";
-			///Acá cambia la presión a la que están seteadas las válvulas de ventilación
-			liquidCategory="Other organic liquids";
-			compoundName="Acetaldehyde";
+			id.location="Duluth, MN";
+			country="USA";
+			siteName="Duluth, MN";
+			liquidCategory="Refined Petroleum Liquids";
+			liquidName="Asfalto (Residuo o fondo de vacío)";
+			t.type="VFR";
+			t.height="49.21";
+			t.diameter="125.33";
+			t.minLiquidHeight="2.3";
+			t.avgLiquidHeight="23.82";
+			t.maxLiquidHeight="45.17";
+			t.turnoversPerYear="16.36";
+			t.shell.color="aluminum: diffuse";
+			t.shell.condition="aged";
 			t.roof.type="cone";
-			t.roof.height=0;
-			t.roof.slope=0.0625;
-			t.ventPressureSetting=0.04;
-        	t.ventVacuumSetting=-0.04;	
-        	t.gaugePressure=0.01;		
+			t.roof.color="aluminum: diffuse";
+			t.roof.condition="aged";
+			t.roof.height="0";
+			t.roof.slope="0.0625";
+			t.insulation="full";
+			t.heating.heating=true;		
+        	t.heating.cyclesPerYear="365";	
+        	t.heating.minBulkTemp="509.67";		
+        	t.heating.maxBulkTemp="527.67";
 		break;
 		case "Prueba9":
 			id.userID="Corrida de Prueba 9";
-			///Acá se ingresan los turnoversPerYear en lugar del annualNetThroughput
-			liquidCategory="Other organic liquids";
-			compoundName="Acetaldehyde";
-			t.roof.type="cone";
-			t.roof.height=0;
-			t.roof.slope=0.0625;
-			t.turnoversPerYear=5;
-			t.annualNetThroughput="";
+			id.location="Rochester, MN";
+			country="USA";
+			siteName="Rochester, MN";
+			liquidCategory="Refined Petroleum Liquids";
+			liquidName="Nafta TVR 13";  
+			t.type="HFR";
+			t.height="65.6";
+			t.diameter="12.3";
+			t.turnoversPerYear="13.15";
+            t.shell.color="white";
+            t.shell.condition="new";
+            t.roof.color="white";
+            t.roof.condition="new";
+			t.ventPressureSetting="1";
+			t.ventVacuumSetting="-1";
+			t.gaugePressure="0";	
 		break;
 		case "Prueba10":
 			id.userID="Corrida de Prueba 10";
-			///Acá cambia el tipo de tanque (DEFR), el tipo de construcción del tanque y de la plataforma flotante, y la textura de las paredes
-			liquidCategory="Other organic liquids";
-			compoundName="Acetaldehyde";
-			t.type="DEFR";
-			t.construction="welded";
-			t.rimSeal.fit="Average-Fitting Seal";
-			t.rimSeal.type="Mechanical-shoe seal";
-			t.rimSeal.secondary="Primary only";
-			t.deck.type="welded";
-			t.deck.support="pontoon";
-			addDeckFitting(t,"Access hatch","Unbolted cover, gasketed",1);
-			addDeckFitting(t,"Slotted guidepole/sample well","Ungasketed or gasketed sliding cover",2);
-			t.shellTexture="Dense Rust";
+			id.location="Duluth, MN";
+			country="USA";
+			siteName="Duluth, MN";
+			liquidCategory="Refined Petroleum Liquids";
+			liquidName="Asfalto (Residuo o fondo de vacío)";
+			t.type="VFR";
+			t.height="49.21";
+			t.diameter="125.33";
+			t.minLiquidHeight="2.3";
+			t.avgLiquidHeight="23.82";
+			t.maxLiquidHeight="45.17";
+			t.turnoversPerYear="16.36";
+			t.shell.color="aluminum: diffuse";
+			t.shell.condition="aged";
+			t.roof.type="cone";
+			t.roof.color="aluminum: diffuse";
+			t.roof.condition="aged";
+			t.roof.height="0";
+			t.roof.slope="0.0625";
+			t.insulation="shell";
+			t.heating.heating=true;		
+        	t.heating.cyclesPerYear="365";	
+        	t.heating.minBulkTemp="509.67";		
+        	t.heating.maxBulkTemp="527.67";
 		break;
 	};
 

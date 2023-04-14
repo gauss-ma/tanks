@@ -28,7 +28,7 @@ function Eq1_4() {
 		t.insulated = t.insulation;			
 	};
 
-	if (t.heating.cyclesPerYear != "" && isNaN(t.heating.cyclesPerYear) == false) {
+	if (t.heating.cyclesPerYear != "" && isNaN(t.heating.cyclesPerYear) == false && t.insulated == "full") {
 		t.heating.cyclesPerYear = parseFloat(t.heating.cyclesPerYear);
 	} else {
 		t.heating.cyclesPerYear = 365;	//Si el usuario no ingresa el dato, se asume que el líquido se calienta una vez por día, es decir, 365 veces al año.
@@ -660,7 +660,7 @@ function Eq2_16() {
 	return Ff;
 };
 
-//Eq2_17: Por ahora no la incluimos. Quizás más adelante, una vez que hayamos terminado de implementar el resto de las cosas. (Sirve para calcular los factores de perdida desde tipos de fittings que NO estén en la base de datos)
+//Eq2_17: Esta ecuación no se incluyó (Sirve para calcular los factores de perdida desde tipos de accesorios que NO estén en la base de datos del programa)
 
 //Eq2_18 Pérdidas a través de las uniones de la plataforma flotante (deckSeamLosses) (lbs/yr)
 function Eq2_18() {
